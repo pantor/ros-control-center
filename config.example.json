@@ -1,0 +1,11 @@
+config = {
+  "address": "192.168.0.121",
+  "port": "9090",
+  "log": "/rosout",
+  "image_preview": {
+    "port": "8080",
+    "width": 640,
+    "height": 480,
+    "quality": 70
+  }
+}

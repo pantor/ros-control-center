@@ -1,0 +1,38 @@
+.navbar-checkbox {
+  margin: 0;
+  padding: 15px;
+}
+
+.panel {
+  margin-bottom: 5px;
+}
+.panel-active {
+  margin-right: -8px;
+  border: none;
+}
+.panel-active .panel-heading {
+  color: white;
+  background-color: #2E3D5F;
+  border: 1px #2E3D5F solid;
+  border-radius: 3px;
+}
+
+.sidebar {
+  position: absolute;
+  top: 50px;
+  bottom: 0;
+  right: 0;
+  display: block;
+  padding: 0 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  border-left: 1px solid #e7e7e7;
+}
+.sidebar > table > tr > td {
+  border-top: none;
+  border-bottom: 1px solid #ddd;
+}
+
+.form-margin {
+  margin: 0 15px;
+}

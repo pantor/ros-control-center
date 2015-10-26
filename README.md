@@ -22,7 +22,7 @@ All elements (including the lowercase-names from system services, topics and par
 There is a config file at `config.example.json`, which can be adapted and renamed to `config.json`. 
 It includes the robot url (given by the rosbridge_suite package) and the logger topic name.
 
-On the robot, the `rosbridge_suite` from the [Robot Web Tools](http://robotwebtools.org) needs to run.
+On the robot, the `rosbridge_suite` from [Robot Web Tools](http://robotwebtools.org) needs to run.
 
 
 ## Development

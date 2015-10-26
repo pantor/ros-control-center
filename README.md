@@ -2,6 +2,8 @@
 
 The control center is a universal tool for all ROS robots.
 
+![screenshot](https://github.com/gaug-cns/ros-control-center/master/images/screenshot.png)
+
 
 ## Using
 

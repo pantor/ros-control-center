@@ -1,5 +1,5 @@
 var app = angular.module('roscc', ['ngRoute', 'ui.bootstrap']); // Dependencies
-var ros; // Main ros element for ROSLIB
+var ros = new ROSLIB.Ros({url: 'ws://' + config.address + ':' + config.port});; // Main ros element for ROSLIB
 
 // Routing
 app.config(['$routeProvider', function($routeProvider) {
@@ -19,7 +19,30 @@ app.controller('main-ctrl', function($scope, $timeout, $interval, $location) {
     return $location.path();
   };
   
-  var newRosConnection = function() {
+  ros.on('connection', function() {
+    console.log('Connected');
+    $timeout(function() {
+      $scope.is_connected = true;
+    });
+  });
+
+  ros.on('error', function() {
+    if ($scope.is_connected)
+      console.log('Error');
+    $timeout(function() {
+      $scope.is_connected = false;
+    });
+  });
+
+  ros.on('close', function() {
+    if ($scope.is_connected)
+      console.log('Close');
+    $timeout(function() {
+      $scope.is_connected = false;
+    });
+  });
+  
+  /* var newRosConnection = function() {
     if (!$scope.is_connected) {
       ros = new ROSLIB.Ros({url: 'ws://' + config.address + ':' + config.port});
       
@@ -52,7 +75,7 @@ app.controller('main-ctrl', function($scope, $timeout, $interval, $location) {
   newRosConnection();
   $interval(function() {
     newRosConnection();
-  }, 1000); // [ms]
+  }, 1000); // [ms] */
 });
 
 // Info controller

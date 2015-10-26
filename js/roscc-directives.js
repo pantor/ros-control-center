@@ -101,6 +101,7 @@ app.directive('ccTopicTemplate', function() {
 		controller: function($scope, $timeout) {
 			var roslib_topic = new ROSLIB.Topic({ros: ros, name: $scope.topic.name, messageType: $scope.topic.type});
 			
+			$scope.can_subscribe = true;
 			$scope.is_subscribing = false;
 			$scope.toggleSubscription = function(data) {
         if (!data) {
@@ -237,6 +238,7 @@ app.directive('ccTopicImage', function() {
     link: function(scope) {
 			scope.config = config;
 			scope.quality = 75;
+			scope.$parent.can_subscribe = false;
     }
   };
 });

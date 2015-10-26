@@ -1,6 +1,6 @@
 <div class="panel panel-default" ng-class="{'panel-success': toggle}">
   <div class="panel-heading clearfix">
-    <button class="btn btn-default btn-sm pull-right" ng-click="toggleSubscription(!toggle)" ng-model="toggle" uib-btn-checkbox>Subscribe</button>
+    <button class="btn btn-default btn-sm pull-right" ng-click="toggleSubscription(!toggle)" ng-model="toggle" ng-show="can_subscribe" uib-btn-checkbox>Subscribe</button>
 
     <h3 class="panel-title">
       {{ topic.abbr }}

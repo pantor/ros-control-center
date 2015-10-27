@@ -100,6 +100,7 @@ app.controller('control-ctrl', function($scope, $timeout, DomainHelper) {
   };
 
   // Setup of console (in the right sidebar)
+  var max_length = 100;
   var topic_rosout = new ROSLIB.Topic({ros: ros, name: config.log, messageType: 'rosgraph_msgs/Log'});
   topic_rosout.subscribe(function(message) {
     $timeout(function() {
@@ -113,6 +114,9 @@ app.controller('control-ctrl', function($scope, $timeout, DomainHelper) {
       var d = new Date(message.header.stamp.secs * 1000 + message.header.stamp.nsecs / 1000000);
       message.date_string = z(d.getHours()) + ":" + z(d.getMinutes()) + ":" + z(d.getSeconds()) + "." + z(d.getMilliseconds());
       $scope.data.rosout.unshift(message);
+      
+      if ($scope.data.rosout.length > max_length)
+        $scope.data.rosout.pop();
     });
   });
   

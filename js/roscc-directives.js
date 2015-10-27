@@ -224,6 +224,35 @@ app.directive('ccTopicPose', function() {
   };
 });
 
+app.directive('ccTopicPoseStamped', function() {
+	return {
+		templateUrl: 'directives/topics/pose-stamped.html',
+		require: '^ccTopicTemplate',
+    link: function(scope) {
+			var getOrientation = function() {
+				if (scope.$parent.latest_message)
+					return scope.$parent.latest_message.pose.orientation;
+				return {w: 1, x: 0, y: 0, z: 0};
+			};
+			
+			scope.getRoll = function() {
+				var q = getOrientation();
+				return 180 / Math.PI * Math.atan2(2 * (q.w * q.x + q.y * q.z), 1 - 2 * (q.x * q.x + q.y * q.y));
+			};
+			
+			scope.getPitch = function() {
+				var q = getOrientation();
+				return 180 / Math.PI *  Math.asin(2 * (q.w * q.y - q.z * q.x));
+			};
+			
+			scope.getYaw = function() {
+				var q = getOrientation();
+				return 180 / Math.PI * Math.atan2(2 * (q.w * q.z + q.x * q.y), 1 - 2 * (q.y * q.y + q.z * q.z));
+			};
+    }
+  };
+});
+
 app.directive('ccTopicPose2d', function() {
 	return {
 		templateUrl: 'directives/topics/pose2D.html',

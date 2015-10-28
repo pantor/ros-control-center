@@ -3,7 +3,7 @@
     <button class="btn btn-default pull-right" type="button" ng-disabled="$parent.is_subscribing" style="margin-left: 10px;" ng-click="$parent.publishMessage($parent.latest_message)">Publish</button>
     <div class="input-group">
       <input type="number" class="form-control" ng-model="$parent.latest_message.relative_humidity" ng-change="" ng-readonly="$parent.is_subscribing">
-      <span class="input-group-addon">m</span>
+      <span class="input-group-addon">%</span>
     </div>
   </div>
 </div>

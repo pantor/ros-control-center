@@ -139,23 +139,18 @@ app.directive('ccTopicDefault', function() {
   };
 });
 
-app.directive('ccTopicNumber', function() {
-	return {
-		templateUrl: 'directives/topics/number.html',
-		require: '^ccTopicTemplate'
-  };
-});
 
-app.directive('ccTopicTemperature', function() {
-	return {
-		templateUrl: 'directives/topics/temperature.html',
-		require: '^ccTopicTemplate'
-  };
-});
 
 app.directive('ccTopicFluidPressure', function() {
 	return {
 		templateUrl: 'directives/topics/fluid-pressure.html',
+		require: '^ccTopicTemplate'
+  };
+});
+
+app.directive('ccTopicIlluminance', function() {
+	return {
+		templateUrl: 'directives/topics/illuminance.html',
 		require: '^ccTopicTemplate'
   };
 });
@@ -167,6 +162,13 @@ app.directive('ccTopicImu', function() {
   };
 });
 
+app.directive('ccTopicJoy', function() {
+	return {
+		templateUrl: 'directives/topics/joy.html',
+		require: '^ccTopicTemplate'
+  };
+});
+
 app.directive('ccTopicMagneticField', function() {
 	return {
 		templateUrl: 'directives/topics/magnetic-field.html',
@@ -174,9 +176,9 @@ app.directive('ccTopicMagneticField', function() {
   };
 });
 
-app.directive('ccTopicJoy', function() {
+app.directive('ccTopicNumber', function() {
 	return {
-		templateUrl: 'directives/topics/joy.html',
+		templateUrl: 'directives/topics/number.html',
 		require: '^ccTopicTemplate'
   };
 });
@@ -188,9 +190,16 @@ app.directive('ccTopicRange', function() {
   };
 });
 
-app.directive('ccTopicIlluminance', function() {
+app.directive('ccTopicRelativeHumidity', function() {
 	return {
-		templateUrl: 'directives/topics/illuminance.html',
+		templateUrl: 'directives/topics/relative-humidity.html',
+		require: '^ccTopicTemplate'
+  };
+});
+
+app.directive('ccTopicTemperature', function() {
+	return {
+		templateUrl: 'directives/topics/temperature.html',
 		require: '^ccTopicTemplate'
   };
 });
@@ -271,6 +280,9 @@ app.directive('ccTopicImage', function() {
     }
   };
 });
+
+
+
 
 app.directive('ccTopicMovingpiRange', function() {
 	return {

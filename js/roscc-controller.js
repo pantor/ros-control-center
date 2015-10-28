@@ -1,5 +1,5 @@
 var app = angular.module('roscc', ['ngRoute', 'ui.bootstrap']); // Dependencies
-var ros = new ROSLIB.Ros({url: 'ws://' + config.address + ':' + config.port});; // Main ros element for ROSLIB
+var ros; // Main ros element for ROSLIB
 
 // Routing
 app.config(['$routeProvider', function($routeProvider) {
@@ -17,6 +17,11 @@ app.controller('main-ctrl', function($scope, $timeout, $interval, $location) {
   
   $scope.getPath = function() {
     return $location.path();
+  };
+  
+  var newRosConnection = function() {
+    ros.close(); // Close old connection
+    ros = new ROSLIB.Ros({url: 'ws://' + config.address + ':' + config.port});
   };
   
   ros.on('connection', function() {
@@ -42,40 +47,12 @@ app.controller('main-ctrl', function($scope, $timeout, $interval, $location) {
     });
   });
   
-  /* var newRosConnection = function() {
-    if (!$scope.is_connected) {
-      ros = new ROSLIB.Ros({url: 'ws://' + config.address + ':' + config.port});
-      
-      ros.on('connection', function() {
-        console.log('Connected');
-        $timeout(function() {
-          $scope.is_connected = true;
-        });
-      });
-
-      ros.on('error', function() {
-        if ($scope.is_connected)
-          console.log('Error');
-        $timeout(function() {
-          $scope.is_connected = false;
-        });
-      });
-
-      ros.on('close', function() {
-        if ($scope.is_connected)
-          console.log('Close');
-        $timeout(function() {
-          $scope.is_connected = false;
-        });
-      });
-    }
-  };
-  
   // Load ROS connection and keep trying if it fails
   newRosConnection();
   $interval(function() {
-    newRosConnection();
-  }, 1000); // [ms] */
+    if (!$scope.is_connected)
+      newRosConnection();
+  }, 1000); // [ms]
 });
 
 // Info controller
@@ -98,27 +75,6 @@ app.controller('control-ctrl', function($scope, $timeout, DomainHelper) {
   $scope.setActiveDomain = function(domain) {
     $scope.activeDomain = domain;
   };
-
-  // Setup of console (in the right sidebar)
-  var max_length = 100;
-  var topic_rosout = new ROSLIB.Topic({ros: ros, name: config.log, messageType: 'rosgraph_msgs/Log'});
-  topic_rosout.subscribe(function(message) {
-    $timeout(function() {
-      var split = message.name.split('/');
-      message.abbr = message.name;
-      if (split.length > 1)
-        message.abbr = split[1];
-      
-      // String formatting of message time and date
-      function z(i) { return i < 10 ? "0" + i : i; }
-      var d = new Date(message.header.stamp.secs * 1000 + message.header.stamp.nsecs / 1000000);
-      message.date_string = z(d.getHours()) + ":" + z(d.getMinutes()) + ":" + z(d.getSeconds()) + "." + z(d.getMilliseconds());
-      $scope.data.rosout.unshift(message);
-      
-      if ($scope.data.rosout.length > max_length)
-        $scope.data.rosout.pop();
-    });
-  });
   
   $scope.filterAdvanced = function(e, a) {
     return DomainHelper.filterAdvanced(e, a);
@@ -139,8 +95,31 @@ app.controller('control-ctrl', function($scope, $timeout, DomainHelper) {
     return DomainHelper.getGlobalParameters($scope.data.parameters);
   };
   
+  // Setup of console (in the right sidebar)
+  var max_length = 100;
+  var setConsole = function() {
+    var topic_rosout = new ROSLIB.Topic({ros: ros, name: config.log, messageType: 'rosgraph_msgs/Log'});
+    topic_rosout.subscribe(function(message) {
+      $timeout(function() {
+        var split = message.name.split('/');
+        message.abbr = message.name;
+        if (split.length > 1)
+          message.abbr = split[1];
+        
+        // String formatting of message time and date
+        function z(i) { return i < 10 ? "0" + i : i; }
+        var d = new Date(message.header.stamp.secs * 1000 + message.header.stamp.nsecs / 1000000);
+        message.date_string = z(d.getHours()) + ":" + z(d.getMinutes()) + ":" + z(d.getSeconds()) + "." + z(d.getMilliseconds());
+        $scope.data.rosout.unshift(message);
+        
+        if ($scope.data.rosout.length > max_length)
+          $scope.data.rosout.pop();
+      });
+    });
+  };
+  
   // Load structure all data, parameters, topics, services, nodes...
-  $scope.loadData = function() {
+  var loadData = function() {
     ros.getTopics(function(topics) {
       $timeout(function() {
         $scope.data.topics = [];
@@ -196,6 +175,11 @@ app.controller('control-ctrl', function($scope, $timeout, DomainHelper) {
       });
     });
   };
-
-  $scope.loadData();
+  
+  ros.on('connection', function() {
+    $timeout(function() {
+      setConsole();
+      loadData();
+    });
+  });
 });

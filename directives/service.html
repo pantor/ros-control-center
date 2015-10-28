@@ -8,7 +8,7 @@
 
   <div class="panel-body" ng-switch="service.type">
     <cc-service-empty ng-switch-when="std_srvs/Empty"></cc-service-empty>
-    <cc-service-empty ng-switch-when="std_srvs/Trigger"></cc-service-empty>
+    <cc-service-trigger ng-switch-when="std_srvs/Trigger"></cc-service-trigger>
 
     <cc-service-movingpi-bool ng-switch-when="movingpi/SrvBool"></cc-service-movingpi-bool>
 

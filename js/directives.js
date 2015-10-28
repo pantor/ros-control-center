@@ -20,6 +20,10 @@ app.directive('ccInfo', function() {
   };
 });
 
+
+
+/* --- Parameters --- */
+
 app.directive('ccParameter', function() {
 	return {
 		scope: { parameter: '=' },
@@ -39,56 +43,43 @@ app.directive('ccParameter', function() {
 app.directive('ccServiceTemplate', function() {
 	return {
 		scope: { service: '=' },
-		templateUrl: 'directives/services/template.html',
+		templateUrl: 'directives/service.html',
     controller: function($scope, $timeout) {
       $scope.callService = function(data) {
         var service = new ROSLIB.Service({ros: ros, name: $scope.service.name, serviceType: $scope.service.type});
         var request = new ROSLIB.ServiceRequest(data);
 				
-				console.log(data);
-
         service.callService(request, function(result) {
           $timeout(function () {
             $scope.result = result;
           });
         });
       };
+			
+			$scope.callServiceJSON = function(data) {
+				$scope.callService(JSON.parse(data));
+			};
     }
   };
 });
 
-app.directive('ccServiceDefault', function() {
-	return {
-		templateUrl: 'directives/services/default.html',
-		require: '^ccServiceTemplate',
-    link: function(scope) {
-      scope.callService = function(input) {
-				scope.$parent.callService(JSON.parse(input));
-      };
-    }
-  };
-});
+var generateDirectiveServiceConfig = function(file_name, link) {
+	link = typeof link !== 'undefined' ? link : null;
+	
+	return function() {
+		return {
+			templateUrl: 'directives/service_views/' + file_name + '.html',
+			require: '^ccServiceTemplate',
+			link: link
+	  };
+	};
+};
 
-app.directive('ccServiceEmpty', function() {
-	return {
-		templateUrl: 'directives/services/empty.html',
-		require: '^ccServiceTemplate'
-  };
-});
+app.directive('ccServiceDefault', generateDirectiveServiceConfig('default'));
 
-app.directive('ccServiceTrigger', function() {
-	return {
-		templateUrl: 'directives/services/trigger.html',
-		require: '^ccServiceTemplate'
-  };
-});
-
-app.directive('ccServiceMovingpiBool', function() {
-	return {
-		templateUrl: 'directives/services/movingpi-bool.html',
-		require: '^ccServiceTemplate'
-  };
-});
+app.directive('ccServiceEmpty', generateDirectiveServiceConfig('std_srvs/empty'));
+app.directive('ccServiceTrigger', generateDirectiveServiceConfig('std_srvs/trigger'));
+app.directive('ccServiceMovingpiBool', generateDirectiveServiceConfig('movingpi/bool'));
 
 
 
@@ -97,7 +88,7 @@ app.directive('ccServiceMovingpiBool', function() {
 app.directive('ccTopicTemplate', function() {
 	return {
 		scope: { topic: '=' },
-		templateUrl: 'directives/topics/template.html',
+		templateUrl: 'directives/topic.html',
 		controller: function($scope, $timeout) {
 			var roslib_topic = new ROSLIB.Topic({ros: ros, name: $scope.topic.name, messageType: $scope.topic.type});
 			
@@ -120,187 +111,93 @@ app.directive('ccTopicTemplate', function() {
 
       $scope.publishMessage = function(data) {
         var message = new ROSLIB.Message(data);
-				console.log(message);
         roslib_topic.publish(message);
       };
-    }
-  };
-});
-
-app.directive('ccTopicDefault', function() {
-	return {
-		templateUrl: 'directives/topics/default.html',
-		require: '^ccTopicTemplate',
-    link: function(scope) {
-      scope.publishMessage = function(input) {
-        scope.$parent.publishMessage(JSON.parse(input));
+			
+			$scope.publishMessageJSON = function(data) {
+        $scope.publishMessage(JSON.parse(input));
       };
     }
   };
 });
 
+var generateDirectiveConfig = function(file_name, link) {
+	link = typeof link !== 'undefined' ? link : null;
+	
+	return function() {
+		return {
+			templateUrl: 'directives/topic_views/' + file_name + '.html',
+			require: '^ccTopicTemplate',
+			link: link
+	  };
+	};
+};
 
+app.directive('ccTopicDefault', generateDirectiveConfig('default'));
 
-app.directive('ccTopicFluidPressure', function() {
-	return {
-		templateUrl: 'directives/topics/fluid-pressure.html',
-		require: '^ccTopicTemplate'
-  };
+app.directive('ccTopicNumber', generateDirectiveConfig('std_msgs/number'));
+
+app.directive('ccTopicFluidPressure', generateDirectiveConfig('sensor_msgs/fluid-pressure'));
+app.directive('ccTopicIlluminance', generateDirectiveConfig('sensor_msgs/illuminance'));
+app.directive('ccTopicImage', generateDirectiveConfig('sensor_msgs/image', function(scope) {
+	scope.config = config;
+	scope.quality = 75;
+	scope.$parent.can_subscribe = false;
+}));
+app.directive('ccTopicImu', generateDirectiveConfig('sensor_msgs/imu'));
+app.directive('ccTopicJoy', generateDirectiveConfig('sensor_msgs/joy'));
+app.directive('ccTopicMagneticField', generateDirectiveConfig('sensor_msgs/magnetic-field'));
+app.directive('ccTopicRange', generateDirectiveConfig('sensor_msgs/range'));
+app.directive('ccTopicRelativeHumidity', generateDirectiveConfig('sensor_msgs/relative-humidity'));
+app.directive('ccTopicTemperature', generateDirectiveConfig('sensor_msgs/temperature'));
+
+app.directive('ccTopicPose', generateDirectiveConfig('geometry_msgs/pose'), function(scope) {
+	var getOrientation = function() {
+		if (scope.$parent.latest_message)
+			return scope.$parent.latest_message.orientation;
+		return {w: 1, x: 0, y: 0, z: 0};
+	};
+	
+	scope.getRoll = function() {
+		var q = getOrientation();
+		return 180 / Math.PI * Math.atan2(2 * (q.w * q.x + q.y * q.z), 1 - 2 * (q.x * q.x + q.y * q.y));
+	};
+	
+	scope.getPitch = function() {
+		var q = getOrientation();
+		return 180 / Math.PI *  Math.asin(2 * (q.w * q.y - q.z * q.x));
+	};
+	
+	scope.getYaw = function() {
+		var q = getOrientation();
+		return 180 / Math.PI * Math.atan2(2 * (q.w * q.z + q.x * q.y), 1 - 2 * (q.y * q.y + q.z * q.z));
+	};
 });
-
-app.directive('ccTopicIlluminance', function() {
-	return {
-		templateUrl: 'directives/topics/illuminance.html',
-		require: '^ccTopicTemplate'
-  };
+app.directive('ccTopicPoseStamped', generateDirectiveConfig('geometry_msgs/pose-stamped'), function(scope) {
+	var getOrientation = function() {
+		if (scope.$parent.latest_message)
+			return scope.$parent.latest_message.pose.orientation;
+		return {w: 1, x: 0, y: 0, z: 0};
+	};
+	
+	scope.getRoll = function() {
+		var q = getOrientation();
+		return 180 / Math.PI * Math.atan2(2 * (q.w * q.x + q.y * q.z), 1 - 2 * (q.x * q.x + q.y * q.y));
+	};
+	
+	scope.getPitch = function() {
+		var q = getOrientation();
+		return 180 / Math.PI *  Math.asin(2 * (q.w * q.y - q.z * q.x));
+	};
+	
+	scope.getYaw = function() {
+		var q = getOrientation();
+		return 180 / Math.PI * Math.atan2(2 * (q.w * q.z + q.x * q.y), 1 - 2 * (q.y * q.y + q.z * q.z));
+	};
 });
+app.directive('ccTopicPose2d', generateDirectiveConfig('geometry_msgs/pose2D'));
 
-app.directive('ccTopicImu', function() {
-	return {
-		templateUrl: 'directives/topics/imu.html',
-		require: '^ccTopicTemplate'
-  };
-});
+app.directive('ccTopicMovingpiRange', generateDirectiveConfig('movingpi/range'));
 
-app.directive('ccTopicJoy', function() {
-	return {
-		templateUrl: 'directives/topics/joy.html',
-		require: '^ccTopicTemplate'
-  };
-});
-
-app.directive('ccTopicMagneticField', function() {
-	return {
-		templateUrl: 'directives/topics/magnetic-field.html',
-		require: '^ccTopicTemplate'
-  };
-});
-
-app.directive('ccTopicNumber', function() {
-	return {
-		templateUrl: 'directives/topics/number.html',
-		require: '^ccTopicTemplate'
-  };
-});
-
-app.directive('ccTopicRange', function() {
-	return {
-		templateUrl: 'directives/topics/range.html',
-		require: '^ccTopicTemplate'
-  };
-});
-
-app.directive('ccTopicRelativeHumidity', function() {
-	return {
-		templateUrl: 'directives/topics/relative-humidity.html',
-		require: '^ccTopicTemplate'
-  };
-});
-
-app.directive('ccTopicTemperature', function() {
-	return {
-		templateUrl: 'directives/topics/temperature.html',
-		require: '^ccTopicTemplate'
-  };
-});
-
-app.directive('ccTopicPose', function() {
-	return {
-		templateUrl: 'directives/topics/pose.html',
-		require: '^ccTopicTemplate',
-    link: function(scope) {
-			var getOrientation = function() {
-				if (scope.$parent.latest_message)
-					return scope.$parent.latest_message.orientation;
-				return {w: 1, x: 0, y: 0, z: 0};
-			};
-			
-			scope.getRoll = function() {
-				var q = getOrientation();
-				return 180 / Math.PI * Math.atan2(2 * (q.w * q.x + q.y * q.z), 1 - 2 * (q.x * q.x + q.y * q.y));
-			};
-			
-			scope.getPitch = function() {
-				var q = getOrientation();
-				return 180 / Math.PI *  Math.asin(2 * (q.w * q.y - q.z * q.x));
-			};
-			
-			scope.getYaw = function() {
-				var q = getOrientation();
-				return 180 / Math.PI * Math.atan2(2 * (q.w * q.z + q.x * q.y), 1 - 2 * (q.y * q.y + q.z * q.z));
-			};
-    }
-  };
-});
-
-app.directive('ccTopicPoseStamped', function() {
-	return {
-		templateUrl: 'directives/topics/pose-stamped.html',
-		require: '^ccTopicTemplate',
-    link: function(scope) {
-			var getOrientation = function() {
-				if (scope.$parent.latest_message)
-					return scope.$parent.latest_message.pose.orientation;
-				return {w: 1, x: 0, y: 0, z: 0};
-			};
-			
-			scope.getRoll = function() {
-				var q = getOrientation();
-				return 180 / Math.PI * Math.atan2(2 * (q.w * q.x + q.y * q.z), 1 - 2 * (q.x * q.x + q.y * q.y));
-			};
-			
-			scope.getPitch = function() {
-				var q = getOrientation();
-				return 180 / Math.PI *  Math.asin(2 * (q.w * q.y - q.z * q.x));
-			};
-			
-			scope.getYaw = function() {
-				var q = getOrientation();
-				return 180 / Math.PI * Math.atan2(2 * (q.w * q.z + q.x * q.y), 1 - 2 * (q.y * q.y + q.z * q.z));
-			};
-    }
-  };
-});
-
-app.directive('ccTopicPose2d', function() {
-	return {
-		templateUrl: 'directives/topics/pose2D.html',
-		require: '^ccTopicTemplate'
-  };
-});
-
-app.directive('ccTopicImage', function() {
-	return {
-		templateUrl: 'directives/topics/image.html',
-		require: '^ccTopicTemplate',
-    link: function(scope) {
-			scope.config = config;
-			scope.quality = 75;
-			scope.$parent.can_subscribe = false;
-    }
-  };
-});
-
-
-
-
-app.directive('ccTopicMovingpiRange', function() {
-	return {
-		templateUrl: 'directives/topics/movingpi-range.html',
-		require: '^ccTopicTemplate'
-  };
-});
-
-app.directive('ccTopicFlypiMotorsThrust', function() {
-	return {
-		templateUrl: 'directives/topics/flypi-motors-thrust.html',
-		require: '^ccTopicTemplate'
-  };
-});
-
-app.directive('ccTopicFlypiSteering', function() {
-	return {
-		templateUrl: 'directives/topics/flypi-steering.html',
-		require: '^ccTopicTemplate'
-  };
-});
+app.directive('ccTopicFlypiMotorsThrust', generateDirectiveConfig('flypi/motors-thrust'));
+app.directive('ccTopicFlypiSteering', generateDirectiveConfig('flypi/steering'));

@@ -1,9 +1,9 @@
 var app = angular.module('roscc');
 
-app.directive('ccInfo', function() {
+app.directive('ccDetails', function() {
 	return {
 		scope: { data: '=', name: '=', advanced: '=' },
-		templateUrl: 'directives/info.html',
+		templateUrl: 'directives/details.html',
     controller: function($scope, DomainHelper) {
       $scope.hasNode = function() {
         return _.pluck($scope.data.nodes, 'name').indexOf('/' + $scope.name) != -1;

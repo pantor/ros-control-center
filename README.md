@@ -17,4 +17,4 @@ ROS Control Center is released with a BSD license. For full terms and conditions
 
 ## Authors
 
-For a list of authors, please see `AUTHORS.md`.
+See `AUTHORS.md` for a full list of contributors.

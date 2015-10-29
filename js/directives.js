@@ -121,9 +121,20 @@ app.directive('ccTopicTemplate', function() {
   };
 });
 
+var calcRoll = function(q) {
+	return 180 / Math.PI * Math.atan2(2 * (q.w * q.x + q.y * q.z), 1 - 2 * (q.x * q.x + q.y * q.y));
+};
+
+var calcPitch = function(q) {
+	return 180 / Math.PI *  Math.asin(2 * (q.w * q.y - q.z * q.x));
+};
+
+var calcYaw = function(q) {
+	return 180 / Math.PI * Math.atan2(2 * (q.w * q.z + q.x * q.y), 1 - 2 * (q.y * q.y + q.z * q.z));
+};
+
 var generateDirectiveConfig = function(file_name, link) {
 	link = typeof link !== 'undefined' ? link : null;
-	
 	return function() {
 		return {
 			templateUrl: 'directives/topic_views/' + file_name + '.html',
@@ -151,50 +162,28 @@ app.directive('ccTopicRange', generateDirectiveConfig('sensor_msgs/range'));
 app.directive('ccTopicRelativeHumidity', generateDirectiveConfig('sensor_msgs/relative-humidity'));
 app.directive('ccTopicTemperature', generateDirectiveConfig('sensor_msgs/temperature'));
 
-app.directive('ccTopicPose', generateDirectiveConfig('geometry_msgs/pose'), function(scope) {
+app.directive('ccTopicPose', generateDirectiveConfig('geometry_msgs/pose', function(scope) {
 	var getOrientation = function() {
 		if (scope.$parent.latest_message)
 			return scope.$parent.latest_message.orientation;
 		return {w: 1, x: 0, y: 0, z: 0};
 	};
 	
-	scope.getRoll = function() {
-		var q = getOrientation();
-		return 180 / Math.PI * Math.atan2(2 * (q.w * q.x + q.y * q.z), 1 - 2 * (q.x * q.x + q.y * q.y));
-	};
-	
-	scope.getPitch = function() {
-		var q = getOrientation();
-		return 180 / Math.PI *  Math.asin(2 * (q.w * q.y - q.z * q.x));
-	};
-	
-	scope.getYaw = function() {
-		var q = getOrientation();
-		return 180 / Math.PI * Math.atan2(2 * (q.w * q.z + q.x * q.y), 1 - 2 * (q.y * q.y + q.z * q.z));
-	};
-});
-app.directive('ccTopicPoseStamped', generateDirectiveConfig('geometry_msgs/pose-stamped'), function(scope) {
+	scope.getRoll = function() { return calcRoll( getOrientation() ); };
+	scope.getPitch = function() { return calcPitch( getOrientation() ); };
+	scope.getYaw = function() { return calcYaw( getOrientation() ); };
+}));
+app.directive('ccTopicPoseStamped', generateDirectiveConfig('geometry_msgs/pose-stamped', function(scope) {
 	var getOrientation = function() {
 		if (scope.$parent.latest_message)
 			return scope.$parent.latest_message.pose.orientation;
 		return {w: 1, x: 0, y: 0, z: 0};
 	};
 	
-	scope.getRoll = function() {
-		var q = getOrientation();
-		return 180 / Math.PI * Math.atan2(2 * (q.w * q.x + q.y * q.z), 1 - 2 * (q.x * q.x + q.y * q.y));
-	};
-	
-	scope.getPitch = function() {
-		var q = getOrientation();
-		return 180 / Math.PI *  Math.asin(2 * (q.w * q.y - q.z * q.x));
-	};
-	
-	scope.getYaw = function() {
-		var q = getOrientation();
-		return 180 / Math.PI * Math.atan2(2 * (q.w * q.z + q.x * q.y), 1 - 2 * (q.y * q.y + q.z * q.z));
-	};
-});
+	scope.getRoll = function() { return calcRoll( getOrientation() ); };
+	scope.getPitch = function() { return calcPitch( getOrientation() ); };
+	scope.getYaw = function() { return calcYaw( getOrientation() ); };
+}));
 app.directive('ccTopicPose2d', generateDirectiveConfig('geometry_msgs/pose2D'));
 
 app.directive('ccTopicMovingpiRange', generateDirectiveConfig('movingpi/range'));

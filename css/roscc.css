@@ -16,6 +16,9 @@
   border: 1px #2E3D5F solid;
   border-radius: 3px;
 }
+.panel-domain {
+  cursor: pointer;
+}
 
 .sidebar {
   position: absolute;

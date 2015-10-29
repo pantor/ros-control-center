@@ -8,5 +8,6 @@ config = {
     "height": 480,
     "quality": 70
   },
-  "battery": true
+  "battery": true,
+  "battery_topic": "/Battery/Battery"
 }

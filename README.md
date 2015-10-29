@@ -12,7 +12,7 @@ Please see the [GitHub Wiki](https://github.com/gaug-cns/ros-control-center/wiki
 
 ## License
 
-ROS Control Center is released with a BSD license. For full terms and conditions, see the LICENSE file.
+ROS Control Center is released with a BSD license. For full terms and conditions, see the [LICENSE](https://github.com/gaug-cns/ros-control-center/blob/master/LICENSE) file.
 
 
 ## Authors

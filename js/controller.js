@@ -23,6 +23,30 @@ app.controller('root-ctrl', function($scope, $timeout, $interval, $location) {
     if (ros)
       ros.close(); // Close old connection
     ros = new ROSLIB.Ros({url: 'ws://' + config.address + ':' + config.port});
+    
+    ros.on('connection', function() {
+      console.log('Connected');
+      $timeout(function() {
+        $scope.$broadcast('CONNECTED');
+        $scope.is_connected = true;
+      });
+    });
+
+    ros.on('error', function() {
+      if ($scope.is_connected)
+        console.log('Error');
+      $timeout(function() {
+        $scope.is_connected = false;
+      });
+    });
+
+    ros.on('close', function() {
+      if ($scope.is_connected)
+        console.log('Close');
+      $timeout(function() {
+        $scope.is_connected = false;
+      });
+    });
   };
   
   // Load ROS connection and keep trying if it fails
@@ -31,29 +55,6 @@ app.controller('root-ctrl', function($scope, $timeout, $interval, $location) {
     if (!$scope.is_connected)
       newRosConnection();
   }, 1000); // [ms]
-  
-  ros.on('connection', function() {
-    console.log('Connected');
-    $timeout(function() {
-      $scope.is_connected = true;
-    });
-  });
-
-  ros.on('error', function() {
-    if ($scope.is_connected)
-      console.log('Error');
-    $timeout(function() {
-      $scope.is_connected = false;
-    });
-  });
-
-  ros.on('close', function() {
-    if ($scope.is_connected)
-      console.log('Close');
-    $timeout(function() {
-      $scope.is_connected = false;
-    });
-  });
 });
 
 // Control controller
@@ -110,6 +111,16 @@ app.controller('main-ctrl', function($scope, $timeout, DomainHelper) {
         
         if ($scope.data.rosout.length > max_length)
           $scope.data.rosout.pop();
+      });
+    });
+  };
+  
+  var setBattery = function() {
+    var topic_rosout = new ROSLIB.Topic({ros: ros, name: config.battery_topic, messageType: 'movingpi/MsgRange'});
+    topic_rosout.subscribe(function(message) {
+      $timeout(function() {
+        $scope.battery_message = message;
+        console.log($scope.battery_message);
       });
     });
   };
@@ -172,11 +183,13 @@ app.controller('main-ctrl', function($scope, $timeout, DomainHelper) {
     });
   };
   
-  ros.on('connection', function() {
+  $scope.$on('CONNECTED', function() {
     $timeout(function() {
       setConsole();
+      if (config.battery)
+        setBattery();
       loadData();
-    });
+    }, 500);
   });
 });
 

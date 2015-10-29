@@ -25,18 +25,35 @@
     </div>
 
     <div class="col-sm-4 sidebar hidden-xs">
-      <table class="table">
-        <tr ng-repeat="r in data.rosout" ng-if="filterAdvanced(r.abbr, advanced)">
-          <td>
-            <strong ng-class="{'text-danger bg-danger': r.level==16, 'text-danger': r.level==8, 'text-warning': r.level==4, 'text-info': r.level==2, 'text-muted': r.level==1 }">
-              {{ r.abbr }}
-            </strong>
-            <br>
-            <small><i class="glyphicon glyphicon-time"></i> {{ r.date_string }}</small>
-          </td>
-          <td>{{ r.msg }}</td>
-        </tr>
-      </table>
+      <div class="console">
+        <table class="table">
+          <tr ng-repeat="r in data.rosout" ng-if="filterAdvanced(r.abbr, advanced)">
+            <td>
+              <strong ng-class="{'text-danger bg-danger': r.level==16, 'text-danger': r.level==8, 'text-warning': r.level==4, 'text-info': r.level==2, 'text-muted': r.level==1 }">
+                {{ r.abbr }}
+              </strong>
+              <br>
+              <small><i class="glyphicon glyphicon-time"></i> {{ r.date_string }}</small>
+            </td>
+            <td>{{ r.msg }}</td>
+          </tr>
+        </table>
+      </div>
+      
+      
+      <div class="battery" ng-if="config.battery">  
+        <strong>Battery</strong><br>
+        <div class="row">
+          
+          <div class="col-xs-4 col-sm-3">
+            <input type="number" class="form-control" ng-value="battery_message.value" ng-readonly="1">
+          </div>
+
+          <div class="col-xs-9 col-md-10">
+            <!--uib-progressbar min="battery_message.min" max="battery_message.max" value="battery_message.value"></uib-progressbar-->
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>

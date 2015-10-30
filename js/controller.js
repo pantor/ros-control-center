@@ -59,13 +59,7 @@ app.controller('root-ctrl', function($scope, $timeout, $interval, $location) {
 
 // Control controller
 app.controller('main-ctrl', function($scope, $timeout, DomainHelper) {
-  $scope.data = {
-    rosout: [],
-    topics: [],
-    nodes: [],
-    parameters: [],
-    services: []
-  };
+  
   
   // The active domain shows further information in the center view
   $scope.activeDomain = '';
@@ -185,6 +179,14 @@ app.controller('main-ctrl', function($scope, $timeout, DomainHelper) {
   
   $scope.$on('CONNECTED', function() {
     $timeout(function() {
+      $scope.data = {
+        rosout: [],
+        topics: [],
+        nodes: [],
+        parameters: [],
+        services: []
+      };
+        
       setConsole();
       if (config.battery)
         setBattery();

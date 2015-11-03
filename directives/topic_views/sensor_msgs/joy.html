@@ -1,7 +1,7 @@
 <div class="row">
   <div class="col-sm-6">
     <div class="form-group">
-      <label>Axis 1</label>
+      <label>Left Stick H</label>
       <div class="input-group">
         <input type="number" class="form-control" ng-model="$parent.latest_message.axes[0]" ng-readonly="$parent.is_subscribing">
         <span class="input-group-addon"></span>
@@ -9,7 +9,7 @@
     </div>
     
     <div class="form-group">
-      <label>Axis 2</label>
+      <label>Left Stick V</label>
       <div class="input-group">
         <input type="number" class="form-control" ng-model="$parent.latest_message.axes[1]" ng-readonly="$parent.is_subscribing">
         <span class="input-group-addon"></span>
@@ -17,7 +17,7 @@
     </div>
     
     <div class="form-group">
-      <label>Axis 3</label>
+      <label>Right Stick H</label>
       <div class="input-group">
         <input type="number" class="form-control" ng-model="$parent.latest_message.axes[2]" ng-readonly="$parent.is_subscribing">
         <span class="input-group-addon"></span>
@@ -25,7 +25,7 @@
     </div>
     
     <div class="form-group">
-      <label>Axis 4</label>
+      <label>Right Stick V</label>
       <div class="input-group">
         <input type="number" class="form-control" ng-model="$parent.latest_message.axes[3]" ng-readonly="$parent.is_subscribing">
         <span class="input-group-addon"></span>
@@ -33,24 +33,25 @@
     </div>
     
     <div class="form-group">
-      <label>Axis 5</label>
+      <label>L2</label>
       <div class="input-group">
-        <input type="number" class="form-control" ng-model="$parent.latest_message.axes[4]" ng-readonly="$parent.is_subscribing">
+        <input type="number" class="form-control" ng-model="$parent.latest_message.axes[12]" ng-readonly="$parent.is_subscribing">
         <span class="input-group-addon"></span>
       </div>
     </div>
     
     <div class="form-group">
-      <label>Axis 6</label>
+      <label>R2</label>
       <div class="input-group">
-        <input type="number" class="form-control" ng-model="$parent.latest_message.axes[5]" ng-readonly="$parent.is_subscribing">
+        <input type="number" class="form-control" ng-model="$parent.latest_message.axes[13]" ng-readonly="$parent.is_subscribing">
         <span class="input-group-addon"></span>
       </div>
     </div>
   </div>
+  
   <div class="col-sm-6">
     <div class="form-group">
-      <label>Button Triangle / 1</label>
+      <label>Select</label>
       <div class="input-group">
         <input type="number" class="form-control" ng-model="$parent.latest_message.buttons[0]" ng-readonly="$parent.is_subscribing">
         <span class="input-group-addon"></span>
@@ -58,23 +59,7 @@
     </div>
     
     <div class="form-group">
-      <label>Button Circle / 2</label>
-      <div class="input-group">
-        <input type="number" class="form-control" ng-model="$parent.latest_message.buttons[1]" ng-readonly="$parent.is_subscribing">
-        <span class="input-group-addon"></span>
-      </div>
-    </div>
-    
-    <div class="form-group">
-      <label>Button Cross / 3</label>
-      <div class="input-group">
-        <input type="number" class="form-control" ng-model="$parent.latest_message.buttons[2]" ng-readonly="$parent.is_subscribing">
-        <span class="input-group-addon"></span>
-      </div>
-    </div>
-    
-    <div class="form-group">
-      <label>Button Square / 4</label>
+      <label>Start</label>
       <div class="input-group">
         <input type="number" class="form-control" ng-model="$parent.latest_message.buttons[3]" ng-readonly="$parent.is_subscribing">
         <span class="input-group-addon"></span>
@@ -82,17 +67,35 @@
     </div>
     
     <div class="form-group">
-      <label>Button Select / 5</label>
+      <label>Triangle</label>
       <div class="input-group">
-        <input type="number" class="form-control" ng-model="$parent.latest_message.buttons[4]" ng-readonly="$parent.is_subscribing">
+        <input type="number" class="form-control" ng-model="$parent.latest_message.buttons[12]" ng-readonly="$parent.is_subscribing">
+        <span class="input-group-addon"></span>
+      </div>
+    </div>
+    
+    
+    <div class="form-group">
+      <label>Cricle</label>
+      <div class="input-group">
+        <input type="number" class="form-control" ng-model="$parent.latest_message.buttons[13]" ng-readonly="$parent.is_subscribing">
+        <span class="input-group-addon"></span>
+      </div>
+    </div>
+    
+    
+    <div class="form-group">
+      <label>Cross</label>
+      <div class="input-group">
+        <input type="number" class="form-control" ng-model="$parent.latest_message.buttons[14]" ng-readonly="$parent.is_subscribing">
         <span class="input-group-addon"></span>
       </div>
     </div>
     
     <div class="form-group">
-      <label>Button Start / 6</label>
+      <label>Square</label>
       <div class="input-group">
-        <input type="number" class="form-control" ng-model="$parent.latest_message.buttons[5]" ng-readonly="$parent.is_subscribing">
+        <input type="number" class="form-control" ng-model="$parent.latest_message.buttons[15]" ng-readonly="$parent.is_subscribing">
         <span class="input-group-addon"></span>
       </div>
     </div>

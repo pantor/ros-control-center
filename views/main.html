@@ -49,8 +49,8 @@
             <input type="number" class="form-control" ng-value="battery_message.value" ng-readonly="1">
           </div>
 
-          <div class="col-xs-9 col-md-10">
-            <!--uib-progressbar min="battery_message.min" max="battery_message.max" value="battery_message.value"></uib-progressbar-->
+          <div class="col-xs-8 col-md-9">
+            <uib-progressbar type="{{ battery_message.value > 30 ? 'success' : 'danger' }}" min="0" max="1" value="battery_message.value / 100"></uib-progressbar>
           </div>
         </div>
       </div>

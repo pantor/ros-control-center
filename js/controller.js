@@ -59,7 +59,13 @@ app.controller('root-ctrl', function($scope, $timeout, $interval, $location) {
 
 // Control controller
 app.controller('main-ctrl', function($scope, $timeout, DomainHelper) {
-  
+  $scope.data = {
+    rosout: [],
+    topics: [],
+    nodes: [],
+    parameters: [],
+    services: []
+  };
   
   // The active domain shows further information in the center view
   $scope.activeDomain = '';
@@ -71,7 +77,7 @@ app.controller('main-ctrl', function($scope, $timeout, DomainHelper) {
     return DomainHelper.filterAdvanced(e, a);
   };
 
-  $scope.getDomains = function(advanced) {
+  $scope.getDomains = function(advanced) {    
     var all_data = $scope.data.topics.concat($scope.data.services, $scope.data.nodes);
     var domains = DomainHelper.getDomains(all_data);
     
@@ -114,7 +120,6 @@ app.controller('main-ctrl', function($scope, $timeout, DomainHelper) {
     topic_rosout.subscribe(function(message) {
       $timeout(function() {
         $scope.battery_message = message;
-        console.log($scope.battery_message);
       });
     });
   };

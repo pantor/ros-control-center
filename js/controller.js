@@ -87,7 +87,7 @@ app.controller('main-ctrl', function($scope, $timeout, DomainHelper) {
   };
   
   // Setup of console (in the right sidebar)
-  var max_length = 100;
+  var max_length = 200;
   var setConsole = function() {
     var topic_rosout = new ROSLIB.Topic({ros: ros, name: config.log, messageType: 'rosgraph_msgs/Log'});
     topic_rosout.subscribe(function(message) {

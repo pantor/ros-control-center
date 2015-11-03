@@ -33,12 +33,13 @@
 .console {
   position: absolute;
   display: block;
+  width: 100%;
   
   overflow-x: hidden;
   overflow-y: auto;
   
   top: 0;
-  bottom: 50px;
+  bottom: 85px;
 }
 .console > table > tr > td {
   border-top: none;

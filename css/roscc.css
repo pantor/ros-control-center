@@ -39,7 +39,7 @@
   overflow-y: auto;
   
   top: 0;
-  bottom: 85px;
+  bottom: 70px;
 }
 .console > table > tr > td {
   border-top: none;
@@ -50,6 +50,7 @@
   position: absolute;
   bottom: 0;
   padding: 15px;
+  padding-bottom: 0;
   width: 100%;
   
   background-color: white;

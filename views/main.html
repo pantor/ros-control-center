@@ -46,11 +46,11 @@
         <div class="row">
           
           <div class="col-xs-4 col-sm-3">
-            <p>{{ 100 * battery_status }} %</p>
+            <p>{{ 100 * battery_status | number:1 }} %</p>
           </div>
 
           <div class="col-xs-8 col-md-9">
-            <uib-progressbar type="{{ battery_status > 30 ? 'success' : 'danger' }}" min="0" max="1" value="battery_status"></uib-progressbar>
+            <uib-progressbar type="{{ battery_status > 0.3 ? 'success' : 'danger' }}" min="0" max="1" value="battery_status"></uib-progressbar>
           </div>
         </div>
       </div>

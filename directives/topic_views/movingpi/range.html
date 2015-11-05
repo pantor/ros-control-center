@@ -1,9 +1,0 @@
-<div class="row">
-  <div class="col-xs-3 col-md-2">
-    <input type="number" class="form-control" ng-value="100 * ($parent.latest_message.value - $parent.latest_message.min) / ($parent.latest_message.max - $parent.latest_message.min)" ng-readonly="1">
-  </div>
-
-  <div class="col-xs-9 col-md-10">
-    <uib-progressbar min="$parent.latest_message.min" max="$parent.latest_message.max" value="$parent.latest_message.value" style="margin-top: 7px;"></uib-progressbar>
-  </div>
-</div>

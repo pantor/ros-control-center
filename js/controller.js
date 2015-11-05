@@ -116,10 +116,10 @@ app.controller('main-ctrl', function($scope, $timeout, DomainHelper) {
   };
   
   var setBattery = function() {
-    var topic_rosout = new ROSLIB.Topic({ros: ros, name: config.battery_topic, messageType: 'movingpi/MsgRange'});
+    var topic_rosout = new ROSLIB.Topic({ros: ros, name: config.battery_topic, messageType: 'std_msgs/Float32'});
     topic_rosout.subscribe(function(message) {
       $timeout(function() {
-        $scope.battery_message = message;
+        $scope.battery_status = message.data;
       });
     });
   };

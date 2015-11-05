@@ -46,11 +46,11 @@
         <div class="row">
           
           <div class="col-xs-4 col-sm-3">
-            <input type="number" class="form-control" ng-value="battery_message.value" ng-readonly="1">
+            <p>{{ battery_status }}</p>
           </div>
 
           <div class="col-xs-8 col-md-9">
-            <uib-progressbar type="{{ battery_message.value > 30 ? 'success' : 'danger' }}" min="0" max="1" value="battery_message.value / 100"></uib-progressbar>
+            <uib-progressbar type="{{ battery_status > 30 ? 'success' : 'danger' }}" min="0" max="1" value="battery_status"></uib-progressbar>
           </div>
         </div>
       </div>

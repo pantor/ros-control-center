@@ -190,3 +190,15 @@ app.directive('ccTopicMovingpiRange', generateDirectiveConfig('movingpi/range'))
 
 app.directive('ccTopicFlypiMotorsThrust', generateDirectiveConfig('flypi/motors-thrust'));
 app.directive('ccTopicFlypiSteering', generateDirectiveConfig('flypi/steering'));
+
+app.directive('ccTopicVisionodometryMotion', generateDirectiveConfig('visionodometry/motion', function(scope) {
+	var getOrientation = function() {
+		if (scope.$parent.latest_message)
+			return scope.$parent.latest_message.motion.orientation;
+		return {w: 1, x: 0, y: 0, z: 0};
+	};
+	
+	scope.getRoll = function() { return calcRoll( getOrientation() ); };
+	scope.getPitch = function() { return calcPitch( getOrientation() ); };
+	scope.getYaw = function() { return calcYaw( getOrientation() ); };
+}));

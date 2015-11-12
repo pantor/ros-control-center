@@ -2,7 +2,7 @@
   <div class="col-xs-12">
     <button class="btn btn-default pull-right" type="button" ng-disabled="$parent.is_subscribing" style="margin-left: 10px;" ng-click="publishMessageJSON($parent.latest_message)">Publish</button>
     <div class="input-group">
-      <input type="number" class="form-control" ng-model="$parent.latest_message" ng-readonly="$parent.is_subscribing" placeholder="JSON">
+      <input type="text" class="form-control" ng-model="$parent.latest_message | json : 0" ng-readonly="$parent.is_subscribing" placeholder="JSON">
       <span class="input-group-addon"></span>
     </div>
   </div>

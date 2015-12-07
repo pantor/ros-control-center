@@ -182,6 +182,12 @@ app.controller('main-ctrl', function($scope, $timeout, DomainHelper) {
     });
   };
   
+   if($scope.is_connected);
+  {
+    setConsole();
+    loadData();
+  }
+  
   $scope.$on('CONNECTED', function() {
     $timeout(function() {
       $scope.data = {

@@ -1,53 +1,55 @@
 <!DOCTYPE html>
 <html ng-app="roscc">
-  <head>
-    <meta charset="utf-8"/>
+    <head>
+        <meta charset="utf-8"/>
 
-    <title>ROS Control Center</title>
-    
-    <link rel="shortcut icon" href="images/ros-logo.svg" type="image/svg+xml" />
-    
-    <link rel="stylesheet" href="css/bootstrap.min.css">
-    <link rel="stylesheet" href="css/roscc.css">
+        <title>ROS Control Center</title>
 
-    <script type="text/javascript" src="js/extern/underscore-min.js"></script>
-    <script type="text/javascript" src="js/extern/angular.min.js"></script>
-    <script type="text/javascript" src="js/extern/angular-route.min.js"></script>
-    <script type="text/javascript" src="js/extern/ui-bootstrap-tpls-0.14.3.min.js"></script>
+        <link rel="shortcut icon" href="images/ros-logo.svg" type="image/svg" />
 
-    <script type="text/javascript" src="js/extern/eventemitter2.min.js"></script>
-    <script type="text/javascript" src="js/extern/roslib.js"></script>
+        <link rel="stylesheet" href="vendor/css/bootstrap.css">
+        <link rel="stylesheet" href="css/roscc.css">
 
-    <script type="text/javascript" src="config.json"></script>
-    <script type="text/javascript" src="js/controller.js"></script>
-    <script type="text/javascript" src="js/directives.js"></script>
-    <script type="text/javascript" src="js/domain-helper.js"></script>
-  </head>
+        <script type="text/javascript" src="vendor/js/underscore.js"></script>
+        <script type="text/javascript" src="vendor/js/angular.js"></script>
+        <script type="text/javascript" src="vendor/js/angular-route.js"></script>
+        <script type="text/javascript" src="vendor/js/ui-bootstrap-tpls.js"></script>
+        <script type="text/javascript" src="vendor/js/eventemitter2.js"></script>
+        <script type="text/javascript" src="vendor/js/roslib.js"></script>
 
-  <body ng-controller="root-ctrl">
-    <nav class="navbar navbar-default navbar-static-top">
-      <div class="container">
-        <div class="navbar-header">
-          <a class="navbar-brand" href="">
-            <img alt="Brand" src="images/ros-logo.svg" height="22px">
-          </a>
-          <a class="navbar-brand" href="">
-            <img alt="Brand" src="images/ros.svg" height="22px">
-          </a>
-        </div>
-        
-        <ul class="nav navbar-nav navbar-right">
-          <li>
-            <div class="checkbox navbar-checkbox">
-              <label><input type="checkbox" ng-model="advanced">Advanced</label>
+        <script type="text/javascript" src="config.json"></script>
+        <script type="text/javascript" src="js/roscc.js"></script>
+        <script type="text/javascript" src="js/root.controller.js"></script>
+        <script type="text/javascript" src="js/main.controller.js"></script>
+        <script type="text/javascript" src="js/info.controller.js"></script>
+        <script type="text/javascript" src="js/domains.factory.js"></script>
+        <script type="text/javascript" src="js/directives.js"></script>
+    </head>
+
+    <body ng-controller="RootController">
+        <nav class="navbar navbar-default navbar-static-top">
+            <div class="container">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="">
+                        <img alt="Brand" src="images/ros-logo.svg" height="22px">
+                    </a>
+                    <a class="navbar-brand" href="">
+                        <img alt="Brand" src="images/ros.svg" height="22px">
+                    </a>
+                </div>
+                
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <div class="checkbox navbar-checkbox">
+                            <label><input type="checkbox" ng-model="advanced">Advanced</label>
+                        </div>
+                    </li>
+                    <li ng-class="{'active': getPath() == '/'}"><a href="#/">Control</a></li>
+                    <li ng-class="{'active': getPath() == '/info'}"><a href="#/info">Info</a></li>
+                </ul>
             </div>
-          </li>
-          <li ng-class="{'active': getPath() == '/'}"><a href="#/">Control</a></li>
-          <li ng-class="{'active': getPath() == '/info'}"><a href="#/info">Info</a></li>
-        </ul>
-      </div>
-    </nav>
+        </nav>
 
-    <div ng-view></div>
-  </body>
+        <div ng-view></div>
+    </body>
 </html>

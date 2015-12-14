@@ -1,23 +1,26 @@
 <div class="container">
-  <div class="row">
-    <div class="cols-xs-12 col-sm-12">
-      <h2>Info</h2>
-      <p>The configuration can be changed in <a href="config.json">config.json</a>.</p>
+    <div class="row">
+        <div class="cols-xs-12 col-sm-12">
+            <h2>Info</h2>
+            <p>The configuration can be changed in <a href="config.json">config.json</a>.</p>
 
-      <dl class="dl-horizontal">
-        <dt>URL</dt>
-        <dd>{{ config.address }}:{{ config.port }}</dd>
-        <dt>Log</dt>
-        <dd>{{ config.log }}</dd>
-        <dt>Image Preview</dt>
-        <dd>
-          Port: {{config.image_preview.port}} <br> 
-          Size: {{config.image_preview.width}} x {{config.image_preview.height}} <br>
-          Quality: {{config.image_preview.quality}}
-        </dd>
-        <dt>Battery</dt>
-        <dd>{{ config.battery ? 'Yes ' : 'No' }}</dd>
-      </dl>
+            <dl class="dl-horizontal">
+                <dt>URL</dt>
+                <dd>{{ config.address }}:{{ config.port }}</dd>
+                <dt>Log</dt>
+                <dd>{{ config.log }}</dd>
+                <dt>Image Preview</dt>
+                <dd>
+                  Port: {{ config.image_preview.port }} <br> 
+                  Size: {{ config.image_preview.width }} &times; {{ config.image_preview.height }} <br>
+                  Quality: {{ config.image_preview.quality }}
+                </dd>
+                <dt>Battery</dt>
+                <dd>
+                    <span ng-show="config.battery">Yes</span>
+                    <span ng-show="!config.battery">No</span>
+                </dd>
+            </dl>
+        </div>
     </div>
-  </div>
 </div>

@@ -1,0 +1,24 @@
+{
+  "name": "ros-control-center",
+  "version": "1.0.0",
+  "description": "A universal web-based control center for ROS robots.",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gaug-cns/ros-control-center.git"
+  },
+  "author": "Lars Berscheid",
+  "license": "BSD",
+  "bugs": {
+    "url": "https://github.com/gaug-cns/ros-control-center/issues"
+  },
+  "homepage": "https://github.com/gaug-cns/ros-control-center#readme",
+  "dependencies": {
+    "angular": "^1.4.8",
+    "angular-route": "^1.4.8",
+    "angular-ui-bootstrap": "^0.14.3",
+    "bootstrap": "^3.3.6",
+    "eventemitter2": "^0.4.14",
+    "underscore": "^1.8.3"
+  }
+}

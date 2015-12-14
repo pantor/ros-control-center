@@ -1,59 +1,58 @@
 <div class="container-fluid">
-  <div class="alert alert-info col-sm-6 col-sm-offset-3" role="alert" ng-if="!is_connected">
-    <p class="lead"><i class="glyphicon glyphicon-warning-sign"></i> Whoops...</p>
-    Is <b>not connected</b> to a robot running rosbridge_suite at {{ config.address }}:{{ config.port }}. <br />
-    You can change the URL in <i>config.json</i>, further information can be found in <i>README.md</i>.
-  </div>
+    <div class="alert alert-info col-sm-6 col-sm-offset-3" role="alert" ng-if="!isConnected">
+        <p class="lead"><i class="glyphicon glyphicon-warning-sign"></i> Whoops...</p>
+        Is <b>not connected</b> to a robot running rosbridge_suite at {{ config.address }}:{{ config.port }}. <br />
+        You can change the URL in <i>config.json</i>, further information can be found in <i>README.md</i>.
+    </div>
 
-  <div class="row" ng-if="is_connected">
-    <div class="cols-xs-12 col-sm-8">
-      <div class="row">
-        <div class="col-sm-3">
-          <div class="panel panel-default panel-domain" ng-class="{'panel-active': activeDomain == e}" ng-repeat="e in getDomains()" ng-show="filterAdvanced(e, advanced)" ng-click="setActiveDomain(e)">
-            <div class="panel-heading">
-              <h3 class="panel-title">{{ e }}</h3>
+    <div class="row" ng-if="isConnected">
+        <div class="cols-xs-12 col-sm-8">
+            <div class="row">
+                <div class="col-sm-3">
+                    <div class="panel panel-default panel-domain" ng-class="{ 'panel-active': activeDomain == e }" ng-repeat="e in getDomains()" ng-show="filterAdvanced(e, advanced)" ng-click="setActiveDomain(e)">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">{{ e }}</h3>
+                        </div>
+                    </div>
+
+                    <cc-parameter ng-repeat="e in getGlobalParameters()" ng-show="filterAdvanced(e.name, advanced)" parameter="e"></cc-parameter>
+                </div>
+
+                <div class="col-sm-9">
+                    <cc-details ng-repeat="e in getDomains()" data="data" advanced="advanced" name="e" ng-show="activeDomain == e"></cc-details>
+                </div>
             </div>
-          </div>
-
-          <cc-parameter ng-repeat="e in getGlobalParameters()" ng-show="filterAdvanced(e.name, advanced)" parameter="e"></cc-parameter>
         </div>
 
-        <div class="col-sm-9">
-          <cc-details ng-repeat="e in getDomains()" data="data" advanced="advanced" name="e" ng-show="activeDomain == e"></cc-details>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-sm-4 sidebar hidden-xs">
-      <div class="console">
-        <table class="table">
-          <tr ng-repeat="r in data.rosout" ng-if="filterAdvanced(r.abbr, advanced)">
-            <td>
-              <strong ng-class="{'text-danger bg-danger': r.level==16, 'text-danger': r.level==8, 'text-warning': r.level==4, 'text-info': r.level==2, 'text-muted': r.level==1 }">
-                {{ r.abbr }}
-              </strong>
-              <br>
-              <small><i class="glyphicon glyphicon-time"></i> {{ r.date_string }}</small>
-            </td>
-            <td>{{ r.msg }}</td>
-          </tr>
-        </table>
-      </div>
-      
-      
-      <div class="battery" ng-if="config.battery">  
-        <strong>Battery</strong><br>
-        <div class="row">
+        <div class="col-sm-4 sidebar hidden-xs">
+            <div class="console">
+                <table class="table">
+                    <tr ng-repeat="r in data.rosout" ng-if="filterAdvanced(r.abbr, advanced)">
+                        <td>
+                            <strong ng-class="{ 'text-danger bg-danger': r.level==16, 'text-danger': r.level==8, 'text-warning': r.level==4, 'text-info': r.level==2, 'text-muted': r.level==1 }">
+                                {{ r.abbr }}
+                            </strong>
+                            <br>
+                            <small><i class="glyphicon glyphicon-time"></i> {{ r.date_string }}</small>
+                        </td>
+                        <td>{{ r.msg }}</td>
+                    </tr>
+                </table>
+            </div>
           
-          <div class="col-xs-4 col-sm-3">
-            <p>{{ 100 * battery_status | number:1 }} %</p>
-          </div>
+          
+            <div class="battery" ng-if="config.battery">  
+                <strong>Battery</strong><br>
+                <div class="row">
+                    <div class="col-xs-4 col-sm-3">
+                        <p>{{ 100 * battery_status | number:1 }} %</p>
+                    </div>
 
-          <div class="col-xs-8 col-md-9">
-            <uib-progressbar type="{{ battery_status > 0.3 ? 'success' : 'danger' }}" min="0" max="1" value="battery_status"></uib-progressbar>
-          </div>
+                    <div class="col-xs-8 col-md-9">
+                        <uib-progressbar type="{{ battery_status > 0.3 ? 'success' : 'danger' }}" min="0" max="1" value="battery_status"></uib-progressbar>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
 </div>

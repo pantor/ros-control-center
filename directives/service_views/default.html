@@ -1,14 +1,14 @@
 <div class="row">
-  <div class="col-sm-6">
-    <form class="input-group">
-      <input type="text" class="form-control" ng-model="input" placeholder="JSON">
-      <span class="input-group-btn">
-        <button class="btn btn-default" type="button" ng-click="callServiceJSON(input)">Call</button>
-      </span>
-    </form>
-  </div>
+    <div class="col-sm-6">
+        <form class="input-group">
+            <input type="text" class="form-control" ng-model="input" placeholder="JSON">
+            <span class="input-group-btn">
+                <button class="btn btn-default" type="button" ng-click="callServiceJSON(input)">Call</button>
+            </span>
+        </form>
+    </div>
 
-  <div class="col-sm-6">
-    <p ng-show="result">Result: {{ $parent.result }}</p>
-  </div>
+    <div class="col-sm-6">
+        <p ng-show="result">Result: {{ $parent.result }}</p>
+    </div>
 </div>

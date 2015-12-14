@@ -39,17 +39,17 @@ angular.module('roscc')
         return {
             scope: { data: '=', name: '=', advanced: '=' },
             templateUrl: 'directives/details.html',
-            controller: function($scope, DomainHelper) {
+            controller: function($scope, Domains) {
                 $scope.hasNode = function() {
                     return _.pluck($scope.data.nodes, 'name').indexOf('/' + $scope.name) != -1;
                 };
 
                 $scope.filterAdvanced = function(entry, advanced) {
-                    return DomainHelper.filterAdvanced(entry, advanced);
+                    return Domains.filterAdvanced(entry, advanced);
                 };
                     
                 $scope.getDataForDomain = function(array) {
-                    return DomainHelper.getDataForDomain(array, $scope.name);
+                    return Domains.getDataForDomain(array, $scope.name);
                 };
             },
         };

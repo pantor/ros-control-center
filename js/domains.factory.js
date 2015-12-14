@@ -1,7 +1,6 @@
 // Filter advanced topics, services, parameters by checking the beginning capital letter
 angular.module('roscc')
     .factory('Domains', function() {
-        var msgs = [];
         return {
             filterAdvanced: function(entry, advanced) {
                 if (advanced) {
@@ -31,11 +30,11 @@ angular.module('roscc')
             },
             getGlobalParameters: function(array) {
                 var result = [];
-                array.forEach(function(e) {
-                    var split = e.name.split('/');
+                array.forEach(function(entry) {
+                    var split = entry.name.split('/');
                     if (split.length == 2) {
-                        e.abbr = split[split.length - 1];
-                        result.push(e);
+                        entry.abbr = split[split.length - 1];
+                        result.push(entry);
                     }
                 });
                 return result;
@@ -52,6 +51,6 @@ angular.module('roscc')
                     }
                 });
                 return result;
-            }
+            },
         };
     });

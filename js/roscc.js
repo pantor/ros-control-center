@@ -1,5 +1,3 @@
-var ros; // Main ros element for ROSLIB
-
 angular.module('roscc', [
     'ngRoute', 
     'ui.bootstrap',

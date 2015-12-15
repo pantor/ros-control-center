@@ -41,7 +41,7 @@ angular.module('roscc')
             templateUrl: 'directives/details.html',
             controller: function($scope, Domains) {
                 $scope.hasNode = function() {
-                    return _.pluck($scope.data.nodes, 'name').indexOf('/' + $scope.name) != -1;
+                    return (_.pluck($scope.data.nodes, 'name').indexOf('/' + $scope.name) != -1);
                 };
 
                 $scope.filterAdvanced = function(entry, advanced) {
@@ -57,7 +57,7 @@ angular.module('roscc')
 
 
 
-    /* --- Parameters --- */
+    // --- Parameters --- 
 
     .directive('ccParameter', function() {
         return {
@@ -72,7 +72,7 @@ angular.module('roscc')
 
 
 
-    /* --- Services --- */
+    // --- Services --- 
 
     .directive('ccServiceTemplate', function() {
         return {
@@ -105,20 +105,20 @@ angular.module('roscc')
 
 
 
-    /* --- Topics --- */
+    // --- Topics ---
 
     .directive('ccTopicTemplate', function() {
         return {
             scope: { topic: '=' },
             templateUrl: 'directives/topic.html',
             controller: function($scope, $timeout) {
-                var roslib_topic = new ROSLIB.Topic({ ros: ros, name: $scope.topic.name, messageType: $scope.topic.type });
+                var roslibTopic = new ROSLIB.Topic({ ros: ros, name: $scope.topic.name, messageType: $scope.topic.type });
                 
                 $scope.can_subscribe = true;
                 $scope.is_subscribing = false;
                 $scope.toggleSubscription = function(data) {
                     if (!data) {
-                        roslib_topic.subscribe(function(message) {
+                        roslibTopic.subscribe(function(message) {
                             $timeout(function() {
                                 $scope.latest_message = message;
                             });
@@ -126,14 +126,14 @@ angular.module('roscc')
                         
                         $scope.is_subscribing = true;
                     } else {
-                        roslib_topic.unsubscribe();
+                        roslibTopic.unsubscribe();
                         $scope.is_subscribing = false;
                     }
                 };
 
                 $scope.publishMessage = function(data) {
                     var message = new ROSLIB.Message(data);
-                    roslib_topic.publish(message);
+                    roslibTopic.publish(message);
                 };
                     
                 $scope.publishMessageJSON = function(data) {

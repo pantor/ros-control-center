@@ -1,10 +1,14 @@
 angular.module('roscc', [
     'ngRoute', 
     'ui.bootstrap',
+    'LocalStorageModule',
 ])
-    .config(['$routeProvider', function($routeProvider) {
+    .config(function($routeProvider, localStorageServiceProvider) {
         $routeProvider
             .when('/', { templateUrl: 'views/main.html', controller: 'MainController' })
-            .when('/info', { templateUrl: 'views/info.html', controller: 'InfoController' })
+            .when('/settings', { templateUrl: 'views/settings.html', controller: 'SettingsController' })
             .otherwise({ redirectTo: '/', controller: 'MainController' });
-    }]);
+            
+        localStorageServiceProvider
+            .setPrefix('roscc');
+    });

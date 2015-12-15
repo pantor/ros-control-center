@@ -1,24 +1,7 @@
 angular.module('roscc')
-    .controller('MainController', function($scope, $timeout, $interval, Domains) {
-        $scope.data = {
-            rosout: [],
-            topics: [],
-            nodes: [],
-            parameters: [],
-            services: [],
-        };
+    .controller('MainController', function($scope, $timeout, $interval, localStorageService, Domains) {
         
-        // Load ROS connection and keep trying if it fails
-        $scope.newRosConnection();
-        $interval(function() {
-            if (!$scope.isConnected) {
-                $scope.newRosConnection();
-            }
-        }, 1000); // [ms]
-        
-      
         // The active domain shows further information in the center view
-        $scope.activeDomain = '';
         $scope.setActiveDomain = function(domain) {
             $scope.activeDomain = domain;
         };
@@ -42,11 +25,29 @@ angular.module('roscc')
         $scope.getGlobalParameters = function(advanced) {
             return Domains.getGlobalParameters($scope.data.parameters);
         };
+        
+        $scope.onConnected = function() {
+            $timeout(function() {
+                $scope.data = {
+                    rosout: [],
+                    topics: [],
+                    nodes: [],
+                    parameters: [],
+                    services: [],
+                };
+                
+                setConsole();
+                if ($scope.config.battery) {
+                    setBattery();
+                }
+                loadData();
+            }, 500);
+        };
       
         // Setup of console (in the right sidebar)
         var max_length = 200;
         var setConsole = function() {
-            var topicRosout = new ROSLIB.Topic({ ros: ros, name: config.log, messageType: 'rosgraph_msgs/Log' });
+            var topicRosout = new ROSLIB.Topic({ ros: ros, name: $scope.config.log, messageType: 'rosgraph_msgs/Log' });
             topicRosout.subscribe(function(message) {
                 $timeout(function() {
                     var split = message.name.split('/');
@@ -69,7 +70,7 @@ angular.module('roscc')
         };
       
         function setBattery() {
-            var topicRosout = new ROSLIB.Topic({ ros: ros, name: config.battery_topic, messageType: 'std_msgs/Float32' });
+            var topicRosout = new ROSLIB.Topic({ ros: ros, name: $scope.config.battery_topic, messageType: 'std_msgs/Float32' });
             topicRosout.subscribe(function(message) {
                 $timeout(function() {
                     $scope.battery_status = message.data;
@@ -134,22 +135,23 @@ angular.module('roscc')
                 });
             });
         }
-      
+        
+
         $scope.$on('CONNECTED', function() {
-            $timeout(function() {
-                $scope.data = {
-                    rosout: [],
-                    topics: [],
-                    nodes: [],
-                    parameters: [],
-                    services: [],
-                };
-                
-                setConsole();
-                if (config.battery) {
-                    setBattery();
-                }
-                loadData();
-            }, 500);
+            $scope.onConnected();
         });
+        
+
+        $scope.activeDomain = '';
+        $scope.data = {
+            rosout: [],
+            topics: [],
+            nodes: [],
+            parameters: [],
+            services: [],
+        };
+        
+        if ($scope.isConnected) {
+            $scope.onConnected();
+        }
     });

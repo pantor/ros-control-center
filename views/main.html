@@ -2,7 +2,7 @@
     <div class="alert alert-info col-sm-6 col-sm-offset-3" role="alert" ng-if="!isConnected">
         <p class="lead"><i class="glyphicon glyphicon-warning-sign"></i> Whoops...</p>
         Is <b>not connected</b> to a robot running rosbridge_suite at {{ config.address }}:{{ config.port }}. <br />
-        You can change the URL in <i>config.json</i>, further information can be found in <i>README.md</i>.
+        You can change the URL in the <i>Settings</i> tab, further information can be found in <i>README.md</i>.
     </div>
 
     <div class="row" ng-if="isConnected">

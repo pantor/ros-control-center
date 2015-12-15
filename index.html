@@ -13,15 +13,15 @@
         <script type="text/javascript" src="vendor/js/underscore.js"></script>
         <script type="text/javascript" src="vendor/js/angular.js"></script>
         <script type="text/javascript" src="vendor/js/angular-route.js"></script>
+        <script type="text/javascript" src="vendor/js/angular-local-storage.js"></script>
         <script type="text/javascript" src="vendor/js/ui-bootstrap-tpls.js"></script>
         <script type="text/javascript" src="vendor/js/eventemitter2.js"></script>
         <script type="text/javascript" src="vendor/js/roslib.js"></script>
 
-        <script type="text/javascript" src="config.json"></script>
         <script type="text/javascript" src="js/roscc.js"></script>
         <script type="text/javascript" src="js/root.controller.js"></script>
         <script type="text/javascript" src="js/main.controller.js"></script>
-        <script type="text/javascript" src="js/info.controller.js"></script>
+        <script type="text/javascript" src="js/settings.controller.js"></script>
         <script type="text/javascript" src="js/domains.factory.js"></script>
         <script type="text/javascript" src="js/directives.js"></script>
     </head>
@@ -45,7 +45,7 @@
                         </div>
                     </li>
                     <li ng-class="{'active': getPath() == '/'}"><a href="#/">Control</a></li>
-                    <li ng-class="{'active': getPath() == '/info'}"><a href="#/info">Info</a></li>
+                    <li ng-class="{'active': getPath() == '/settings'}"><a href="#/settings">Settings</a></li>
                 </ul>
             </div>
         </nav>

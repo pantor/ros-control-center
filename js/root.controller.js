@@ -2,10 +2,17 @@ var ros;
 
 // Root controller of the connection
 angular.module('roscc')
-    .controller('RootController', function($scope, $location, $timeout, $interval) {
-        $scope.config = config;
+    .controller('RootController', function($scope, $location, $interval, $timeout, localStorageService) {
+        $scope.selectedSettingIndex = localStorageService.get('selectedSettingIndex');
+        $scope.settings = JSON.parse(localStorageService.get('settings'));
+        $scope.config = $scope.settings[$scope.selectedSettingIndex];
+        
+        if (!$scope.config) {
+            $location.path('/settings').replace();
+        }
+        
         $scope.isConnected = false;
-      
+        
         $scope.getPath = function() {
             return $location.path();
         };
@@ -15,7 +22,7 @@ angular.module('roscc')
                 ros.close(); // Close old connection
             }
             
-            ros = new ROSLIB.Ros({url: 'ws://' + config.address + ':' + config.port});
+            ros = new ROSLIB.Ros({url: 'ws://' + $scope.config.address + ':' + $scope.config.port});
             
             ros.on('connection', function() {
                 console.log('Connected');
@@ -43,4 +50,14 @@ angular.module('roscc')
                 });
             });
         };
+        
+        // Load ROS connection and keep trying if it fails
+        if (!$scope.isConnected) {
+            $scope.newRosConnection();
+        }
+        $interval(function() {
+            if (!$scope.isConnected) {
+                $scope.newRosConnection();
+            }
+        }, 1000); // [ms]
     });

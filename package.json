@@ -15,6 +15,7 @@
   "homepage": "https://github.com/gaug-cns/ros-control-center#readme",
   "dependencies": {
     "angular": "^1.4.8",
+    "angular-local-storage": "^0.2.2",
     "angular-route": "^1.4.8",
     "angular-ui-bootstrap": "^0.14.3",
     "bootstrap": "^3.3.6",

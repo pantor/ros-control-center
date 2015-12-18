@@ -51,11 +51,11 @@ angular.module('roscc')
         };
         
         // Load ROS connection and keep trying if it fails
-        if (!$scope.isConnected) {
+        if (!$scope.isConnected && $scope.config) {
             $scope.newRosConnection();
         }
         $interval(function() {
-            if (!$scope.isConnected) {
+            if (!$scope.isConnected && $scope.config) {
                 $scope.newRosConnection();
             }
         }, 1000); // [ms]

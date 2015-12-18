@@ -7,7 +7,9 @@ angular.module('roscc')
             load: function() {
                 var selectedSettingIndex = localStorageService.get('selectedSettingIndex');
                 var settings = JSON.parse(localStorageService.get('settings'));
-                config = settings[selectedSettingIndex];
+                if (settings && selectedSettingIndex) {
+                    config = settings[selectedSettingIndex];
+                }
             },
             get: function() {
                 return config;

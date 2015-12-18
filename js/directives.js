@@ -111,7 +111,7 @@ angular.module('roscc')
         return {
             scope: { topic: '=' },
             templateUrl: 'directives/topic.html',
-            controller: function($scope, $timeout) {
+            controller: function($scope, $timeout, Config) {
                 var roslibTopic = new ROSLIB.Topic({ ros: ros, name: $scope.topic.name, messageType: $scope.topic.type });
                 
                 $scope.can_subscribe = true;
@@ -151,11 +151,20 @@ angular.module('roscc')
 
     .directive('ccTopicFluidPressure', generateDirectiveConfig('sensor_msgs/fluid-pressure'))
     .directive('ccTopicIlluminance', generateDirectiveConfig('sensor_msgs/illuminance'))
-    .directive('ccTopicImage', generateDirectiveConfig('sensor_msgs/image', function(scope) {
-        scope.config = config;
-        scope.quality = 75;
-        scope.$parent.can_subscribe = false;
-    }))
+    
+    .directive('ccTopicImage', function() {
+        return {
+            templateUrl: 'directives/topic_views/sensor_msgs/image.html',
+            require: '^ccTopicTemplate',
+            controller: function($scope, Config) {
+                $scope.config = Config.get();
+                console.log($scope.config);
+                $scope.quality = 75;
+                $scope.$parent.can_subscribe = false;
+            },
+        };
+    })
+    
     .directive('ccTopicImu', generateDirectiveConfig('sensor_msgs/imu'))
     .directive('ccTopicJoy', generateDirectiveConfig('sensor_msgs/joy'))
     .directive('ccTopicMagneticField', generateDirectiveConfig('sensor_msgs/magnetic-field'))

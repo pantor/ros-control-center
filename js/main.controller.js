@@ -1,5 +1,5 @@
 angular.module('roscc')
-    .controller('MainController', function($scope, $timeout, $interval, localStorageService, Domains) {
+    .controller('MainController', function($scope, $timeout, $interval, Domains) {
         
         // The active domain shows further information in the center view
         $scope.setActiveDomain = function(domain) {

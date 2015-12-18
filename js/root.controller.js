@@ -2,10 +2,9 @@ var ros;
 
 // Root controller of the connection
 angular.module('roscc')
-    .controller('RootController', function($scope, $location, $interval, $timeout, localStorageService) {
-        $scope.selectedSettingIndex = localStorageService.get('selectedSettingIndex');
-        $scope.settings = JSON.parse(localStorageService.get('settings'));
-        $scope.config = $scope.settings[$scope.selectedSettingIndex];
+    .controller('RootController', function($scope, $location, $interval, $timeout, Config) {
+        Config.load();
+        $scope.config = Config.get();
         
         if (!$scope.config) {
             $location.path('/settings').replace();

@@ -1,8 +1,7 @@
 {
   "name": "ros-control-center",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "A universal web-based control center for ROS robots.",
-  "main": "index.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/gaug-cns/ros-control-center.git"
@@ -12,7 +11,6 @@
   "bugs": {
     "url": "https://github.com/gaug-cns/ros-control-center/issues"
   },
-  "homepage": "https://github.com/gaug-cns/ros-control-center#readme",
   "dependencies": {
     "angular": "^1.4.8",
     "angular-local-storage": "^0.2.2",

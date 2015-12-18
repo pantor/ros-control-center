@@ -29,7 +29,7 @@
                 <table class="table">
                     <tr ng-repeat="r in data.rosout" ng-if="filterAdvanced(r.abbr, advanced)">
                         <td>
-                            <strong ng-class="{ 'text-danger bg-danger': r.level==16, 'text-danger': r.level==8, 'text-warning': r.level==4, 'text-info': r.level==2, 'text-muted': r.level==1 }">
+                            <strong ng-class="{ 'text-danger bg-danger': r.level == 16, 'text-danger': r.level == 8, 'text-warning': r.level == 4, 'text-info': r.level == 2, 'text-muted': r.level == 1 }">
                                 {{ r.abbr }}
                             </strong>
                             <br>
@@ -39,13 +39,12 @@
                     </tr>
                 </table>
             </div>
-          
-          
+
             <div class="battery" ng-if="config.battery">  
                 <strong>Battery</strong><br>
                 <div class="row">
                     <div class="col-xs-4 col-sm-3">
-                        <p>{{ 100 * battery_status | number:1 }} %</p>
+                        <p>{{ 100 * battery_status | number : 1 }} %</p>
                     </div>
 
                     <div class="col-xs-8 col-md-9">

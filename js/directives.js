@@ -1,15 +1,3 @@
-function generateDirectiveServiceConfig(file_name, link) {
-    link = typeof link !== 'undefined' ? link : null;
-    
-    return function() {
-        return {
-            templateUrl: 'directives/service_views/' + file_name + '.html',
-            require: '^ccServiceTemplate',
-            link: link,
-        };
-    };
-}
-
 function calcRoll(q) {
     return 180 / Math.PI * Math.atan2(2 * (q.w * q.x + q.y * q.z), 1 - 2 * (q.x * q.x + q.y * q.y));
 }
@@ -22,13 +10,22 @@ function calcYaw(q) {
     return 180 / Math.PI * Math.atan2(2 * (q.w * q.z + q.x * q.y), 1 - 2 * (q.y * q.y + q.z * q.z));
 }
 
-function generateDirectiveConfig(file_name, link) {
-    link = typeof link !== 'undefined' ? link : null;
+function generateDirectiveTopicConfig(fileName, controller) {
     return function() {
         return {
-            templateUrl: 'directives/topic_views/' + file_name + '.html',
+            templateUrl: 'directives/topic_views/' + fileName + '.html',
             require: '^ccTopicTemplate',
-            link: link,
+            controller: controller,
+        };
+    };
+}
+
+function generateDirectiveServiceConfig(fileName, controller) {
+    return function() {
+        return {
+            templateUrl: 'directives/service_views/' + fileName + '.html',
+            require: '^ccServiceTemplate',
+            controller: controller,
         };
     };
 }
@@ -56,24 +53,22 @@ angular.module('roscc')
     })
 
 
-
     // --- Parameters --- 
-
     .directive('ccParameter', function() {
         return {
             scope: { parameter: '=' },
             templateUrl: 'directives/parameter.html',
             controller: function($scope) {
                 $scope.p = new ROSLIB.Param({ ros: ros, name: $scope.parameter.name });
-                $scope.setValue = function(value) { $scope.p.set(value); };
+                $scope.setValue = function(value) {
+                    $scope.p.set(value);
+                };
             },
         };
     })
 
 
-
     // --- Services --- 
-
     .directive('ccServiceTemplate', function() {
         return {
             scope: { service: '=' },
@@ -104,9 +99,7 @@ angular.module('roscc')
     .directive('ccServiceMovingpiBool', generateDirectiveServiceConfig('movingpi/bool'))
 
 
-
     // --- Topics ---
-
     .directive('ccTopicTemplate', function() {
         return {
             scope: { topic: '=' },
@@ -144,13 +137,12 @@ angular.module('roscc')
     })
 
 
+    .directive('ccTopicDefault', generateDirectiveTopicConfig('default'))
 
-    .directive('ccTopicDefault', generateDirectiveConfig('default'))
+    .directive('ccTopicNumber', generateDirectiveTopicConfig('std_msgs/number'))
 
-    .directive('ccTopicNumber', generateDirectiveConfig('std_msgs/number'))
-
-    .directive('ccTopicFluidPressure', generateDirectiveConfig('sensor_msgs/fluid-pressure'))
-    .directive('ccTopicIlluminance', generateDirectiveConfig('sensor_msgs/illuminance'))
+    .directive('ccTopicFluidPressure', generateDirectiveTopicConfig('sensor_msgs/fluid-pressure'))
+    .directive('ccTopicIlluminance', generateDirectiveTopicConfig('sensor_msgs/illuminance'))
     
     .directive('ccTopicImage', function() {
         return {
@@ -158,60 +150,59 @@ angular.module('roscc')
             require: '^ccTopicTemplate',
             controller: function($scope, Config) {
                 $scope.config = Config.get();
-                console.log($scope.config);
                 $scope.quality = 75;
                 $scope.$parent.can_subscribe = false;
             },
         };
     })
     
-    .directive('ccTopicImu', generateDirectiveConfig('sensor_msgs/imu'))
-    .directive('ccTopicJoy', generateDirectiveConfig('sensor_msgs/joy'))
-    .directive('ccTopicMagneticField', generateDirectiveConfig('sensor_msgs/magnetic-field'))
-    .directive('ccTopicRange', generateDirectiveConfig('sensor_msgs/range'))
-    .directive('ccTopicRelativeHumidity', generateDirectiveConfig('sensor_msgs/relative-humidity'))
-    .directive('ccTopicTemperature', generateDirectiveConfig('sensor_msgs/temperature'))
+    .directive('ccTopicImu', generateDirectiveTopicConfig('sensor_msgs/imu'))
+    .directive('ccTopicJoy', generateDirectiveTopicConfig('sensor_msgs/joy'))
+    .directive('ccTopicMagneticField', generateDirectiveTopicConfig('sensor_msgs/magnetic-field'))
+    .directive('ccTopicRange', generateDirectiveTopicConfig('sensor_msgs/range'))
+    .directive('ccTopicRelativeHumidity', generateDirectiveTopicConfig('sensor_msgs/relative-humidity'))
+    .directive('ccTopicTemperature', generateDirectiveTopicConfig('sensor_msgs/temperature'))
 
-    .directive('ccTopicPose', generateDirectiveConfig('geometry_msgs/pose', function(scope) {
+    .directive('ccTopicPose', generateDirectiveTopicConfig('geometry_msgs/pose', function($scope) {
         function getOrientation() {
-            if (scope.$parent.latest_message) {
-                return scope.$parent.latest_message.orientation;
+            if ($scope.$parent.latest_message) {
+                return $scope.$parent.latest_message.orientation;
             }
             return { w: 1, x: 0, y: 0, z: 0 };
         }
         
-        scope.getRoll = function() { return calcRoll( getOrientation() ); };
-        scope.getPitch = function() { return calcPitch( getOrientation() ); };
-        scope.getYaw = function() { return calcYaw( getOrientation() ); };
+        $scope.getRoll = function() { return calcRoll( getOrientation() ); };
+        $scope.getPitch = function() { return calcPitch( getOrientation() ); };
+        $scope.getYaw = function() { return calcYaw( getOrientation() ); };
     }))
-    .directive('ccTopicPoseStamped', generateDirectiveConfig('geometry_msgs/pose-stamped', function(scope) {
+    .directive('ccTopicPoseStamped', generateDirectiveTopicConfig('geometry_msgs/pose-stamped', function($scope) {
         function getOrientation() {
-            if (scope.$parent.latest_message) {
-                return scope.$parent.latest_message.pose.orientation;
+            if ($scope.$parent.latest_message) {
+                return $scope.$parent.latest_message.pose.orientation;
             }
             return { w: 1, x: 0, y: 0, z: 0 };
         }
         
-        scope.getRoll = function() { return calcRoll( getOrientation() ); };
-        scope.getPitch = function() { return calcPitch( getOrientation() ); };
-        scope.getYaw = function() { return calcYaw( getOrientation() ); };
+        $scope.getRoll = function() { return calcRoll( getOrientation() ); };
+        $scope.getPitch = function() { return calcPitch( getOrientation() ); };
+        $scope.getYaw = function() { return calcYaw( getOrientation() ); };
     }))
-    .directive('ccTopicPose2d', generateDirectiveConfig('geometry_msgs/pose2D'))
+    .directive('ccTopicPose2d', generateDirectiveTopicConfig('geometry_msgs/pose2D'))
 
-    .directive('ccTopicMovingpiRange', generateDirectiveConfig('movingpi/range'))
+    .directive('ccTopicMovingpiRange', generateDirectiveTopicConfig('movingpi/range'))
 
-    .directive('ccTopicFlypiMotorsThrust', generateDirectiveConfig('flypi/motors-thrust'))
-    .directive('ccTopicFlypiSteering', generateDirectiveConfig('flypi/steering'))
+    .directive('ccTopicFlypiMotorsThrust', generateDirectiveTopicConfig('flypi/motors-thrust'))
+    .directive('ccTopicFlypiSteering', generateDirectiveTopicConfig('flypi/steering'))
 
-    .directive('ccTopicVisionodometryMotion', generateDirectiveConfig('visionodometry/motion', function(scope) {
+    .directive('ccTopicVisionodometryMotion', generateDirectiveTopicConfig('visionodometry/motion', function($scope) {
         function getOrientation() {
-            if (scope.$parent.latest_message) {
-                return scope.$parent.latest_message.motion.orientation;
+            if ($scope.$parent.latest_message) {
+                return $scope.$parent.latest_message.motion.orientation;
             }
             return { w: 1, x: 0, y: 0, z: 0 };
         }
         
-        scope.getRoll = function() { return calcRoll( getOrientation() ); };
-        scope.getPitch = function() { return calcPitch( getOrientation() ); };
-        scope.getYaw = function() { return calcYaw( getOrientation() ); };
+        $scope.getRoll = function() { return calcRoll( getOrientation() ); };
+        $scope.getPitch = function() { return calcPitch( getOrientation() ); };
+        $scope.getYaw = function() { return calcYaw( getOrientation() ); };
     }));

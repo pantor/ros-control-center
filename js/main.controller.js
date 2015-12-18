@@ -70,7 +70,7 @@ angular.module('roscc')
         };
       
         function setBattery() {
-            var topicRosout = new ROSLIB.Topic({ ros: ros, name: $scope.config.battery_topic, messageType: 'std_msgs/Float32' });
+            var topicRosout = new ROSLIB.Topic({ ros: ros, name: $scope.config.batteryTopic, messageType: 'std_msgs/Float32' });
             topicRosout.subscribe(function(message) {
                 $timeout(function() {
                     $scope.battery_status = message.data;

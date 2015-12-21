@@ -19,8 +19,8 @@ angular.module('roscc')
         
         var defaultSetting = {
             name: 'New Setting',
-            address: '',
-            port: '',
+            address: location.hostname,
+            port: 9090,
             log: '/rosout', imagePreview: { port: 0, quality: 70, width: 640, height: 480 },
             battery: true,
             batteryTopic: ''

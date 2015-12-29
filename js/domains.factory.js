@@ -8,45 +8,31 @@ angular.module('roscc')
                 }
 
                 var split = entry.split('/');
-                if (split.length < 1) {
+                if (_.isEmpty(split)) {
                     return false;
                 }
 
-                return (split[split.length - 1][0] == split[split.length - 1][0].toUpperCase());
+                return (_.last(split)[0] == _.last(split)[0].toUpperCase());
             },
             getDomains: function(array) {
-                var result = [];
-                array.forEach(function(entry) {
-                    var split = entry.name.split('/');
-                    if (split.length > 1) {
-                        result.push(split[1]);
-                    }
+                var result = _.filter(array, function(entry) {
+                    return (entry.name.split('/').length > 1);
                 });
                 return _.uniq(result).sort();
             },
             getGlobalParameters: function(array) {
-                var result = [];
-                array.forEach(function(entry) {
+                return _.filter(array, function(entry) {
                     var split = entry.name.split('/');
-                    if (split.length == 2) {
-                        entry.abbr = split[split.length - 1];
-                        result.push(entry);
-                    }
+                    entry.abbr = _.last(split);
+                    return (split.length == 2);
                 });
-                return result;
             },
             getDataForDomain: function(array, domainName) {
-                var result = [];
-                array.forEach(function(entry) {
+                return _.filter(array, function(entry) {
                     var split = entry.name.split('/');
-                    if (split.length > 1) {
-                        if (split[1] == domainName) {
-                            entry.abbr = split.slice(2).join(' ');
-                            result.push(entry);
-                        }
-                    }
+                    entry.abbr = split.slice(2).join(' ');
+                    return (split.length > 1 && split[1] == domainName);
                 });
-                return result;
             },
         };
     });

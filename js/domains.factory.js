@@ -12,11 +12,7 @@ angular.module('roscc')
                     return false;
                 }
 
-                if (split[split.length - 1][0] == split[split.length - 1][0].toUpperCase()) {
-                    return true;
-                }
-
-                return false;
+                return (split[split.length - 1][0] == split[split.length - 1][0].toUpperCase());
             },
             getDomains: function(array) {
                 var result = [];

@@ -11,8 +11,8 @@ angular.module('roscc')
         };
 
         $scope.getDomains = function(advanced) {    
-            var allData = $scope.data.topics.concat($scope.data.services, $scope.data.nodes);
-            var domains = Domains.getDomains(allData);
+            var all_data = $scope.data.topics.concat($scope.data.services, $scope.data.nodes);
+            var domains = Domains.getDomains(all_data);
         
             // Set active domain
             if (!$scope.activeDomain) {
@@ -47,8 +47,8 @@ angular.module('roscc')
         // Setup of console (in the right sidebar)
         var max_length = 200;
         var setConsole = function() {
-            var topicRosout = new ROSLIB.Topic({ ros: ros, name: $scope.config.log, messageType: 'rosgraph_msgs/Log' });
-            topicRosout.subscribe(function(message) {
+            var topic_rosout = new ROSLIB.Topic({ ros: ros, name: $scope.config.log, messageType: 'rosgraph_msgs/Log' });
+            topic_rosout.subscribe(function(message) {
                 $timeout(function() {
                     var split = message.name.split('/');
                     message.abbr = message.name;
@@ -70,15 +70,19 @@ angular.module('roscc')
         };
       
         function setBattery() {
-            var topicRosout = new ROSLIB.Topic({ ros: ros, name: $scope.config.batteryTopic, messageType: 'std_msgs/Float32' });
-            topicRosout.subscribe(function(message) {
+            var topic_rosout = new ROSLIB.Topic({
+                ros: ros,
+                name: $scope.config.batteryTopic,
+                messageType: 'std_msgs/Float32',
+            });
+            topic_rosout.subscribe(function(message) {
                 $timeout(function() {
                     $scope.battery_status = message.data;
                 });
             });
         }
       
-        // Load structure all data, parameters, topics, services, nodes...
+        // Load structure, all data, parameters, topics, services, nodes...
         function loadData() {
             ros.getTopics(function(topics) {
                 $timeout(function() {

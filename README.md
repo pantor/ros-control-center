@@ -2,7 +2,7 @@
 
 This control center is a universal tool for controlling robots running ROS. It runs in the browser using a websocket connection and `roslibjs` from [RobotWebTools](http://robotwebtools.org).
 
-![screenshot](https://raw.githubusercontent.com/gaug-cns/ros-control-center/master/images/screenshot.png)
+![screenshot](https://raw.githubusercontent.com/gaug-cns/ros-control-center/master/assets/images/screenshot.png)
 
 
 ## Installation & Tutorial

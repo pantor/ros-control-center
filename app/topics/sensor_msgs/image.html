@@ -1,0 +1,20 @@
+<div class="panel panel-default" ng-class="{'panel-success': vm.toggle}">
+  <div class="panel-heading clearfix">
+    <button class="btn btn-default btn-sm pull-right" ng-click="vm.toggleSubscription(!vm.toggle)" ng-model="vm.toggle" uib-btn-checkbox>Subscribe</button>
+
+    <h3 class="panel-title">
+      {{ vm.topic.abbr }}
+      <small style="font-size: 12px;">({{ vm.topic.type }})</small>
+    </h3>
+  </div>
+
+  <div class="panel-body" ng-if="vm.toggle">
+    <div class="row">
+      <div class="col-sm-12">
+        <center>
+          <img class="img-responsive img-thumbnail" ng-src="http://{{ vm.setting.address }}:{{ vm.setting.imagePreview.port }}/stream?topic={{ topic.name }}&quality={{ vm.setting.imagePreview.quality }}&width={{ vm.setting.imagePreview.width }}&height={{ vm.setting.imagePreview.height }}">
+        </center>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,14 @@
+<div class="panel panel-default">
+  <div class="panel-heading clearfix">
+    <h3 class="panel-title">{{ vm.parameter.abbr }}</h3>
+  </div>
+
+  <div class="panel-body">
+    <div class="input-group">
+      <input type="text" class="form-control" ng-model="vm.parameter.value">
+      <span class="input-group-btn">
+        <button class="btn btn-default" type="button" ng-click="vm.setValue(vm.parameter.value)">Set</button>
+      </span>
+    </div>
+  </div>
+</div>

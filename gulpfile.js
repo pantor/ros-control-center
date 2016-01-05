@@ -15,8 +15,7 @@ gulp.task('js-lint', function() {
     .pipe(eslint({
       global: ['_', 'ros', 'ROSLIB'],
       extends: ['airbnb/legacy', 'angular'],
-      rules: { 'vars-on-top': 1 },
-      envs: ['browser'],
+      rules: { 'no-param-reassign': 1 },
     }))
     .pipe(eslint.format())
     .pipe(eslint.failAfterError());

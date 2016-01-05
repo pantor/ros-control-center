@@ -1,0 +1,116 @@
+<div class="panel panel-default" ng-class="{'panel-success': vm.toggle}">
+  <div class="panel-heading clearfix">
+    <button class="btn btn-default btn-sm pull-right" ng-click="vm.toggleSubscription(!vm.toggle)" ng-model="vm.toggle" uib-btn-checkbox>Subscribe</button>
+
+    <h3 class="panel-title">
+      {{ vm.topic.abbr }}
+      <small style="font-size: 12px;">({{ vm.topic.type }})</small>
+    </h3>
+  </div>
+
+  <div class="panel-body">
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="form-group">
+          <label>Left Stick H</label>
+          <div class="input-group">
+            <input type="number" class="form-control" ng-model="vm.message.axes[0]" ng-readonly="vm.isSubscribing">
+            <span class="input-group-addon"></span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Left Stick V</label>
+          <div class="input-group">
+            <input type="number" class="form-control" ng-model="vm.message.axes[1]" ng-readonly="vm.isSubscribing">
+            <span class="input-group-addon"></span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Right Stick H</label>
+          <div class="input-group">
+            <input type="number" class="form-control" ng-model="vm.message.axes[2]" ng-readonly="vm.isSubscribing">
+            <span class="input-group-addon"></span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Right Stick V</label>
+          <div class="input-group">
+            <input type="number" class="form-control" ng-model="vm.message.axes[3]" ng-readonly="vm.isSubscribing">
+            <span class="input-group-addon"></span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>L2</label>
+          <div class="input-group">
+            <input type="number" class="form-control" ng-model="vm.message.axes[12]" ng-readonly="vm.isSubscribing">
+            <span class="input-group-addon"></span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>R2</label>
+          <div class="input-group">
+            <input type="number" class="form-control" ng-model="vm.message.axes[13]" ng-readonly="vm.isSubscribing">
+            <span class="input-group-addon"></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-sm-6">
+        <div class="form-group">
+          <label>Select</label>
+          <div class="input-group">
+            <input type="number" class="form-control" ng-model="vm.message.buttons[0]" ng-readonly="vm.isSubscribing">
+            <span class="input-group-addon"></span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Start</label>
+          <div class="input-group">
+            <input type="number" class="form-control" ng-model="vm.message.buttons[3]" ng-readonly="vm.isSubscribing">
+            <span class="input-group-addon"></span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Triangle</label>
+          <div class="input-group">
+            <input type="number" class="form-control" ng-model="vm.message.buttons[12]" ng-readonly="vm.isSubscribing">
+            <span class="input-group-addon"></span>
+          </div>
+        </div>
+
+
+        <div class="form-group">
+          <label>Cricle</label>
+          <div class="input-group">
+            <input type="number" class="form-control" ng-model="vm.message.buttons[13]" ng-readonly="vm.isSubscribing">
+            <span class="input-group-addon"></span>
+          </div>
+        </div>
+
+
+        <div class="form-group">
+          <label>Cross</label>
+          <div class="input-group">
+            <input type="number" class="form-control" ng-model="vm.message.buttons[14]" ng-readonly="vm.isSubscribing">
+            <span class="input-group-addon"></span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Square</label>
+          <div class="input-group">
+            <input type="number" class="form-control" ng-model="vm.message.buttons[15]" ng-readonly="vm.isSubscribing">
+            <span class="input-group-addon"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -18,90 +18,13 @@ function RosccConfig($routeProvider, localStorageServiceProvider) {
 
 angular.module('roscc', ['ngRoute', 'ui.bootstrap', 'LocalStorageModule']).config(RosccConfig);
 
-function DomainsFactory() {
-  return {
-    filterAdvanced: function (entry, advanced) {
-      if (advanced) {
-        return true;
-      }
-
-      if (!entry) {
-        return false;
-      }
-
-      var entryArray = entry.split('/');
-      if (_.isEmpty(entryArray)) {
-        return false;
-      }
-
-      return (_.last(entryArray)[0] === _.last(entryArray)[0].toUpperCase());
-    },
-    getDomains: function (array) {
-      var result = [];
-      angular.forEach(array, function (entry) {
-        var nameArray = entry.name.split('/');
-        if (nameArray.length > 1) {
-          result.push(nameArray[1]);
-        }
-      });
-      return _.uniq(result).sort();
-    },
-    getGlobalParameters: function (array) {
-      var result = [];
-      angular.forEach(array, function (entry) {
-        var nameArray = entry.name.split('/');
-        if (nameArray.length === 2) {
-          entry.abbr = _.last(nameArray);
-          result.push(entry);
-        }
-      });
-      return result;
-    },
-    getDataForDomain: function (array, domainName) {
-      var result = [];
-      angular.forEach(array, function (entry) {
-        var nameArray = entry.name.split('/');
-        if (nameArray.length > 1 && nameArray[1] === domainName) {
-          entry.abbr = nameArray.slice(2).join(' ');
-          result.push(entry);
-        }
-      });
-      return result;
-    },
-  };
-}
-
-// Filter advanced topics, services, parameters by checking the beginning capital letter
-angular.module('roscc').factory('Domains', DomainsFactory);
-
-function QuaternionsFactory() {
-  return {
-    getRoll: function (q) {
-      var rad = Math.atan2(2 * (q.w * q.x + q.y * q.z), 1 - 2 * (q.x * q.x + q.y * q.y));
-      return 180 / Math.PI * rad;
-    },
-    getPitch: function (q) {
-      var rad = Math.asin(2 * (q.w * q.y - q.z * q.x));
-      return 180 / Math.PI * rad;
-    },
-    getYaw: function (q) {
-      var rad = Math.atan2(2 * (q.w * q.z + q.x * q.y), 1 - 2 * (q.y * q.y + q.z * q.z));
-      return 180 / Math.PI * rad;
-    },
-    getInit: function () {
-      return { w: 1, x: 0, y: 0, z: 0 };
-    },
-  };
-}
-
-// Filter advanced topics, services, parameters by checking the beginning capital letter
-angular.module('roscc').factory('Quaternions', QuaternionsFactory);
-
 var ros;
 var isConnected = false;
 
 function ControlController($timeout, $interval, Settings, Domains) {
   var vm = this;
+  var maxEntries = 200;
+
   vm.Domains = Domains;
   vm.setActiveDomain = setActiveDomain;
   vm.getDomains = getDomains;
@@ -110,8 +33,6 @@ function ControlController($timeout, $interval, Settings, Domains) {
   vm.newRosConnection = newRosConnection;
   vm.isConnected = isConnected;
   vm.setting = Settings.get();
-
-  var maxEntries = 200;
 
 
   // The active domain shows further information in the center view
@@ -205,15 +126,16 @@ function ControlController($timeout, $interval, Settings, Domains) {
     });
     consoleTopic.subscribe(function (message) {
       var nameArray = message.name.split('/');
+      var d = new Date(message.header.stamp.secs * 1E3 + message.header.stamp.nsecs * 1E-6);
+
       message.abbr = (nameArray.length > 1) ? nameArray[1] : message.name;
 
       // String formatting of message time and date
-      function z(i) { return i < 10 ? '0' + i : i; }
-      var d = new Date(message.header.stamp.secs * 1E3 + message.header.stamp.nsecs * 1E-6);
-      message.dateString = z(d.getHours()) + ':' +
-        z(d.getMinutes()) + ':' +
-        z(d.getSeconds()) + '.' +
-        z(d.getMilliseconds());
+      function addZero(i) { return i < 10 ? '0' + i : i; }
+      message.dateString = addZero(d.getHours()) + ':' +
+        addZero(d.getMinutes()) + ':' +
+        addZero(d.getSeconds()) + '.' +
+        addZero(d.getMilliseconds());
       vm.data.rosout.unshift(message);
 
       if (vm.data.rosout.length > maxEntries) {
@@ -239,7 +161,6 @@ function ControlController($timeout, $interval, Settings, Domains) {
     resetData();
 
     ros.getTopics(function (topics) {
-      vm.data.topics = [];
       angular.forEach(topics, function (topic) {
         vm.data.topics.push({ name: topic });
 
@@ -250,7 +171,6 @@ function ControlController($timeout, $interval, Settings, Domains) {
     });
 
     ros.getServices(function (services) {
-      vm.data.services = [];
       angular.forEach(services, function (service) {
         vm.data.services.push({ name: service });
 
@@ -261,11 +181,11 @@ function ControlController($timeout, $interval, Settings, Domains) {
     });
 
     ros.getParams(function (params) {
-      vm.data.parameters = [];
       angular.forEach(params, function (param) {
+        var p = new ROSLIB.Param({ ros: ros, name: param });
+
         vm.data.parameters.push({ name: param });
 
-        var p = new ROSLIB.Param({ ros: ros, name: param });
         p.get(function (value) {
           _.findWhere(vm.data.parameters, { name: param }).value = value;
         });
@@ -273,7 +193,6 @@ function ControlController($timeout, $interval, Settings, Domains) {
     });
 
     ros.getNodes(function (nodes) {
-      vm.data.nodes = [];
       angular.forEach(nodes, function (entry) {
         vm.data.nodes.push({ name: entry });
       });
@@ -282,6 +201,82 @@ function ControlController($timeout, $interval, Settings, Domains) {
 }
 
 angular.module('roscc').controller('ControlController', ControlController);
+
+function DomainsFactory() {
+  return {
+    filterAdvanced: function (entry, advanced) {
+      var entryArray = entry.split('/');
+
+      if (advanced) {
+        return true;
+      }
+
+      if (!entry || _.isEmpty(entryArray)) {
+        return false;
+      }
+
+      return (_.last(entryArray)[0] === _.last(entryArray)[0].toUpperCase());
+    },
+    getDomains: function (array) {
+      var result = [];
+      angular.forEach(array, function (entry) {
+        var nameArray = entry.name.split('/');
+        if (nameArray.length > 1) {
+          result.push(nameArray[1]);
+        }
+      });
+      return _.uniq(result).sort();
+    },
+    getGlobalParameters: function (array) {
+      var result = [];
+      angular.forEach(array, function (entry) {
+        var nameArray = entry.name.split('/');
+        if (nameArray.length === 2) {
+          entry.abbr = _.last(nameArray);
+          result.push(entry);
+        }
+      });
+      return result;
+    },
+    getDataForDomain: function (array, domainName) {
+      var result = [];
+      angular.forEach(array, function (entry) {
+        var nameArray = entry.name.split('/');
+        if (nameArray.length > 1 && nameArray[1] === domainName) {
+          entry.abbr = nameArray.slice(2).join(' ');
+          result.push(entry);
+        }
+      });
+      return result;
+    },
+  };
+}
+
+// Filter advanced topics, services, parameters by checking the beginning capital letter
+angular.module('roscc').factory('Domains', DomainsFactory);
+
+function QuaternionsFactory() {
+  return {
+    getRoll: function (q) {
+      var rad = Math.atan2(2 * (q.w * q.x + q.y * q.z), 1 - 2 * (q.x * q.x + q.y * q.y));
+      return 180 / Math.PI * rad;
+    },
+    getPitch: function (q) {
+      var rad = Math.asin(2 * (q.w * q.y - q.z * q.x));
+      return 180 / Math.PI * rad;
+    },
+    getYaw: function (q) {
+      var rad = Math.atan2(2 * (q.w * q.z + q.x * q.y), 1 - 2 * (q.y * q.y + q.z * q.z));
+      return 180 / Math.PI * rad;
+    },
+    getInit: function () {
+      return { w: 1, x: 0, y: 0, z: 0 };
+    },
+  };
+}
+
+// Filter advanced topics, services, parameters by checking the beginning capital letter
+angular.module('roscc').factory('Quaternions', QuaternionsFactory);
 
 function NavbarDirective($location) {
   return {
@@ -307,11 +302,10 @@ function ParamaterDirective() {
     controllerAs: 'vm',
     controller: function ($scope) {
       var vm = this;
+      var p = new ROSLIB.Param({ ros: ros, name: $scope.parameter.name });
+
       vm.parameter = $scope.parameter;
       vm.setValue = setValue;
-
-
-      var p = new ROSLIB.Param({ ros: ros, name: vm.parameter.name });
 
       function setValue(value) {
         p.set(value);
@@ -321,6 +315,49 @@ function ParamaterDirective() {
 }
 
 angular.module('roscc').directive('ccParameter', ParamaterDirective);
+
+function serviceDirective(fileName) {
+  return function () {
+    return {
+      scope: { service: '=' },
+      templateUrl: 'app/services/' + fileName + '.html',
+      controllerAs: 'vm',
+      controller: function ($scope, $timeout) {
+        var vm = this;
+        vm.service = $scope.service;
+        vm.callService = callService;
+        vm.callServiceJSON = callServiceJSON;
+
+        function callService(data) {
+          var service = new ROSLIB.Service({
+            ros: ros,
+            name: vm.service.name,
+            serviceType: vm.service.type,
+          });
+          var request = new ROSLIB.ServiceRequest(data);
+
+          service.callService(request, function (result) {
+            $timeout(function () {
+              vm.result = result;
+            });
+          });
+        }
+
+        function callServiceJSON(data) {
+          callService(angular.fromJSON(data));
+        }
+      },
+    };
+  };
+}
+
+
+angular.module('roscc')
+  .directive('ccServiceDefault', serviceDirective('default'))
+
+  .directive('ccServiceEmpty', serviceDirective('std_srvs/empty'))
+  .directive('ccServiceTrigger', serviceDirective('std_srvs/trigger'))
+  .directive('ccServiceMovingpiBool', serviceDirective('movingpi/bool'));
 
 function SettingsController(localStorageService, Settings) {
   var vm = this;
@@ -428,6 +465,12 @@ function topicDirective(fileName) {
       controllerAs: 'vm',
       controller: function ($scope, $timeout, Settings, Quaternions) {
         var vm = this;
+        var roslibTopic = new ROSLIB.Topic({
+          ros: ros,
+          name: $scope.topic.name,
+          messageType: $scope.topic.type,
+        });
+
         vm.topic = $scope.topic;
         vm.toggleSubscription = toggleSubscription;
         vm.publishMessage = publishMessage;
@@ -436,12 +479,6 @@ function topicDirective(fileName) {
         vm.setting = Settings.get();
         vm.Quaternions = Quaternions;
 
-        // Main topic things
-        var roslibTopic = new ROSLIB.Topic({
-          ros: ros,
-          name: vm.topic.name,
-          messageType: vm.topic.type,
-        });
 
         function toggleSubscription(data) {
           if (!data) {
@@ -494,46 +531,3 @@ angular.module('roscc')
   .directive('ccTopicFlypiSteering', topicDirective('flypi/steering'))
 
   .directive('ccTopicVisionodometryMotion', topicDirective('visionodometry/motion'));
-
-function serviceDirective(fileName) {
-  return function () {
-    return {
-      scope: { service: '=' },
-      templateUrl: 'app/services/' + fileName + '.html',
-      controllerAs: 'vm',
-      controller: function ($scope, $timeout) {
-        var vm = this;
-        vm.service = $scope.service;
-        vm.callService = callService;
-        vm.callServiceJSON = callServiceJSON;
-
-        function callService(data) {
-          var service = new ROSLIB.Service({
-            ros: ros,
-            name: vm.service.name,
-            serviceType: vm.service.type,
-          });
-          var request = new ROSLIB.ServiceRequest(data);
-
-          service.callService(request, function (result) {
-            $timeout(function () {
-              vm.result = result;
-            });
-          });
-        }
-
-        function callServiceJSON(data) {
-          callService(angular.fromJSON(data));
-        }
-      },
-    };
-  };
-}
-
-
-angular.module('roscc')
-  .directive('ccServiceDefault', serviceDirective('default'))
-
-  .directive('ccServiceEmpty', serviceDirective('std_srvs/empty'))
-  .directive('ccServiceTrigger', serviceDirective('std_srvs/trigger'))
-  .directive('ccServiceMovingpiBool', serviceDirective('movingpi/bool'));

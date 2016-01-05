@@ -1,0 +1,70 @@
+<div class="panel panel-default" ng-class="{'panel-success': vm.toggle}">
+  <div class="panel-heading clearfix">
+    <button class="btn btn-default btn-sm pull-right" ng-click="vm.toggleSubscription(!vm.toggle)" ng-model="vm.toggle" uib-btn-checkbox>Subscribe</button>
+
+    <h3 class="panel-title">
+      {{ vm.topic.abbr }}
+      <small style="font-size: 12px;">({{ vm.topic.type }})</small>
+    </h3>
+  </div>
+
+  <div class="panel-body">
+    <div class="row">
+      <div class="col-sm-6">
+        <form class="form-horizontal form-margin">
+          <div class="form-group">
+            <label>X</label>
+            <div class="input-group">
+              <input type="number" class="form-control" ng-model="vm.message.pose.position.x" ng-readonly="vm.isSubscribing">
+              <span class="input-group-addon">m</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Y</label>
+            <div class="input-group">
+              <input type="number" class="form-control" ng-model="vm.message.pose.position.y" ng-readonly="vm.isSubscribing">
+              <span class="input-group-addon">m</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Z</label>
+            <div class="input-group">
+              <input type="number" class="form-control" ng-model="vm.message.pose.position.z" ng-readonly="vm.isSubscribing">
+              <span class="input-group-addon">m</span>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div class="col-sm-6">
+        <form class="form-horizontal form-margin">
+          <div class="form-group">
+            <label>Roll</label>
+            <div class="input-group">
+              <input type="number" class="form-control" ng-model="vm.Quaternions.getRoll(vm.message.pose.orientation)" ng-readonly="vm.isSubscribing">
+              <span class="input-group-addon">°</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Pitch</label>
+            <div class="input-group">
+              <input type="number" class="form-control" ng-model="vm.Quaternions.getPitch(vm.message.pose.orientation)" ng-readonly="vm.isSubscribing">
+              <span class="input-group-addon">°</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Yaw</label>
+            <div class="input-group">
+              <input type="number" class="form-control" ng-model="vm.Quaternions.getYaw(vm.message.pose.orientation)" ng-readonly="vm.isSubscribing">
+              <span class="input-group-addon">°</span>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

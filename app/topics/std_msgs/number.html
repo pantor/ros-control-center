@@ -1,0 +1,22 @@
+<div class="panel panel-default" ng-class="{'panel-success': vm.toggle}">
+  <div class="panel-heading clearfix">
+    <button class="btn btn-default btn-sm pull-right" ng-click="vm.toggleSubscription(!vm.toggle)" ng-model="vm.toggle" uib-btn-checkbox>Subscribe</button>
+
+    <h3 class="panel-title">
+      {{ vm.topic.abbr }}
+      <small style="font-size: 12px;">({{ vm.topic.type }})</small>
+    </h3>
+  </div>
+
+  <div class="panel-body">
+    <div class="row">
+      <div class="col-xs-12">
+        <button class="btn btn-default pull-right" type="button" ng-disabled="vm.isSubscribing" style="margin-left: 10px;" ng-click="vm.publishMessage(vm.message)">Publish</button>
+        <div class="input-group">
+          <input type="number" class="form-control" ng-model="vm.message.data" ng-readonly="vm.isSubscribing">
+          <span class="input-group-addon"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

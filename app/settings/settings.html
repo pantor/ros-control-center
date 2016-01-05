@@ -1,0 +1,113 @@
+<div class="container">
+  <div class="row">
+    <div class="col-xs-12">
+      <h2>Settings</h2>
+
+      <div class="row" style="margin-bottom: 30px;">
+        <div class="col-xs-4">
+          <select class="form-control" ng-model="vm.index" ng-change="vm.save()">
+            <option ng-repeat="s in vm.settings track by $index" value="{{ $index }}">{{ s.name }}</option>
+          </select>
+        </div>
+
+        <div class="col-xs-8">
+          <button class="btn btn-success" ng-click="vm.add()">Add Setting</button>
+          <button class="btn btn-danger" ng-click="vm.remove()">Remove Setting</button>
+        </div>
+      </div>
+
+      <hr>
+
+      <div class="row">
+        <div class="col-xs-12">
+          <form class="form-horizontal">
+            <div class="form-group">
+              <label class="col-sm-2 control-label">Name</label>
+              <div class="col-sm-4">
+                <input type="text" class="form-control" placeholder="Name" ng-model="vm.settings[vm.index].name" ng-change="vm.save()">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="col-sm-2 control-label">URL</label>
+              <div class="col-sm-4">
+                <input type="text" class="form-control" placeholder="Address" ng-model="vm.settings[vm.index].address" ng-change="vm.save()">
+                <span class="help-block">Please reload after URL change</span>
+              </div>
+              <div class="col-sm-4">
+                <input type="number" class="form-control" placeholder="Port" ng-model="vm.settings[vm.index].port" ng-change="vm.save()">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="col-sm-2 control-label">Log</label>
+              <div class="col-sm-4">
+                <input type="text" class="form-control" placeholder="Console" ng-model="vm.settings[vm.index].log" ng-change="vm.save()">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="col-sm-2 control-label">Image Preview Port</label>
+              <div class="col-sm-4">
+                <input type="number" class="form-control" placeholder="Port" ng-model="vm.settings[vm.index].imagePreview.port" ng-change="vm.save()">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="col-sm-2 control-label">Image Width &times; Height</label>
+              <div class="col-sm-4">
+                <input type="number" class="form-control" placeholder="Width" ng-model="vm.settings[vm.index].imagePreview.width" ng-change="vm.save()">
+              </div>
+              <div class="col-sm-4">
+                <input type="number" class="form-control" placeholder="Height" ng-model="vm.settings[vm.index].imagePreview.height" ng-change="vm.save()">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="col-sm-2 control-label">Image Quality</label>
+              <div class="col-sm-4">
+                <input type="number" class="form-control" placeholder="Quality" ng-model="vm.settings[vm.index].imagePreview.quality" ng-change="vm.save()">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <div class="col-sm-offset-2 col-sm-10">
+                <div class="checkbox">
+                  <label>
+                    <input type="checkbox" ng-model="vm.settings[vm.index].battery" ng-change="vm.save()"> Battery
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="col-sm-2 control-label">Battery Topic</label>
+              <div class="col-sm-4">
+                <input type="text" class="form-control" placeholder="/battery" ng-model="vm.settings[vm.index].batteryTopic" ng-change="vm.save()">
+                <span class="help-block">Should be std_msgs/Float32.</span>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <hr>
+
+      <div class="row">
+        <div class="col-xs-12">
+          <form class="form-horizontal">
+            <div class="form-group">
+              <div class="col-sm-offset-2 col-sm-10">
+                <div class="checkbox">
+                  <label>
+                    <input type="checkbox" ng-model="vm.settings[vm.index].advanced" ng-change="vm.save()"> Advanced View
+                  </label>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

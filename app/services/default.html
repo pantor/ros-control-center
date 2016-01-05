@@ -1,0 +1,25 @@
+<div class="panel panel-default">
+  <div class="panel-heading clearfix">
+    <h3 class="panel-title">
+      {{ vm.service.abbr }}
+      <small style="font-size: 12px;">({{ vm.service.type }} / Default)</small>
+    </h3>
+  </div>
+
+  <div class="panel-body">
+    <div class="row">
+      <div class="col-sm-6">
+        <form class="input-group">
+          <input type="text" class="form-control" ng-model="input" placeholder="JSON">
+          <span class="input-group-btn">
+            <button class="btn btn-default" type="button" ng-click="vm.callServiceJSON(input)">Call</button>
+          </span>
+        </form>
+      </div>
+
+      <div class="col-sm-6">
+        <p ng-show="vm.esult">Result: {{ vm.result }}</p>
+      </div>
+    </div>
+  </div>
+</div>

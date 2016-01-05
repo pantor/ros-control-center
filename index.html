@@ -1,56 +1,27 @@
 <!DOCTYPE html>
-<html ng-app="roscc">
-    <head>
-        <meta charset="utf-8"/>
+<html ng-app="roscc" id="ng-app">
+  <head>
+    <meta charset="utf-8"/>
+    <title>ROS Control Center</title>
 
-        <title>ROS Control Center</title>
+    <link rel="shortcut icon" href="assets/images/ros-logo.svg" type="image/svg" />
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/roscc.css">
 
-        <link rel="shortcut icon" href="images/ros-logo.svg" type="image/svg" />
+    <script type="text/javascript" src="assets/js/underscore-min.js"></script>
+    <script type="text/javascript" src="assets/js/angular.min.js"></script>
+    <script type="text/javascript" src="assets/js/angular-route.min.js"></script>
+    <script type="text/javascript" src="assets/js/angular-local-storage.min.js"></script>
+    <script type="text/javascript" src="assets/js/ui-bootstrap-tpls.min.js"></script>
+    
+    <script type="text/javascript" src="assets/js/eventemitter2.js"></script>
+    <script type="text/javascript" src="assets/js/roslib.js"></script>
+    <script type="text/javascript" src="assets/js/roscc.js"></script>
+  </head>
 
-        <link rel="stylesheet" href="vendor/css/bootstrap.css">
-        <link rel="stylesheet" href="css/roscc.css">
+  <body>
+    <cc-navbar></cc-navbar>
 
-        <script type="text/javascript" src="vendor/js/underscore.js"></script>
-        <script type="text/javascript" src="vendor/js/angular.js"></script>
-        <script type="text/javascript" src="vendor/js/angular-route.js"></script>
-        <script type="text/javascript" src="vendor/js/angular-local-storage.js"></script>
-        <script type="text/javascript" src="vendor/js/ui-bootstrap-tpls.js"></script>
-        <script type="text/javascript" src="vendor/js/eventemitter2.js"></script>
-        <script type="text/javascript" src="vendor/js/roslib.js"></script>
-
-        <script type="text/javascript" src="js/roscc.js"></script>
-        <script type="text/javascript" src="js/root.controller.js"></script>
-        <script type="text/javascript" src="js/main.controller.js"></script>
-        <script type="text/javascript" src="js/settings.controller.js"></script>
-        <script type="text/javascript" src="js/config.factory.js"></script>
-        <script type="text/javascript" src="js/domains.factory.js"></script>
-        <script type="text/javascript" src="js/directives.js"></script>
-    </head>
-
-    <body ng-controller="RootController">
-        <nav class="navbar navbar-default navbar-static-top">
-            <div class="container">
-                <div class="navbar-header">
-                    <a class="navbar-brand" href="">
-                        <img alt="Brand" src="images/ros-logo.svg" height="22px">
-                    </a>
-                    <a class="navbar-brand" href="">
-                        <img alt="Brand" src="images/ros.svg" height="22px">
-                    </a>
-                </div>
-                
-                <ul class="nav navbar-nav navbar-right">
-                    <li>
-                        <div class="checkbox navbar-checkbox">
-                            <label><input type="checkbox" ng-model="advanced">Advanced</label>
-                        </div>
-                    </li>
-                    <li ng-class="{'active': getPath() == '/'}"><a href="#/">Control</a></li>
-                    <li ng-class="{'active': getPath() == '/settings'}"><a href="#/settings">Settings</a></li>
-                </ul>
-            </div>
-        </nav>
-
-        <div ng-view></div>
-    </body>
+    <div ng-view></div>
+  </body>
 </html>

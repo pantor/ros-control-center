@@ -18,12 +18,97 @@ function RosccConfig($routeProvider, localStorageServiceProvider) {
 
 angular.module('roscc', ['ngRoute', 'ui.bootstrap', 'LocalStorageModule']).config(RosccConfig);
 
+function DomainsFactory() {
+  return {
+    filterAdvanced: function (entry, advanced) {
+      var entryArray = entry.split('/');
+
+      if (advanced) {
+        return true;
+      }
+
+      if (!entry || _.isEmpty(entryArray)) {
+        return false;
+      }
+
+      return (_.last(entryArray)[0] === _.last(entryArray)[0].toUpperCase());
+    },
+    getDomains: function (array) {
+      var result = [];
+      angular.forEach(array, function (entry) {
+        var nameArray = entry.name.split('/');
+        if (nameArray.length > 1) {
+          result.push(nameArray[1]);
+        }
+      });
+      return _.uniq(result).sort();
+    },
+    getGlobalParameters: function (array) {
+      var result = [];
+      angular.forEach(array, function (entry) {
+        var nameArray = entry.name.split('/');
+        if (nameArray.length === 2) {
+          entry.abbr = _.last(nameArray);
+          result.push(entry);
+        }
+      });
+      return result;
+    },
+    getDataForDomain: function (array, domainName) {
+      var result = [];
+      angular.forEach(array, function (entry) {
+        var nameArray = entry.name.split('/');
+        if (nameArray.length > 1 && nameArray[1] === domainName) {
+          entry.abbr = nameArray.slice(2).join(' ');
+          result.push(entry);
+        }
+      });
+      return result;
+    },
+  };
+}
+
+// Filter advanced topics, services, parameters by checking the beginning capital letter
+angular.module('roscc').factory('Domains', DomainsFactory);
+
+function QuaternionsFactory() {
+  return {
+    getRoll: function (q) {
+      if (!q) {
+        return '';
+      }
+      var rad = Math.atan2(2 * (q.w * q.x + q.y * q.z), 1 - 2 * (q.x * q.x + q.y * q.y));
+      return 180 / Math.PI * rad;
+    },
+    getPitch: function (q) {
+      if (!q) {
+        return '';
+      }
+      var rad = Math.asin(2 * (q.w * q.y - q.z * q.x));
+      return 180 / Math.PI * rad;
+    },
+    getYaw: function (q) {
+      if (!q) {
+        return '';
+      }
+      var rad = Math.atan2(2 * (q.w * q.z + q.x * q.y), 1 - 2 * (q.y * q.y + q.z * q.z));
+      return 180 / Math.PI * rad;
+    },
+    getInit: function () {
+      return { w: 1, x: 0, y: 0, z: 0 };
+    },
+  };
+}
+
+// Filter advanced topics, services, parameters by checking the beginning capital letter
+angular.module('roscc').factory('Quaternions', QuaternionsFactory);
+
 var ros;
 var isConnected = false;
 
 function ControlController($timeout, $interval, Settings, Domains) {
   var vm = this;
-  var maxEntries = 200;
+  var maxConsoleEntries = 200;
 
   vm.Domains = Domains;
   vm.setActiveDomain = setActiveDomain;
@@ -138,7 +223,7 @@ function ControlController($timeout, $interval, Settings, Domains) {
         addZero(d.getMilliseconds());
       vm.data.rosout.unshift(message);
 
-      if (vm.data.rosout.length > maxEntries) {
+      if (vm.data.rosout.length > maxConsoleEntries) {
         vm.data.rosout.pop();
       }
     });
@@ -202,99 +287,6 @@ function ControlController($timeout, $interval, Settings, Domains) {
 
 angular.module('roscc').controller('ControlController', ControlController);
 
-function DomainsFactory() {
-  return {
-    filterAdvanced: function (entry, advanced) {
-      var entryArray = entry.split('/');
-
-      if (advanced) {
-        return true;
-      }
-
-      if (!entry || _.isEmpty(entryArray)) {
-        return false;
-      }
-
-      return (_.last(entryArray)[0] === _.last(entryArray)[0].toUpperCase());
-    },
-    getDomains: function (array) {
-      var result = [];
-      angular.forEach(array, function (entry) {
-        var nameArray = entry.name.split('/');
-        if (nameArray.length > 1) {
-          result.push(nameArray[1]);
-        }
-      });
-      return _.uniq(result).sort();
-    },
-    getGlobalParameters: function (array) {
-      var result = [];
-      angular.forEach(array, function (entry) {
-        var nameArray = entry.name.split('/');
-        if (nameArray.length === 2) {
-          entry.abbr = _.last(nameArray);
-          result.push(entry);
-        }
-      });
-      return result;
-    },
-    getDataForDomain: function (array, domainName) {
-      var result = [];
-      angular.forEach(array, function (entry) {
-        var nameArray = entry.name.split('/');
-        if (nameArray.length > 1 && nameArray[1] === domainName) {
-          entry.abbr = nameArray.slice(2).join(' ');
-          result.push(entry);
-        }
-      });
-      return result;
-    },
-  };
-}
-
-// Filter advanced topics, services, parameters by checking the beginning capital letter
-angular.module('roscc').factory('Domains', DomainsFactory);
-
-function QuaternionsFactory() {
-  return {
-    getRoll: function (q) {
-      var rad = Math.atan2(2 * (q.w * q.x + q.y * q.z), 1 - 2 * (q.x * q.x + q.y * q.y));
-      return 180 / Math.PI * rad;
-    },
-    getPitch: function (q) {
-      var rad = Math.asin(2 * (q.w * q.y - q.z * q.x));
-      return 180 / Math.PI * rad;
-    },
-    getYaw: function (q) {
-      var rad = Math.atan2(2 * (q.w * q.z + q.x * q.y), 1 - 2 * (q.y * q.y + q.z * q.z));
-      return 180 / Math.PI * rad;
-    },
-    getInit: function () {
-      return { w: 1, x: 0, y: 0, z: 0 };
-    },
-  };
-}
-
-// Filter advanced topics, services, parameters by checking the beginning capital letter
-angular.module('roscc').factory('Quaternions', QuaternionsFactory);
-
-function NavbarDirective($location) {
-  return {
-    templateUrl: 'app/navbar/navbar.html',
-    controllerAs: 'vm',
-    controller: function () {
-      var vm = this;
-      vm.isPath = isPath;
-
-      function isPath(path) {
-        return $location.path() === path;
-      }
-    },
-  };
-}
-
-angular.module('roscc').directive('ccNavbar', NavbarDirective);
-
 function ParamaterDirective() {
   return {
     scope: { parameter: '=' },
@@ -315,6 +307,23 @@ function ParamaterDirective() {
 }
 
 angular.module('roscc').directive('ccParameter', ParamaterDirective);
+
+function NavbarDirective($location) {
+  return {
+    templateUrl: 'app/navbar/navbar.html',
+    controllerAs: 'vm',
+    controller: function () {
+      var vm = this;
+      vm.isPath = isPath;
+
+      function isPath(path) {
+        return $location.path() === path;
+      }
+    },
+  };
+}
+
+angular.module('roscc').directive('ccNavbar', NavbarDirective);
 
 function serviceDirective(fileName) {
   return function () {

@@ -19,5 +19,13 @@
     "bootstrap": "^3.3.6",
     "eventemitter2": "^0.4.14",
     "underscore": "^1.8.3"
+  },
+  "devDependencies": {
+    "eslint-config-airbnb": "^3.0.0",
+    "eslint-config-angular": "^0.4.0",
+    "eslint-plugin-angular": "^0.15.0",
+    "gulp": "^3.9.0",
+    "gulp-concat": "^2.6.0",
+    "gulp-eslint": "^1.1.1"
   }
 }

@@ -12,7 +12,7 @@ Please see the [GitHub Wiki](https://github.com/gaug-cns/ros-control-center/wiki
 
 ## Contributing
 
-For contributing, [gulp](http://gulpjs.com) needs to be installed on your local development machine. It is used for concat and linting JavaScript files. Gulp depends on the [Node.js](https://nodejs.org/en/) package manager [NPM](https://www.npmjs.com). Via `npm install` it will automatically all development dependencies for ROS Control Center, which are listed in `package.json`. Type `gulp` in the terminal for automatically concatenation of JS files and `gulp js-lint` for linting.
+For development, [gulp](http://gulpjs.com) needs to be installed on your local computer. Gulp depends on the [Node.js](https://nodejs.org/en/) package manager [NPM](https://www.npmjs.com), which is installed via Node.js itself. Via `npm install` it will automatically download all development dependencies (from `package.json`). Type `gulp` in the terminal for concatenation of JS files and `gulp js-lint` for linting.
 
 Contributions are always welcome!
 

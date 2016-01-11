@@ -18,91 +18,6 @@ function RosccConfig($routeProvider, localStorageServiceProvider) {
 
 angular.module('roscc', ['ngRoute', 'ui.bootstrap', 'LocalStorageModule']).config(RosccConfig);
 
-function DomainsFactory() {
-  return {
-    filterAdvanced: function (entry, advanced) {
-      var entryArray = entry.split('/');
-
-      if (advanced) {
-        return true;
-      }
-
-      if (!entry || _.isEmpty(entryArray)) {
-        return false;
-      }
-
-      return (_.last(entryArray)[0] === _.last(entryArray)[0].toUpperCase());
-    },
-    getDomains: function (array) {
-      var result = [];
-      angular.forEach(array, function (entry) {
-        var nameArray = entry.name.split('/');
-        if (nameArray.length > 1) {
-          result.push(nameArray[1]);
-        }
-      });
-      return _.uniq(result).sort();
-    },
-    getGlobalParameters: function (array) {
-      var result = [];
-      angular.forEach(array, function (entry) {
-        var nameArray = entry.name.split('/');
-        if (nameArray.length === 2) {
-          entry.abbr = _.last(nameArray);
-          result.push(entry);
-        }
-      });
-      return result;
-    },
-    getDataForDomain: function (array, domainName) {
-      var result = [];
-      angular.forEach(array, function (entry) {
-        var nameArray = entry.name.split('/');
-        if (nameArray.length > 1 && nameArray[1] === domainName) {
-          entry.abbr = nameArray.slice(2).join(' ');
-          result.push(entry);
-        }
-      });
-      return result;
-    },
-  };
-}
-
-// Filter advanced topics, services, parameters by checking the beginning capital letter
-angular.module('roscc').factory('Domains', DomainsFactory);
-
-function QuaternionsFactory() {
-  return {
-    getRoll: function (q) {
-      if (!q) {
-        return '';
-      }
-      var rad = Math.atan2(2 * (q.w * q.x + q.y * q.z), 1 - 2 * (q.x * q.x + q.y * q.y));
-      return 180 / Math.PI * rad;
-    },
-    getPitch: function (q) {
-      if (!q) {
-        return '';
-      }
-      var rad = Math.asin(2 * (q.w * q.y - q.z * q.x));
-      return 180 / Math.PI * rad;
-    },
-    getYaw: function (q) {
-      if (!q) {
-        return '';
-      }
-      var rad = Math.atan2(2 * (q.w * q.z + q.x * q.y), 1 - 2 * (q.y * q.y + q.z * q.z));
-      return 180 / Math.PI * rad;
-    },
-    getInit: function () {
-      return { w: 1, x: 0, y: 0, z: 0 };
-    },
-  };
-}
-
-// Filter advanced topics, services, parameters by checking the beginning capital letter
-angular.module('roscc').factory('Quaternions', QuaternionsFactory);
-
 var ros;
 var isConnected = false;
 
@@ -287,6 +202,111 @@ function ControlController($timeout, $interval, Settings, Domains) {
 
 angular.module('roscc').controller('ControlController', ControlController);
 
+function DomainsFactory() {
+  return {
+    filterAdvanced: function (entry, advanced) {
+      var entryArray = entry.split('/');
+
+      if (advanced) {
+        return true;
+      }
+
+      if (!entry || _.isEmpty(entryArray)) {
+        return false;
+      }
+
+      return (_.last(entryArray)[0] === _.last(entryArray)[0].toUpperCase());
+    },
+    getDomains: function (array) {
+      var result = [];
+      angular.forEach(array, function (entry) {
+        var nameArray = entry.name.split('/');
+        if (nameArray.length > 1) {
+          result.push(nameArray[1]);
+        }
+      });
+      return _.uniq(result).sort();
+    },
+    getGlobalParameters: function (array) {
+      var result = [];
+      angular.forEach(array, function (entry) {
+        var nameArray = entry.name.split('/');
+        if (nameArray.length === 2) {
+          entry.abbr = _.last(nameArray);
+          result.push(entry);
+        }
+      });
+      return result;
+    },
+    getDataForDomain: function (array, domainName) {
+      var result = [];
+      angular.forEach(array, function (entry) {
+        var nameArray = entry.name.split('/');
+        if (nameArray.length > 1 && nameArray[1] === domainName) {
+          entry.abbr = nameArray.slice(2).join(' ');
+          result.push(entry);
+        }
+      });
+      return result;
+    },
+  };
+}
+
+// Filter advanced topics, services, parameters by checking the beginning capital letter
+angular.module('roscc').factory('Domains', DomainsFactory);
+
+function QuaternionsFactory() {
+  return {
+    getRoll: function (q) {
+      var rad;
+      if (!q) {
+        return '';
+      }
+      rad = Math.atan2(2 * (q.w * q.x + q.y * q.z), 1 - 2 * (q.x * q.x + q.y * q.y));
+      return 180 / Math.PI * rad;
+    },
+    getPitch: function (q) {
+      var rad;
+      if (!q) {
+        return '';
+      }
+      rad = Math.asin(2 * (q.w * q.y - q.z * q.x));
+      return 180 / Math.PI * rad;
+    },
+    getYaw: function (q) {
+      var rad;
+      if (!q) {
+        return '';
+      }
+      rad = Math.atan2(2 * (q.w * q.z + q.x * q.y), 1 - 2 * (q.y * q.y + q.z * q.z));
+      return 180 / Math.PI * rad;
+    },
+    getInit: function () {
+      return { w: 1, x: 0, y: 0, z: 0 };
+    },
+  };
+}
+
+// Filter advanced topics, services, parameters by checking the beginning capital letter
+angular.module('roscc').factory('Quaternions', QuaternionsFactory);
+
+function NavbarDirective($location) {
+  return {
+    templateUrl: 'app/navbar/navbar.html',
+    controllerAs: 'vm',
+    controller: function () {
+      var vm = this;
+      vm.isPath = isPath;
+
+      function isPath(path) {
+        return $location.path() === path;
+      }
+    },
+  };
+}
+
+angular.module('roscc').directive('ccNavbar', NavbarDirective);
+
 function ParamaterDirective() {
   return {
     scope: { parameter: '=' },
@@ -307,23 +327,6 @@ function ParamaterDirective() {
 }
 
 angular.module('roscc').directive('ccParameter', ParamaterDirective);
-
-function NavbarDirective($location) {
-  return {
-    templateUrl: 'app/navbar/navbar.html',
-    controllerAs: 'vm',
-    controller: function () {
-      var vm = this;
-      vm.isPath = isPath;
-
-      function isPath(path) {
-        return $location.path() === path;
-      }
-    },
-  };
-}
-
-angular.module('roscc').directive('ccNavbar', NavbarDirective);
 
 function serviceDirective(fileName) {
   return function () {
@@ -366,7 +369,84 @@ angular.module('roscc')
 
   .directive('ccServiceEmpty', serviceDirective('std_srvs/empty'))
   .directive('ccServiceTrigger', serviceDirective('std_srvs/trigger'))
+  .directive('ccServiceSetBool', serviceDirective('std_srvs/set-bool'))
+
   .directive('ccServiceMovingpiBool', serviceDirective('movingpi/bool'));
+
+function topicDirective(fileName) {
+  return function () {
+    return {
+      scope: { topic: '=' },
+      templateUrl: 'app/topics/' + fileName + '.html',
+      controllerAs: 'vm',
+      controller: function ($scope, $timeout, Settings, Quaternions) {
+        var vm = this;
+        var roslibTopic = new ROSLIB.Topic({
+          ros: ros,
+          name: $scope.topic.name,
+          messageType: $scope.topic.type,
+        });
+
+        vm.topic = $scope.topic;
+        vm.toggleSubscription = toggleSubscription;
+        vm.publishMessage = publishMessage;
+        vm.publishMessageJSON = publishMessageJSON;
+        vm.isSubscribing = false;
+        vm.setting = Settings.get();
+        vm.Quaternions = Quaternions;
+
+
+        function toggleSubscription(data) {
+          if (!data) {
+            roslibTopic.subscribe(function (message) {
+              $timeout(function () {
+                vm.message = message;
+              });
+            });
+          } else {
+            roslibTopic.unsubscribe();
+          }
+
+          vm.isSubscribing = !data;
+        }
+
+        function publishMessage(data) {
+          var message = new ROSLIB.Message(data);
+          roslibTopic.publish(message);
+        }
+
+        function publishMessageJSON(data) {
+          publishMessage(angular.fromJSON(data));
+        }
+      },
+    };
+  };
+}
+
+
+angular.module('roscc')
+  .directive('ccTopicDefault', topicDirective('default'))
+
+  .directive('ccTopicNumber', topicDirective('std_msgs/number'))
+
+  .directive('ccTopicFluidPressure', topicDirective('sensor_msgs/fluid-pressure'))
+  .directive('ccTopicIlluminance', topicDirective('sensor_msgs/illuminance'))
+  .directive('ccTopicImage', topicDirective('sensor_msgs/image'))
+  .directive('ccTopicImu', topicDirective('sensor_msgs/imu'))
+  .directive('ccTopicJoy', topicDirective('sensor_msgs/joy'))
+  .directive('ccTopicMagneticField', topicDirective('sensor_msgs/magnetic-field'))
+  .directive('ccTopicRange', topicDirective('sensor_msgs/range'))
+  .directive('ccTopicRelativeHumidity', topicDirective('sensor_msgs/relative-humidity'))
+  .directive('ccTopicTemperature', topicDirective('sensor_msgs/temperature'))
+
+  .directive('ccTopicPose', topicDirective('geometry_msgs/pose'))
+  .directive('ccTopicPoseStamped', topicDirective('geometry_msgs/pose-stamped'))
+  .directive('ccTopicPose2d', topicDirective('geometry_msgs/pose2D'))
+
+  .directive('ccTopicFlypiMotorsThrust', topicDirective('flypi/motors-thrust'))
+  .directive('ccTopicFlypiSteering', topicDirective('flypi/steering'))
+
+  .directive('ccTopicVisionodometryMotion', topicDirective('visionodometry/motion'));
 
 function SettingsController(localStorageService, Settings) {
   var vm = this;
@@ -465,78 +545,3 @@ function SettingsFactory($location, localStorageService) {
 }
 
 angular.module('roscc').factory('Settings', SettingsFactory);
-
-function topicDirective(fileName) {
-  return function () {
-    return {
-      scope: { topic: '=' },
-      templateUrl: 'app/topics/' + fileName + '.html',
-      controllerAs: 'vm',
-      controller: function ($scope, $timeout, Settings, Quaternions) {
-        var vm = this;
-        var roslibTopic = new ROSLIB.Topic({
-          ros: ros,
-          name: $scope.topic.name,
-          messageType: $scope.topic.type,
-        });
-
-        vm.topic = $scope.topic;
-        vm.toggleSubscription = toggleSubscription;
-        vm.publishMessage = publishMessage;
-        vm.publishMessageJSON = publishMessageJSON;
-        vm.isSubscribing = false;
-        vm.setting = Settings.get();
-        vm.Quaternions = Quaternions;
-
-
-        function toggleSubscription(data) {
-          if (!data) {
-            roslibTopic.subscribe(function (message) {
-              $timeout(function () {
-                vm.message = message;
-              });
-            });
-          } else {
-            roslibTopic.unsubscribe();
-          }
-
-          vm.isSubscribing = !data;
-        }
-
-        function publishMessage(data) {
-          var message = new ROSLIB.Message(data);
-          roslibTopic.publish(message);
-        }
-
-        function publishMessageJSON(data) {
-          publishMessage(angular.fromJSON(data));
-        }
-      },
-    };
-  };
-}
-
-
-angular.module('roscc')
-  .directive('ccTopicDefault', topicDirective('default'))
-
-  .directive('ccTopicNumber', topicDirective('std_msgs/number'))
-
-  .directive('ccTopicFluidPressure', topicDirective('sensor_msgs/fluid-pressure'))
-  .directive('ccTopicIlluminance', topicDirective('sensor_msgs/illuminance'))
-  .directive('ccTopicImage', topicDirective('sensor_msgs/image'))
-  .directive('ccTopicImu', topicDirective('sensor_msgs/imu'))
-  .directive('ccTopicJoy', topicDirective('sensor_msgs/joy'))
-  .directive('ccTopicMagneticField', topicDirective('sensor_msgs/magnetic-field'))
-  .directive('ccTopicRange', topicDirective('sensor_msgs/range'))
-  .directive('ccTopicRelativeHumidity', topicDirective('sensor_msgs/relative-humidity'))
-  .directive('ccTopicTemperature', topicDirective('sensor_msgs/temperature'))
-
-  .directive('ccTopicPose', topicDirective('geometry_msgs/pose'))
-  .directive('ccTopicPoseStamped', topicDirective('geometry_msgs/pose-stamped'))
-  .directive('ccTopicPose2d', topicDirective('geometry_msgs/pose2D'))
-
-  .directive('ccTopicFlypiMotorsThrust', topicDirective('flypi/motors-thrust'))
-  .directive('ccTopicFlypiSteering', topicDirective('flypi/steering'))
-
-  .directive('ccTopicVisionodometryMotion', topicDirective('visionodometry/motion'));

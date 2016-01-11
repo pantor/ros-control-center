@@ -64,6 +64,7 @@
             <!-- Services -->
             <div ng-switch="service.type" ng-repeat="service in vm.Domains.getDataForDomain(vm.data.services, domain)" ng-if="vm.Domains.filterAdvanced(service.name, vm.setting.advanced)">
               <cc-service-empty service="service" ng-switch-when="std_srvs/Empty"></cc-service-empty>
+              <cc-service-set-bool service="service" ng-switch-when="std_srvs/SetBool"></cc-service-set-bool>
               <cc-service-trigger service="service" ng-switch-when="std_srvs/Trigger"></cc-service-trigger>
 
               <cc-service-movingpi-bool service="service" ng-switch-when="movingpi/SrvBool"></cc-service-movingpi-bool>

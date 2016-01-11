@@ -39,4 +39,6 @@ angular.module('roscc')
 
   .directive('ccServiceEmpty', serviceDirective('std_srvs/empty'))
   .directive('ccServiceTrigger', serviceDirective('std_srvs/trigger'))
+  .directive('ccServiceSetBool', serviceDirective('std_srvs/set-bool'))
+
   .directive('ccServiceMovingpiBool', serviceDirective('movingpi/bool'));

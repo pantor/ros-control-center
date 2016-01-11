@@ -1,2 +1,12 @@
 # NPM
 node_modules
+
+# Exclude folders...
+app/topics/**/
+app/services/**/
+
+# ...except of standard ROS packages
+!app/topics/std_msgs
+!app/topics/sensor_msgs
+!app/topics/geometry_msgs
+!app/services/std_srvs

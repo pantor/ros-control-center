@@ -10,14 +10,12 @@ In general, ROS Control Center offers an easy way to
  - call services.
  - show and change parameters.
 
-Further features like custom formatting for your own message and service types, a console (rosout by default) output, a battery status view, a camera stream view or an advanced mode for better usability are implemented. More information can be found in the tutorial.
-
-[Check it out!](https://gaug-cns.github.io/ros-control-center)
+Further features like custom formatting for your own message and service types, a console (rosout by default) output, a battery status view, a camera stream view or an advanced mode for better usability are implemented. [Check it out!](https://gaug-cns.github.io/ros-control-center)
 
 
 ## Installation & Tutorial
 
-On your ROS robot, the `rosbridge_suite` from [Robot Web Tools](http://robotwebtools.org) needs to run. The control center runs on any computer (in particular without ROS...) in the same network. Open the ROS Control Center at [https://gaug-cns.github.io/ros-control-center](https://gaug-cns.github.io/ros-control-center). In the settings tab, you need to enter the IP address and port of your robot. Open `Control` and reload!
+On your ROS robot, the `rosbridge_suite` from [Robot Web Tools](http://robotwebtools.org) needs to run. The control center runs on any computer (in particular without ROS...) in the same network. Open the ROS Control Center at [https://gaug-cns.github.io/ros-control-center](https://gaug-cns.github.io/ros-control-center). In the settings tab, you need to enter the IP address and port of your robot. Open the `Control` tab and reload!
 
 
 ## Advanced Features
@@ -33,19 +31,19 @@ services and parameters can be grouped together for a better overview. This work
 - Every topic, service or parameter name should correspond to `/group-name/element-name` like a URL. Global parameters should have no group name and are shown below the group list on the left side.
 - Every element name should start with a capital letter, as they are shown in the normal view mode. All elements (including the lowercase-names from system services, topics and parameters) can be shown by enabling the `advanced` view mode.
 
-In the right bottom corner, a battery status bar can be shown. Therefore, the battery topic can be adapted in the settings tab.
+In the right bottom corner, a battery status bar can be shown; the battery topic can be adapted in the settings tab.
 
 
 ## Contributing
 
-For development, [gulp](http://gulpjs.com) needs to be installed on your local computer. Gulp depends on the [Node.js](https://nodejs.org/en/) package manager [NPM](https://www.npmjs.com), which is installed via Node.js itself. Via `npm install` it will automatically download all development dependencies (from `package.json`). Type `gulp` in the terminal for concatenation of JS files and `gulp js-lint` for linting.
+For development, [Gulp](http://gulpjs.com) needs to be installed on your local computer. Gulp depends on the [Node.js](https://nodejs.org/en/) package manager [npm](https://www.npmjs.com), which is installed via Node.js itself. Via `npm install` it will automatically download all development dependencies (from `package.json`). Type `gulp` in the terminal for concatenation of JS files and `gulp js-lint` for linting.
 
 ROS Control Center depends on:
  - [AngularJS](https://www.angularjs.org/) as the general JavaScript and routing framework.
  - [\_underscore.js](http://underscorejs.org) as a general-purpose JavaScript library.
  - [Bootstrap](http://getbootstrap.com/) for design.
  - [UI Bootstrap](http://angular-ui.github.io/bootstrap/) for Bootstrap components written in AngularJS.
- - [roslib.js](http://robotwebtools.org) for ROS connection.
+ - [roslib.js](https://github.com/RobotWebTools/roslibjs) for ROS connection.
 
 Contributions are always welcome!
 

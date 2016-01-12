@@ -36,7 +36,7 @@ In the right bottom corner, a battery status bar can be shown; the battery topic
 
 ## Contributing
 
-For development, [Gulp](http://gulpjs.com) needs to be installed on your local computer. Gulp depends on the [Node.js](https://nodejs.org/en/) package manager [npm](https://www.npmjs.com), which is installed via Node.js itself. Via `npm install` it will automatically download all development dependencies (from `package.json`). Type `gulp` in the terminal for concatenation of JS files and `gulp js-lint` for linting.
+For development, [Gulp](http://gulpjs.com) needs to be installed on your local computer. Gulp depends on the [Node.js](https://nodejs.org/en/) package manager [npm](https://www.npmjs.com), which is installed via Node.js itself. Via `npm install` it will automatically download all development dependencies (from `package.json`). Type `gulp` in the terminal for concatenation of JS files and `gulp js-lint` for linting. The control center is written in ES6 JavaScript.
 
 ROS Control Center depends on:
  - [AngularJS](https://www.angularjs.org/) as the general JavaScript and routing framework.

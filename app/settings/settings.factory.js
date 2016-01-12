@@ -1,61 +1,65 @@
-function SettingsFactory($location, localStorageService) {
-  var setting;
-  var settings;
-  var index;
+class SettingsService {
+  constructor($location, localStorageService) {
+    this.$location = $location;
+    this.localStorageService = localStorageService;
+  }
 
-  return {
-    load: function () {
-      index = localStorageService.get('selectedSettingIndex');
-      settings = localStorageService.get('settings');
-      if (settings && index) {
-        setting = settings[index];
-      }
+  load() {
+    this.index = this.localStorageService.get('selectedSettingIndex');
+    this.settings = this.localStorageService.get('settings');
+    if (this.settings && this.index) {
+      this.setting = this.settings[this.index];
+    }
 
-      // If there are no saved settings, redirect to /settings for first setting input
-      if (!setting) {
-        $location.path('/settings').replace();
-      }
-    },
-    save: function (newSettings, newIndex) {
-      settings = newSettings;
-      index = newIndex;
-      localStorageService.set('selectedSettingIndex', newIndex);
-      localStorageService.set('settings', newSettings);
-    },
-    get: function () {
-      if (!setting) {
-        this.load();
-      }
+    // If there are no saved settings, redirect to /settings for first setting input
+    if (!this.setting) {
+      this.$location.path('/settings').replace();
+    }
+  }
 
-      return setting;
-    },
-    getIndex: function () {
-      if (!setting) {
-        this.load();
-      }
+  save(newSettings, newIndex) {
+    this.settings = newSettings;
+    this.index = newIndex;
+    this.localStorageService.set('selectedSettingIndex', newIndex);
+    this.localStorageService.set('settings', newSettings);
+  }
 
-      return index;
-    },
-    getSettings: function () {
-      if (!setting) {
-        this.load();
-      }
+  get() {
+    if (!this.setting) {
+      this.load();
+    }
 
-      return settings;
-    },
-    getDefaultSetting: function () {
-      return {
-        name: 'New Setting',
-        address: location.hostname,
-        port: 9090,
-        log: '/rosout',
-        imagePreview: { port: 0, quality: 70, width: 640, height: 480 },
-        battery: true,
-        batteryTopic: '',
-        advanced: false,
-      };
-    },
-  };
+    return this.setting;
+  }
+
+  getIndex() {
+    if (!this.setting) {
+      this.load();
+    }
+
+    return this.index;
+  }
+
+  getSettings() {
+    if (!this.setting) {
+      this.load();
+    }
+
+    return this.settings;
+  }
+
+  getDefaultSetting() {
+    return {
+      name: 'New Setting',
+      address: location.hostname,
+      port: 9090,
+      log: '/rosout',
+      imagePreview: { port: 0, quality: 70, width: 640, height: 480 },
+      battery: true,
+      batteryTopic: '',
+      advanced: false,
+    };
+  }
 }
 
-angular.module('roscc').factory('Settings', SettingsFactory);
+angular.module('roscc').service('Settings', SettingsService);

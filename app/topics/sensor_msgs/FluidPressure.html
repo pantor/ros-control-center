@@ -8,12 +8,14 @@
     </h3>
   </div>
 
-  <div class="panel-body" ng-if="vm.toggle">
+  <div class="panel-body">
     <div class="row">
-      <div class="col-sm-12">
-        <center>
-          <img class="img-responsive img-thumbnail" ng-src="http://{{ vm.setting.address }}:{{ vm.setting.imagePreview.port }}/stream?topic={{ topic.name }}&quality={{ vm.setting.imagePreview.quality }}&width={{ vm.setting.imagePreview.width }}&height={{ vm.setting.imagePreview.height }}">
-        </center>
+      <div class="col-xs-12">
+        <button class="btn btn-default pull-right" type="button" ng-disabled="vm.isSubscribing" style="margin-left: 10px;" ng-click="vm.publishMessage(vm.message)">Publish</button>
+        <div class="input-group">
+          <input type="number" class="form-control" ng-model="vm.message.fluid_pressure" ng-readonly="vm.isSubscribing">
+          <span class="input-group-addon">Pa</span>
+        </div>
       </div>
     </div>
   </div>

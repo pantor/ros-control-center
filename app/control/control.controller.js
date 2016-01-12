@@ -1,41 +1,48 @@
-var ros;
-var isConnected = false;
+let ros;
+let isConnected = false;
 
-function ControlController($timeout, $interval, Settings, Domains) {
-  var vm = this;
-  var maxConsoleEntries = 200;
+class ControlController {
+  constructor($timeout, $interval, Settings, Domains) {
+    this.$timeout = $timeout;
+    this.Domains = Domains;
 
-  vm.Domains = Domains;
-  vm.setActiveDomain = setActiveDomain;
-  vm.getDomains = getDomains;
-  vm.getGlobalParameters = getGlobalParameters;
-  vm.onConnected = onConnected;
-  vm.newRosConnection = newRosConnection;
-  vm.isConnected = isConnected;
-  vm.setting = Settings.get();
+    this.isConnected = isConnected;
+    this.setting = Settings.get();
+    this.maxConsoleEntries = 200;
 
+    // Load ROS connection and keep trying if it fails
+    this.newRosConnection();
+    $interval(() => {
+      this.newRosConnection();
+    }, 1000); // [ms]
 
-  // The active domain shows further information in the center view
-  function setActiveDomain(domain) {
-    vm.activeDomain = domain;
+    this.resetData();
+    if (isConnected) {
+      this.onConnected();
+    }
   }
 
-  function getDomains() {
-    var allData = vm.data.topics.concat(vm.data.services, vm.data.nodes);
-    var domains = Domains.getDomains(allData);
+  // The active domain shows further information in the center view
+  setActiveDomain(domain) {
+    this.activeDomain = domain;
+  }
 
-    if (!vm.activeDomain) {
-      setActiveDomain(domains[0]);
+  getDomains() {
+    const allData = this.data.topics.concat(this.data.services, this.data.nodes);
+    const domains = this.Domains.getDomains(allData);
+
+    if (!this.activeDomain) {
+      this.setActiveDomain(domains[0]);
     }
     return domains;
   }
 
-  function getGlobalParameters() {
-    return Domains.getGlobalParameters(vm.data.parameters);
+  getGlobalParameters() {
+    return this.Domains.getGlobalParameters(this.data.parameters);
   }
 
-  function resetData() {
-    vm.data = {
+  resetData() {
+    this.data = {
       rosout: [],
       topics: [],
       nodes: [],
@@ -44,8 +51,8 @@ function ControlController($timeout, $interval, Settings, Domains) {
     };
   }
 
-  function newRosConnection() {
-    if (isConnected || !vm.setting) {
+  newRosConnection() {
+    if (isConnected || !this.setting) {
       return;
     }
 
@@ -55,58 +62,47 @@ function ControlController($timeout, $interval, Settings, Domains) {
       return;
     }
 
-    ros = new ROSLIB.Ros({ url: 'ws://' + vm.setting.address + ':' + vm.setting.port });
+    ros = new ROSLIB.Ros({ url: 'ws://' + this.setting.address + ':' + this.setting.port });
 
-    ros.on('connection', function () {
-      vm.onConnected();
+    ros.on('connection', () => {
+      this.onConnected();
       isConnected = true;
-      vm.isConnected = isConnected;
+      this.isConnected = isConnected;
     });
 
-    ros.on('error', function () {
+    ros.on('error', () => {
       isConnected = false;
-      vm.isConnected = isConnected;
+      this.isConnected = isConnected;
     });
 
-    ros.on('close', function () {
+    ros.on('close', () => {
       isConnected = false;
-      vm.isConnected = isConnected;
+      this.isConnected = isConnected;
     });
   }
 
-  function onConnected() {
-    $timeout(function () {
-      loadData();
+  onConnected() {
+    // wait a moment until ROS is loaded and initialized
+    this.$timeout(() => {
+      this.loadData();
 
-      setConsole();
-      if (vm.setting.battery) {
-        setBattery();
+      this.setConsole();
+      if (this.setting.battery) {
+        this.setBattery();
       }
-    }, 500);
+    }, 1000); // [ms]
   }
-
-  // Load ROS connection and keep trying if it fails
-  newRosConnection();
-  $interval(function () {
-    newRosConnection();
-  }, 1000); // [ms]
-
-  resetData();
-  if (isConnected) {
-    vm.onConnected();
-  }
-
 
   // Setup of console (in the right sidebar)
-  function setConsole() {
-    var consoleTopic = new ROSLIB.Topic({
-      ros: ros,
-      name: vm.setting.log,
+  setConsole() {
+    const consoleTopic = new ROSLIB.Topic({
+      ros,
+      name: this.setting.log,
       messageType: 'rosgraph_msgs/Log',
     });
-    consoleTopic.subscribe(function (message) {
-      var nameArray = message.name.split('/');
-      var d = new Date(message.header.stamp.secs * 1E3 + message.header.stamp.nsecs * 1E-6);
+    consoleTopic.subscribe(message => {
+      const nameArray = message.name.split('/');
+      const d = new Date(message.header.stamp.secs * 1E3 + message.header.stamp.nsecs * 1E-6);
 
       message.abbr = (nameArray.length > 1) ? nameArray[1] : message.name;
 
@@ -116,65 +112,64 @@ function ControlController($timeout, $interval, Settings, Domains) {
         addZero(d.getMinutes()) + ':' +
         addZero(d.getSeconds()) + '.' +
         addZero(d.getMilliseconds());
-      vm.data.rosout.unshift(message);
+      this.data.rosout.unshift(message);
 
-      if (vm.data.rosout.length > maxConsoleEntries) {
-        vm.data.rosout.pop();
+      if (this.data.rosout.length > this.maxConsoleEntries) {
+        this.data.rosout.pop();
       }
     });
   }
 
   // Setup battery status
-  function setBattery() {
-    var batteryTopic = new ROSLIB.Topic({
-      ros: ros,
-      name: vm.setting.batteryTopic,
+  setBattery() {
+    const batteryTopic = new ROSLIB.Topic({
+      ros,
+      name: this.setting.batteryTopic,
       messageType: 'std_msgs/Float32',
     });
-    batteryTopic.subscribe(function (message) {
-      vm.batteryStatus = message.data;
+    batteryTopic.subscribe(message => {
+      this.batteryStatus = message.data;
     });
   }
 
   // Load structure, all data, parameters, topics, services, nodes...
-  function loadData() {
-    resetData();
+  loadData() {
+    this.resetData();
 
-    ros.getTopics(function (topics) {
-      angular.forEach(topics, function (topic) {
-        vm.data.topics.push({ name: topic });
+    ros.getTopics(topics => {
+      angular.forEach(topics, name => {
+        this.data.topics.push({ name });
 
-        ros.getTopicType(topic, function (type) {
-          _.findWhere(vm.data.topics, { name: topic }).type = type;
+        ros.getTopicType(name, type => {
+          _.findWhere(this.data.topics, { name }).type = type;
         });
       });
     });
 
-    ros.getServices(function (services) {
-      angular.forEach(services, function (service) {
-        vm.data.services.push({ name: service });
+    ros.getServices(services => {
+      angular.forEach(services, name => {
+        this.data.services.push({ name });
 
-        ros.getServiceType(service, function (type) {
-          _.findWhere(vm.data.services, { name: service }).type = type;
+        ros.getServiceType(name, type => {
+          _.findWhere(this.data.services, { name }).type = type;
         });
       });
     });
 
-    ros.getParams(function (params) {
-      angular.forEach(params, function (param) {
-        var p = new ROSLIB.Param({ ros: ros, name: param });
+    ros.getParams(params => {
+      angular.forEach(params, name => {
+        const param = new ROSLIB.Param({ ros, name });
+        this.data.parameters.push({ name });
 
-        vm.data.parameters.push({ name: param });
-
-        p.get(function (value) {
-          _.findWhere(vm.data.parameters, { name: param }).value = value;
+        param.get((value) => {
+          _.findWhere(this.data.parameters, { name }).value = value;
         });
       });
     });
 
-    ros.getNodes(function (nodes) {
-      angular.forEach(nodes, function (entry) {
-        vm.data.nodes.push({ name: entry });
+    ros.getNodes(nodes => {
+      angular.forEach(nodes, name => {
+        this.data.nodes.push({ name });
       });
     });
   }

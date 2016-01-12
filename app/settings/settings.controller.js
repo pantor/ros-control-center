@@ -1,34 +1,33 @@
-function SettingsController(localStorageService, Settings) {
-  var vm = this;
-  vm.add = add;
-  vm.remove = remove;
-  vm.save = save;
-  vm.settings = Settings.getSettings() || [Settings.getDefaultSetting()];
-  vm.index = Settings.getIndex();
+class SettingsController {
+  constructor(localStorageService, Settings) {
+    this.Settings = Settings;
 
+    this.settings = Settings.getSettings() || [Settings.getDefaultSetting()];
+    this.index = Settings.getIndex();
 
-  if (!vm.index || vm.index > vm.settings.length) {
-    vm.index = '0';
-  }
-
-  function save() {
-    Settings.save(vm.settings, vm.index);
-  }
-
-  function add() {
-    vm.settings.push(Settings.getDefaultSetting()); // Clone object
-    vm.index = String(vm.settings.length - 1);
-    save();
-  }
-
-  function remove() {
-    vm.settings.splice(vm.index, 1);
-    vm.index = '0';
-
-    if (!vm.settings.length) {
-      vm.add();
+    if (!this.index || this.index > this.settings.length) {
+      this.index = '0';
     }
-    save();
+  }
+
+  save() {
+    this.Settings.save(this.settings, this.index);
+  }
+
+  add() {
+    this.settings.push(this.Settings.getDefaultSetting()); // Clone object
+    this.index = String(this.settings.length - 1);
+    this.save();
+  }
+
+  remove() {
+    this.settings.splice(this.index, 1);
+    this.index = '0';
+
+    if (!this.settings.length) {
+      this.add();
+    }
+    this.save();
   }
 }
 

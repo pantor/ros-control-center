@@ -27,53 +27,13 @@
             <p class="lead" style="font-size: 28px;">{{ domain }}</p>
 
             <!-- Topics -->
-            <div ng-switch="topic.type" ng-repeat="topic in vm.Domains.getDataForDomain(vm.data.topics, domain)" ng-if="vm.Domains.filterAdvanced(topic.name, vm.setting.advanced)">
-              <cc-topic-number topic="topic" ng-switch-when="std_msgs/Int8"></cc-topic-number>
-              <cc-topic-number topic="topic" ng-switch-when="std_msgs/Int16"></cc-topic-number>
-              <cc-topic-number topic="topic" ng-switch-when="std_msgs/Int32"></cc-topic-number>
-              <cc-topic-number topic="topic" ng-switch-when="std_msgs/Int64"></cc-topic-number>
-              <cc-topic-number topic="topic" ng-switch-when="std_msgs/UInt8"></cc-topic-number>
-              <cc-topic-number topic="topic" ng-switch-when="std_msgs/UInt16"></cc-topic-number>
-              <cc-topic-number topic="topic" ng-switch-when="std_msgs/UInt32"></cc-topic-number>
-              <cc-topic-number topic="topic" ng-switch-when="std_msgs/UInt64"></cc-topic-number>
-              <cc-topic-number topic="topic" ng-switch-when="std_msgs/Float32"></cc-topic-number>
-              <cc-topic-number topic="topic" ng-switch-when="std_msgs/Float64"></cc-topic-number>
-
-              <cc-topic-fluid-pressure topic="topic" ng-switch-when="sensor_msgs/FluidPressure"></cc-topic-fluid-pressure>
-              <cc-topic-illuminance topic="topic" ng-switch-when="sensor_msgs/Illuminance"></cc-topic-illuminance>
-              <cc-topic-image topic="topic" ng-switch-when="sensor_msgs/Image"></cc-topic-image>
-              <cc-topic-imu topic="topic" ng-switch-when="sensor_msgs/Imu"></cc-topic-imu>
-              <cc-topic-joy topic="topic" ng-switch-when="sensor_msgs/Joy"></cc-topic-joy>
-              <cc-topic-magnetic-field topic="topic" ng-switch-when="sensor_msgs/MagneticField"></cc-topic-magnetic-field>
-              <cc-topic-range topic="topic" ng-switch-when="sensor_msgs/Range"></cc-topic-range>
-              <cc-topic-relative-humidity topic="topic" ng-switch-when="sensor_msgs/RelativeHumidity"></cc-topic-relative-humidity>
-              <cc-topic-temperature topic="topic" ng-switch-when="sensor_msgs/Temperature"></cc-topic-temperature>
-
-              <cc-topic-pose topic="topic" ng-switch-when="geometry_msgs/Pose"></cc-topic-pose>
-              <cc-topic-pose-stamped topic="topic" ng-switch-when="geometry_msgs/PoseStamped"></cc-topic-pose-stamped>
-              <cc-topic-pose2d topic="topic" ng-switch-when="geometry_msgs/Pose2D"></cc-topic-pose2d>
-
-              <cc-topic-flypi-motors-thrust topic="topic" ng-switch-when="flypi/MsgMotorsThrust"></cc-topic-flypi-motors-thrust>
-              <cc-topic-flypi-steering topic="topic" ng-switch-when="flypi/MsgSteering"></cc-topic-flypi-steering>
-
-              <cc-topic-visionodometry-motion topic="topic" ng-switch-when="visionodometry/MsgMotion"></cc-topic-visionodometry-motion>
-
-              <cc-topic-default topic="topic" ng-switch-default></cc-topic-default>
-            </div>
+            <cc-topic topic="topic" ng-repeat="topic in vm.Domains.getDataForDomain(vm.data.topics, domain, vm.setting.advanced)"></cc-topic>
 
             <!-- Services -->
-            <div ng-switch="service.type" ng-repeat="service in vm.Domains.getDataForDomain(vm.data.services, domain)" ng-if="vm.Domains.filterAdvanced(service.name, vm.setting.advanced)">
-              <cc-service-empty service="service" ng-switch-when="std_srvs/Empty"></cc-service-empty>
-              <cc-service-set-bool service="service" ng-switch-when="std_srvs/SetBool"></cc-service-set-bool>
-              <cc-service-trigger service="service" ng-switch-when="std_srvs/Trigger"></cc-service-trigger>
-
-              <cc-service-movingpi-bool service="service" ng-switch-when="movingpi/SrvBool"></cc-service-movingpi-bool>
-
-              <cc-service-default service="service" ng-switch-default></cc-service-default>
-            </div>
+            <cc-service service="service" ng-repeat="service in vm.Domains.getDataForDomain(vm.data.services, domain, vm.setting.advanced)"></cc-service>
 
             <!-- Parameters -->
-            <cc-parameter ng-repeat="parameter in vm.Domains.getDataForDomain(vm.data.parameters, domain)" ng-show="vm.Domains.filterAdvanced(parameter.name, vm.setting.advanced)" parameter="parameter"></cc-parameter>
+            <cc-parameter parameter="parameter" ng-repeat="parameter in vm.Domains.getDataForDomain(vm.data.parameters, domain, vm.setting.advanced)"></cc-parameter>
           </div>
         </div>
       </div>
@@ -85,7 +45,7 @@
         <table class="table">
           <tr ng-repeat="logEntry in vm.data.rosout" ng-if="vm.Domains.filterAdvanced(logEntry.abbr, vm.setting.advanced)">
             <td>
-              <strong ng-class="{ 'text-danger bg-danger': logEntry.level == 16, 'text-danger': logEntry.level == 8, 'text-warning': logEntry.level == 4, 'text-info': logEntry.level == 2, 'text-muted': logEntry.level == 1 }">
+              <strong ng-class="{ 'text-danger bg-danger': logEntry.level > 8, 'text-danger': logEntry.level == 8, 'text-warning': logEntry.level == 4, 'text-info': logEntry.level == 2, 'text-muted': logEntry.level < 2 }">
                 {{ logEntry.abbr }}
               </strong>
               <br>

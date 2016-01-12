@@ -7,10 +7,11 @@ app/services/**/
 
 # ...except of standard ROS packages
 !app/topics/default.html
-!app/topics/topics.directives.js
-!app/topics/std_msgs
-!app/topics/sensor_msgs
+!app/topics/topic.directive.js
 !app/topics/geometry_msgs
+!app/topics/nav_msgs
+!app/topics/sensor_msgs
+!app/topics/std_msgs
 !app/services/default.html
-!app/services/services.directives.js
+!app/services/service.directive.js
 !app/services/std_srvs

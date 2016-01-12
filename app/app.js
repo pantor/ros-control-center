@@ -1,4 +1,4 @@
-function RosccConfig($routeProvider, localStorageServiceProvider) {
+function ROSCCConfig($routeProvider, localStorageServiceProvider) {
   $routeProvider
     .when('/', {
       templateUrl: 'app/control/control.html',
@@ -16,4 +16,4 @@ function RosccConfig($routeProvider, localStorageServiceProvider) {
     .setPrefix('roscc');
 }
 
-angular.module('roscc', ['ngRoute', 'ui.bootstrap', 'LocalStorageModule']).config(RosccConfig);
+angular.module('roscc', ['ngRoute', 'ui.bootstrap', 'LocalStorageModule']).config(ROSCCConfig);

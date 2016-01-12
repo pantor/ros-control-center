@@ -13,7 +13,7 @@ In general, ROS Control Center offers an easy way to
 Further features like custom formatting for your own message and service types, a console (rosout by default) output, a battery status view, a camera stream view or an advanced mode for better usability are implemented. [Check it out!](https://gaug-cns.github.io/ros-control-center)
 
 
-## Installation & Tutorial
+## Installation
 
 On your ROS robot, the `rosbridge_suite` from [Robot Web Tools](http://robotwebtools.org) needs to run. The control center runs on any computer (in particular without ROS...) in the same network. Open the ROS Control Center at [https://gaug-cns.github.io/ros-control-center](https://gaug-cns.github.io/ros-control-center). In the settings tab, you need to enter the IP address and port of your robot. Open the `Control` tab and reload!
 

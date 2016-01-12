@@ -19,8 +19,6 @@ Further features like custom formatting for your own message and service types, 
 
 On your ROS robot, the `rosbridge_suite` from [Robot Web Tools](http://robotwebtools.org) needs to run. The control center runs on any computer (in particular without ROS...) in the same network. Open the ROS Control Center at [https://gaug-cns.github.io/ros-control-center](https://gaug-cns.github.io/ros-control-center). In the settings tab, you need to enter the IP address and port of your robot. Open `Control` and reload!
 
-Please see the [GitHub Wiki](https://github.com/gaug-cns/ros-control-center/wiki).
-
 
 ## Advanced Features
 

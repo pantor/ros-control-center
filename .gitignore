@@ -12,6 +12,7 @@ app/services/**/
 !app/topics/nav_msgs
 !app/topics/sensor_msgs
 !app/topics/std_msgs
+!app/topics/mavros_msgs
 !app/services/default.html
 !app/services/service.directive.js
 !app/services/std_srvs

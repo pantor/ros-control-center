@@ -20,7 +20,7 @@ gulp.task('js-lint', function() {
       rules: {
         'no-param-reassign': 1,
         'angular/no-service-method': 0,
-        'angular/controller-as-vm': 0, 
+        'angular/controller-as-vm': 0,
       },
     }))
     .pipe(eslint.format())

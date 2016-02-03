@@ -62,7 +62,7 @@ class ControlController {
       return;
     }
 
-    ros = new ROSLIB.Ros({ url: 'ws://' + this.setting.address + ':' + this.setting.port });
+    ros = new ROSLIB.Ros({ url: `ws://${this.settings.address}:${this.settings.port}` });
 
     ros.on('connection', () => {
       this.onConnected();
@@ -107,11 +107,11 @@ class ControlController {
       message.abbr = (nameArray.length > 1) ? nameArray[1] : message.name;
 
       // String formatting of message time and date
-      function addZero(i) { return i < 10 ? '0' + i : i; }
-      message.dateString = addZero(d.getHours()) + ':' +
-        addZero(d.getMinutes()) + ':' +
-        addZero(d.getSeconds()) + '.' +
-        addZero(d.getMilliseconds());
+      function addZero(i) { return i < 10 ? `0${i}` : `${i}`; }
+      message.dateString = `${addZero(d.getHours())}:
+      ${addZero(d.getMinutes())}:
+      ${addZero(d.getSeconds())}.
+      ${addZero(d.getMilliseconds())}`;
       this.data.rosout.unshift(message);
 
       if (this.data.rosout.length > this.maxConsoleEntries) {

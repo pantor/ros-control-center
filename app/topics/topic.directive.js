@@ -17,14 +17,14 @@ function topicDirective() {
       this.isSubscribing = false;
       this.setting = Settings.get();
       this.Quaternions = Quaternions;
-      this.fileName = path + 'default.html';
+      this.fileName = `${path}default.html`;
 
       // Check if file exists
       $scope.$watch('topic.type', () => {
         if (!$scope.topic.type) {
           return;
         }
-        const fileName = path + $scope.topic.type + '.html';
+        const fileName = '${path}${$scope.topic.type}.html';
 
         this.topic = $scope.topic;
         $http.get(fileName).then(result => {

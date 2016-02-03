@@ -8,14 +8,14 @@ function serviceDirective() {
 
       this.service = $scope.service;
       this.callService = callService;
-      this.fileName = path + 'default.html';
+      this.fileName = `${path}default.html`;
 
       // Check if file exists
       $scope.$watch('service.type', () => {
         if (!$scope.service.type) {
           return;
         }
-        const fileName = path + $scope.service.type + '.html';
+        const fileName = `${path}${$scope.service.type}.html`;
 
         this.service = $scope.service;
         $http.get(fileName).then(result => {

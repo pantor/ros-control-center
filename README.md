@@ -2,7 +2,7 @@
 
 This control center is a universal tool for controlling robots running ROS. It runs in the browser using a websocket connection and `roslibjs` from [RobotWebTools](http://robotwebtools.org).
 
-![screenshot](https://raw.githubusercontent.com/gaug-cns/ros-control-center/master/assets/images/screenshot.png)
+![screenshot](https://raw.githubusercontent.com/pantor/ros-control-center/master/assets/images/screenshot.png)
 
 In general, ROS Control Center offers an easy way to
  - show nodes, topics and service names.
@@ -10,12 +10,12 @@ In general, ROS Control Center offers an easy way to
  - call services.
  - show and change parameters.
 
-Further features like custom formatting for your own message and service types, a console (rosout by default) output, a battery status view, a camera stream view or an advanced mode for better usability are implemented. [Check it out!](https://gaug-cns.github.io/ros-control-center)
+Further features like custom formatting for your own message and service types, a console (rosout by default) output, a battery status view, a camera stream view or an advanced mode for better usability are implemented. [Check it out!](https://pantor.github.io/ros-control-center)
 
 
 ## Installation
 
-On your ROS robot, the `rosbridge_suite` from [Robot Web Tools](http://robotwebtools.org) needs to run. The control center runs on any computer (in particular without ROS...) in the same network. Open the ROS Control Center at [https://gaug-cns.github.io/ros-control-center](https://gaug-cns.github.io/ros-control-center). In the settings tab, you need to enter the IP address and port of your robot. Open the `Control` tab and reload!
+On your ROS robot, the `rosbridge_suite` from [Robot Web Tools](http://robotwebtools.org) needs to run. The control center runs on any computer (in particular without ROS...) in the same network. Open the ROS Control Center at [https://pantor.github.io/ros-control-center](https://pantor.github.io/ros-control-center). In the settings tab, you need to enter the IP address and port of your robot. Open the `Control` tab and reload!
 
 
 ## Features
@@ -50,9 +50,9 @@ Contributions are always welcome!
 
 ## License
 
-ROS Control Center is released with a BSD license. For full terms and conditions, see the [LICENSE](https://github.com/gaug-cns/ros-control-center/blob/master/LICENSE) file.
+ROS Control Center is released with a BSD license. For full terms and conditions, see the [LICENSE](https://github.com/pantor/ros-control-center/blob/master/LICENSE) file.
 
 
 ## Authors
 
-See [AUTHORS.md](https://github.com/gaug-cns/ros-control-center/blob/master/AUTHORS.md) for a full list of contributors.
+See [AUTHORS.md](https://github.com/pantor/ros-control-center/blob/master/AUTHORS.md) for a full list of contributors.

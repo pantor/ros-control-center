@@ -1,6 +1,9 @@
 # NPM
 node_modules
 
+# Vagrant
+.vagrant
+
 # Exclude folders...
 app/topics/**/
 app/services/**/

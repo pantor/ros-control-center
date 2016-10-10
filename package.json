@@ -1,15 +1,15 @@
 {
   "name": "ros-control-center",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "A universal web-based control center for ROS robots.",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/gaug-cns/ros-control-center.git"
+    "url": "git+https://github.com/pantor/ros-control-center.git"
   },
   "author": "Lars Berscheid",
   "license": "BSD-3-Clause",
   "bugs": {
-    "url": "https://github.com/gaug-cns/ros-control-center/issues"
+    "url": "https://github.com/pantor/ros-control-center/issues"
   },
   "dependencies": {
     "angular": "^1.4.8",
@@ -25,9 +25,9 @@
     "eslint-config-airbnb": "^4.0.0",
     "eslint-config-angular": "^0.4.0",
     "eslint-plugin-angular": "^0.15.0",
-    "gulp": "^3.9.0",
+    "gulp": "^3.9.1",
     "gulp-babel": "^6.1.1",
     "gulp-concat": "^2.6.0",
-    "gulp-eslint": "^1.1.1"
+    "gulp-eslint": "^3.0.1"
   }
 }

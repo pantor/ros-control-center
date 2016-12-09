@@ -31,6 +31,8 @@ function topicDirective() {
           if (result.data) {
             this.fileName = fileName;
           }
+        }, () => {
+          // console.log(fileName + ' not found, use default topic component.');
         });
       });
 

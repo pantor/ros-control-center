@@ -1,5 +1,5 @@
 class DomainsService {
-  static filterAdvanced(entry, advanced) {
+  filterAdvanced(entry, advanced) {
     const entryArray = entry.split('/');
     if (advanced) {
       return true;
@@ -10,7 +10,7 @@ class DomainsService {
     return (_.last(entryArray)[0] === _.last(entryArray)[0].toUpperCase());
   }
 
-  static getDomains(array) {
+  getDomains(array) {
     const result = [];
     angular.forEach(array, (entry) => {
       const nameArray = entry.name.split('/');
@@ -21,7 +21,7 @@ class DomainsService {
     return _.uniq(result).sort();
   }
 
-  static getGlobalParameters(array) {
+  getGlobalParameters(array) {
     const result = [];
     angular.forEach(array, (entry) => {
       const nameArray = entry.name.split('/');
@@ -33,7 +33,7 @@ class DomainsService {
     return result;
   }
 
-  static getDataForDomain(array, domainName, advanced) {
+  getDataForDomain(array, domainName, advanced) {
     const result = [];
     angular.forEach(array, (entry) => {
       const nameArray = entry.name.split('/');

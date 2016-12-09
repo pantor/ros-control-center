@@ -37,6 +37,12 @@ class ControlController {
     return domains;
   }
 
+  hasFilteredDomains(advanced) {
+    return this.getDomains().some((domain) => {
+      return this.Domains.filterAdvanced(domain, advanced);
+    });
+  }
+
   getGlobalParameters() {
     return this.Domains.getGlobalParameters(this.data.parameters);
   }
@@ -52,7 +58,7 @@ class ControlController {
   }
 
   newRosConnection() {
-    if (isConnected || !this.setting) {
+    if (isConnected || this.setting === angular.isUndefined) {
       return;
     }
 
@@ -62,7 +68,7 @@ class ControlController {
       return;
     }
 
-    ros = new ROSLIB.Ros({ url: `ws://${this.settings.address}:${this.settings.port}` });
+    ros = new ROSLIB.Ros({ url: `ws://${this.setting.address}:${this.setting.port}` });
 
     ros.on('connection', () => {
       this.onConnected();

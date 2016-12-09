@@ -6,7 +6,7 @@ var gulp = require('gulp'),
 // Concat all js files into roscc.js
 gulp.task('js', function () {
   return gulp.src(['app/app.js', 'app/**/*.js'])
-    .pipe(babel({ presets: ['es2016'] }))
+    .pipe(babel({ presets: ['es2015'] }))
     .pipe(concat('roscc.js'))
     .pipe(gulp.dest('assets/js/'));
 });

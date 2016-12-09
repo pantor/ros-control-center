@@ -22,6 +22,8 @@ function serviceDirective() {
           if (result.data) {
             this.fileName = fileName;
           }
+        }, () => {
+          // console.log(fileName + ' not found, use default service component.');
         });
       });
 

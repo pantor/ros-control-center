@@ -1,3 +1,5 @@
+'use strict';
+
 function ROSCCConfig($routeProvider, localStorageServiceProvider) {
   $routeProvider.when('/', {
     templateUrl: 'app/control/control.html',
@@ -13,11 +15,143 @@ function ROSCCConfig($routeProvider, localStorageServiceProvider) {
 }
 
 angular.module('roscc', ['ngRoute', 'ui.bootstrap', 'LocalStorageModule']).config(ROSCCConfig);
-let ros;
-let isConnected = false;
+'use strict';
 
-class ControlController {
-  constructor($timeout, $interval, Settings, Domains) {
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var DomainsService = function () {
+  function DomainsService() {
+    _classCallCheck(this, DomainsService);
+  }
+
+  _createClass(DomainsService, [{
+    key: 'filterAdvanced',
+    value: function filterAdvanced(entry, advanced) {
+      var entryArray = entry.split('/');
+      if (advanced) {
+        return true;
+      }
+      if (!entry || _.isEmpty(entryArray)) {
+        return false;
+      }
+      return _.last(entryArray)[0] === _.last(entryArray)[0].toUpperCase();
+    }
+  }, {
+    key: 'getDomains',
+    value: function getDomains(array) {
+      var result = [];
+      angular.forEach(array, function (entry) {
+        var nameArray = entry.name.split('/');
+        if (nameArray.length > 1) {
+          result.push(nameArray[1]);
+        }
+      });
+      return _.uniq(result).sort();
+    }
+  }, {
+    key: 'getGlobalParameters',
+    value: function getGlobalParameters(array) {
+      var result = [];
+      angular.forEach(array, function (entry) {
+        var nameArray = entry.name.split('/');
+        if (nameArray.length === 2) {
+          entry.abbr = _.last(nameArray);
+          result.push(entry);
+        }
+      });
+      return result;
+    }
+  }, {
+    key: 'getDataForDomain',
+    value: function getDataForDomain(array, domainName, advanced) {
+      var _this = this;
+
+      var result = [];
+      angular.forEach(array, function (entry) {
+        var nameArray = entry.name.split('/');
+        if (nameArray.length > 1 && nameArray[1] === domainName && _this.filterAdvanced(entry.name, advanced)) {
+          entry.abbr = nameArray.slice(2).join(' ');
+          result.push(entry);
+        }
+      });
+      return result;
+    }
+  }]);
+
+  return DomainsService;
+}();
+
+// Filter advanced topics, services, parameters by checking the beginning capital letter
+
+angular.module('roscc').service('Domains', DomainsService);
+'use strict';
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var QuaternionsService = function () {
+  function QuaternionsService() {
+    _classCallCheck(this, QuaternionsService);
+  }
+
+  _createClass(QuaternionsService, null, [{
+    key: 'getRoll',
+    value: function getRoll(q) {
+      if (!q) {
+        return '';
+      }
+      var rad = Math.atan2(2 * (q.w * q.x + q.y * q.z), 1 - 2 * (q.x * q.x + q.y * q.y));
+      return 180 / Math.PI * rad;
+    }
+  }, {
+    key: 'getPitch',
+    value: function getPitch(q) {
+      if (!q) {
+        return '';
+      }
+      var rad = Math.asin(2 * (q.w * q.y - q.z * q.x));
+      return 180 / Math.PI * rad;
+    }
+  }, {
+    key: 'getYaw',
+    value: function getYaw(q) {
+      if (!q) {
+        return '';
+      }
+      var rad = Math.atan2(2 * (q.w * q.z + q.x * q.y), 1 - 2 * (q.y * q.y + q.z * q.z));
+      return 180 / Math.PI * rad;
+    }
+  }, {
+    key: 'getInit',
+    value: function getInit() {
+      return { w: 1, x: 0, y: 0, z: 0 };
+    }
+  }]);
+
+  return QuaternionsService;
+}();
+
+// Quaternions to Euler angles converter
+
+angular.module('roscc').service('Quaternions', QuaternionsService);
+'use strict';
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var ros = undefined;
+var isConnected = false;
+
+var ControlController = function () {
+  function ControlController($timeout, $interval, Settings, Domains) {
+    var _this = this;
+
+    _classCallCheck(this, ControlController);
+
     this.$timeout = $timeout;
     this.Domains = Domains;
 
@@ -27,8 +161,8 @@ class ControlController {
 
     // Load ROS connection and keep trying if it fails
     this.newRosConnection();
-    $interval(() => {
-      this.newRosConnection();
+    $interval(function () {
+      _this.newRosConnection();
     }, 1000); // [ms]
 
     this.resetData();
@@ -38,250 +172,223 @@ class ControlController {
   }
 
   // The active domain shows further information in the center view
-  setActiveDomain(domain) {
-    this.activeDomain = domain;
-  }
 
-  getDomains() {
-    const allData = this.data.topics.concat(this.data.services, this.data.nodes);
-    const domains = this.Domains.getDomains(allData);
-
-    if (!this.activeDomain) {
-      this.setActiveDomain(domains[0]);
+  _createClass(ControlController, [{
+    key: 'setActiveDomain',
+    value: function setActiveDomain(domain) {
+      this.activeDomain = domain;
     }
-    return domains;
-  }
+  }, {
+    key: 'getDomains',
+    value: function getDomains() {
+      var allData = this.data.topics.concat(this.data.services, this.data.nodes);
+      var domains = this.Domains.getDomains(allData);
 
-  getGlobalParameters() {
-    return this.Domains.getGlobalParameters(this.data.parameters);
-  }
+      if (!this.activeDomain) {
+        this.setActiveDomain(domains[0]);
+      }
+      return domains;
+    }
+  }, {
+    key: 'hasFilteredDomains',
+    value: function hasFilteredDomains(advanced) {
+      var _this2 = this;
 
-  resetData() {
-    this.data = {
-      rosout: [],
-      topics: [],
-      nodes: [],
-      parameters: [],
-      services: []
-    };
-  }
+      return this.getDomains().some(function (domain) {
+        return _this2.Domains.filterAdvanced(domain, advanced);
+      });
+    }
+  }, {
+    key: 'getGlobalParameters',
+    value: function getGlobalParameters() {
+      return this.Domains.getGlobalParameters(this.data.parameters);
+    }
+  }, {
+    key: 'resetData',
+    value: function resetData() {
+      this.data = {
+        rosout: [],
+        topics: [],
+        nodes: [],
+        parameters: [],
+        services: []
+      };
+    }
+  }, {
+    key: 'newRosConnection',
+    value: function newRosConnection() {
+      var _this3 = this;
 
-  newRosConnection() {
-    if (isConnected || !this.setting) {
-      return;
+      if (isConnected || this.setting === angular.isUndefined) {
+        return;
+      }
+
+      if (ros) {
+        ros.close(); // Close old connection
+        ros = false;
+        return;
+      }
+
+      ros = new ROSLIB.Ros({ url: 'ws://' + this.setting.address + ':' + this.setting.port });
+
+      ros.on('connection', function () {
+        _this3.onConnected();
+        isConnected = true;
+        _this3.isConnected = isConnected;
+      });
+
+      ros.on('error', function () {
+        isConnected = false;
+        _this3.isConnected = isConnected;
+      });
+
+      ros.on('close', function () {
+        isConnected = false;
+        _this3.isConnected = isConnected;
+      });
+    }
+  }, {
+    key: 'onConnected',
+    value: function onConnected() {
+      var _this4 = this;
+
+      // wait a moment until ROS is loaded and initialized
+      this.$timeout(function () {
+        _this4.loadData();
+
+        _this4.setConsole();
+        if (_this4.setting.battery) {
+          _this4.setBattery();
+        }
+      }, 1000); // [ms]
     }
 
-    if (ros) {
-      ros.close(); // Close old connection
-      ros = false;
-      return;
+    // Setup of console (in the right sidebar)
+
+  }, {
+    key: 'setConsole',
+    value: function setConsole() {
+      var _this5 = this;
+
+      var consoleTopic = new ROSLIB.Topic({
+        ros: ros,
+        name: this.setting.log,
+        messageType: 'rosgraph_msgs/Log'
+      });
+      consoleTopic.subscribe(function (message) {
+        var nameArray = message.name.split('/');
+        var d = new Date(message.header.stamp.secs * 1E3 + message.header.stamp.nsecs * 1E-6);
+
+        message.abbr = nameArray.length > 1 ? nameArray[1] : message.name;
+
+        // String formatting of message time and date
+        function addZero(i) {
+          return i < 10 ? '0' + i : '' + i;
+        }
+        message.dateString = addZero(d.getHours()) + ':\n      ' + addZero(d.getMinutes()) + ':\n      ' + addZero(d.getSeconds()) + '.\n      ' + addZero(d.getMilliseconds());
+        _this5.data.rosout.unshift(message);
+
+        if (_this5.data.rosout.length > _this5.maxConsoleEntries) {
+          _this5.data.rosout.pop();
+        }
+      });
     }
 
-    ros = new ROSLIB.Ros({ url: `ws://${ this.settings.address }:${ this.settings.port }` });
+    // Setup battery status
 
-    ros.on('connection', () => {
-      this.onConnected();
-      isConnected = true;
-      this.isConnected = isConnected;
-    });
+  }, {
+    key: 'setBattery',
+    value: function setBattery() {
+      var _this6 = this;
 
-    ros.on('error', () => {
-      isConnected = false;
-      this.isConnected = isConnected;
-    });
+      var batteryTopic = new ROSLIB.Topic({
+        ros: ros,
+        name: this.setting.batteryTopic,
+        messageType: 'std_msgs/Float32'
+      });
+      batteryTopic.subscribe(function (message) {
+        _this6.batteryStatus = message.data;
+      });
+    }
 
-    ros.on('close', () => {
-      isConnected = false;
-      this.isConnected = isConnected;
-    });
-  }
+    // Load structure, all data, parameters, topics, services, nodes...
 
-  onConnected() {
-    // wait a moment until ROS is loaded and initialized
-    this.$timeout(() => {
-      this.loadData();
+  }, {
+    key: 'loadData',
+    value: function loadData() {
+      var _this7 = this;
 
-      this.setConsole();
-      if (this.setting.battery) {
-        this.setBattery();
-      }
-    }, 1000); // [ms]
-  }
+      this.resetData();
 
-  // Setup of console (in the right sidebar)
-  setConsole() {
-    const consoleTopic = new ROSLIB.Topic({
-      ros,
-      name: this.setting.log,
-      messageType: 'rosgraph_msgs/Log'
-    });
-    consoleTopic.subscribe(message => {
-      const nameArray = message.name.split('/');
-      const d = new Date(message.header.stamp.secs * 1E3 + message.header.stamp.nsecs * 1E-6);
+      ros.getTopics(function (topics) {
+        angular.forEach(topics, function (name) {
+          _this7.data.topics.push({ name: name });
 
-      message.abbr = nameArray.length > 1 ? nameArray[1] : message.name;
-
-      // String formatting of message time and date
-      function addZero(i) {
-        return i < 10 ? `0${ i }` : `${ i }`;
-      }
-      message.dateString = `${ addZero(d.getHours()) }:
-      ${ addZero(d.getMinutes()) }:
-      ${ addZero(d.getSeconds()) }.
-      ${ addZero(d.getMilliseconds()) }`;
-      this.data.rosout.unshift(message);
-
-      if (this.data.rosout.length > this.maxConsoleEntries) {
-        this.data.rosout.pop();
-      }
-    });
-  }
-
-  // Setup battery status
-  setBattery() {
-    const batteryTopic = new ROSLIB.Topic({
-      ros,
-      name: this.setting.batteryTopic,
-      messageType: 'std_msgs/Float32'
-    });
-    batteryTopic.subscribe(message => {
-      this.batteryStatus = message.data;
-    });
-  }
-
-  // Load structure, all data, parameters, topics, services, nodes...
-  loadData() {
-    this.resetData();
-
-    ros.getTopics(topics => {
-      angular.forEach(topics, name => {
-        this.data.topics.push({ name });
-
-        ros.getTopicType(name, type => {
-          _.findWhere(this.data.topics, { name }).type = type;
+          ros.getTopicType(name, function (type) {
+            _.findWhere(_this7.data.topics, { name: name }).type = type;
+          });
         });
       });
-    });
 
-    ros.getServices(services => {
-      angular.forEach(services, name => {
-        this.data.services.push({ name });
+      ros.getServices(function (services) {
+        angular.forEach(services, function (name) {
+          _this7.data.services.push({ name: name });
 
-        ros.getServiceType(name, type => {
-          _.findWhere(this.data.services, { name }).type = type;
+          ros.getServiceType(name, function (type) {
+            _.findWhere(_this7.data.services, { name: name }).type = type;
+          });
         });
       });
-    });
 
-    ros.getParams(params => {
-      angular.forEach(params, name => {
-        const param = new ROSLIB.Param({ ros, name });
-        this.data.parameters.push({ name });
+      ros.getParams(function (params) {
+        angular.forEach(params, function (name) {
+          var param = new ROSLIB.Param({ ros: ros, name: name });
+          _this7.data.parameters.push({ name: name });
 
-        param.get(value => {
-          _.findWhere(this.data.parameters, { name }).value = value;
+          param.get(function (value) {
+            _.findWhere(_this7.data.parameters, { name: name }).value = value;
+          });
         });
       });
-    });
 
-    ros.getNodes(nodes => {
-      angular.forEach(nodes, name => {
-        this.data.nodes.push({ name });
+      ros.getNodes(function (nodes) {
+        angular.forEach(nodes, function (name) {
+          _this7.data.nodes.push({ name: name });
+        });
       });
-    });
-  }
-}
+    }
+  }]);
+
+  return ControlController;
+}();
 
 angular.module('roscc').controller('ControlController', ControlController);
-class DomainsService {
-  static filterAdvanced(entry, advanced) {
-    const entryArray = entry.split('/');
-    if (advanced) {
-      return true;
+'use strict';
+
+function NavbarDirective($location) {
+  return {
+    templateUrl: 'app/navbar/navbar.html',
+    controllerAs: 'vm',
+    controller: function controller() {
+      this.isPath = isPath;
+
+      function isPath(path) {
+        return $location.path() === path;
+      }
     }
-    if (!entry || _.isEmpty(entryArray)) {
-      return false;
-    }
-    return _.last(entryArray)[0] === _.last(entryArray)[0].toUpperCase();
-  }
-
-  static getDomains(array) {
-    const result = [];
-    angular.forEach(array, entry => {
-      const nameArray = entry.name.split('/');
-      if (nameArray.length > 1) {
-        result.push(nameArray[1]);
-      }
-    });
-    return _.uniq(result).sort();
-  }
-
-  static getGlobalParameters(array) {
-    const result = [];
-    angular.forEach(array, entry => {
-      const nameArray = entry.name.split('/');
-      if (nameArray.length === 2) {
-        entry.abbr = _.last(nameArray);
-        result.push(entry);
-      }
-    });
-    return result;
-  }
-
-  static getDataForDomain(array, domainName, advanced) {
-    const result = [];
-    angular.forEach(array, entry => {
-      const nameArray = entry.name.split('/');
-      if (nameArray.length > 1 && nameArray[1] === domainName && this.filterAdvanced(entry.name, advanced)) {
-        entry.abbr = nameArray.slice(2).join(' ');
-        result.push(entry);
-      }
-    });
-    return result;
-  }
+  };
 }
 
-// Filter advanced topics, services, parameters by checking the beginning capital letter
-angular.module('roscc').service('Domains', DomainsService);
-class QuaternionsService {
-  static getRoll(q) {
-    if (!q) {
-      return '';
-    }
-    const rad = Math.atan2(2 * (q.w * q.x + q.y * q.z), 1 - 2 * (q.x * q.x + q.y * q.y));
-    return 180 / Math.PI * rad;
-  }
+angular.module('roscc').directive('ccNavbar', NavbarDirective);
+'use strict';
 
-  static getPitch(q) {
-    if (!q) {
-      return '';
-    }
-    const rad = Math.asin(2 * (q.w * q.y - q.z * q.x));
-    return 180 / Math.PI * rad;
-  }
-
-  static getYaw(q) {
-    if (!q) {
-      return '';
-    }
-    const rad = Math.atan2(2 * (q.w * q.z + q.x * q.y), 1 - 2 * (q.y * q.y + q.z * q.z));
-    return 180 / Math.PI * rad;
-  }
-
-  static getInit() {
-    return { w: 1, x: 0, y: 0, z: 0 };
-  }
-}
-
-// Quaternions to Euler angles converter
-angular.module('roscc').service('Quaternions', QuaternionsService);
 function ParamaterDirective() {
   return {
     scope: { parameter: '=' },
     templateUrl: 'app/parameters/parameters.html',
     controllerAs: 'vm',
-    controller($scope) {
-      const param = new ROSLIB.Param({ ros, name: $scope.parameter.name });
+    controller: function controller($scope) {
+      var param = new ROSLIB.Param({ ros: ros, name: $scope.parameter.name });
 
       this.parameter = $scope.parameter;
       this.setValue = setValue;
@@ -294,60 +401,53 @@ function ParamaterDirective() {
 }
 
 angular.module('roscc').directive('ccParameter', ParamaterDirective);
-function NavbarDirective($location) {
-  return {
-    templateUrl: 'app/navbar/navbar.html',
-    controllerAs: 'vm',
-    controller() {
-      this.isPath = isPath;
+'use strict';
 
-      function isPath(path) {
-        return $location.path() === path;
-      }
-    }
-  };
-}
-
-angular.module('roscc').directive('ccNavbar', NavbarDirective);
 function serviceDirective() {
   return {
     scope: { service: '=' },
     template: '<ng-include src="vm.fileName"></ng-include>',
     controllerAs: 'vm',
-    controller($scope, $timeout, $http) {
-      const path = 'app/services/';
+    controller: function controller($scope, $timeout, $http) {
+      var _this = this;
+
+      var path = 'app/services/';
 
       this.service = $scope.service;
       this.callService = callService;
-      this.fileName = `${ path }default.html`;
+      this.fileName = path + 'default.html';
 
       // Check if file exists
-      $scope.$watch('service.type', () => {
+      $scope.$watch('service.type', function () {
         if (!$scope.service.type) {
           return;
         }
-        const fileName = `${ path }${ $scope.service.type }.html`;
+        var fileName = '' + path + $scope.service.type + '.html';
 
-        this.service = $scope.service;
-        $http.get(fileName).then(result => {
+        _this.service = $scope.service;
+        $http.get(fileName).then(function (result) {
           if (result.data) {
-            this.fileName = fileName;
+            _this.fileName = fileName;
           }
+        }, function (result) {
+          console.log(fileName + ' not found, use default service component.');
         });
       });
 
       function callService(input, isJSON) {
-        const data = isJSON ? angular.fromJSON(input) : input;
-        const service = new ROSLIB.Service({
-          ros,
+        var _this2 = this;
+
+        var data = isJSON ? angular.fromJSON(input) : input;
+        var service = new ROSLIB.Service({
+          ros: ros,
           name: this.service.name,
           serviceType: this.service.type
         });
-        const request = new ROSLIB.ServiceRequest(data);
+        var request = new ROSLIB.ServiceRequest(data);
 
-        service.callService(request, result => {
-          $timeout(() => {
-            this.result = result;
+        service.callService(request, function (result) {
+          $timeout(function () {
+            _this2.result = result;
           });
         });
       }
@@ -356,8 +456,16 @@ function serviceDirective() {
 }
 
 angular.module('roscc').directive('ccService', serviceDirective);
-class SettingsController {
-  constructor(localStorageService, Settings) {
+'use strict';
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var SettingsController = function () {
+  function SettingsController(localStorageService, Settings) {
+    _classCallCheck(this, SettingsController);
+
     this.Settings = Settings;
 
     this.settings = Settings.getSettings() || [Settings.getDefaultSetting()];
@@ -368,105 +476,134 @@ class SettingsController {
     }
   }
 
-  save() {
-    this.Settings.save(this.settings, this.index);
-  }
-
-  add() {
-    this.settings.push(this.Settings.getDefaultSetting()); // Clone object
-    this.index = String(this.settings.length - 1);
-    this.save();
-  }
-
-  remove() {
-    this.settings.splice(this.index, 1);
-    this.index = '0';
-
-    if (!this.settings.length) {
-      this.add();
+  _createClass(SettingsController, [{
+    key: 'save',
+    value: function save() {
+      this.Settings.save(this.settings, this.index);
     }
-    this.save();
-  }
-}
+  }, {
+    key: 'add',
+    value: function add() {
+      this.settings.push(this.Settings.getDefaultSetting()); // Clone object
+      this.index = String(this.settings.length - 1);
+      this.save();
+    }
+  }, {
+    key: 'remove',
+    value: function remove() {
+      this.settings.splice(this.index, 1);
+      this.index = '0';
+
+      if (!this.settings.length) {
+        this.add();
+      }
+      this.save();
+    }
+  }]);
+
+  return SettingsController;
+}();
 
 angular.module('roscc').controller('SettingsController', SettingsController);
-class SettingsService {
-  constructor($location, localStorageService) {
+'use strict';
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var SettingsService = function () {
+  function SettingsService($location, localStorageService) {
+    _classCallCheck(this, SettingsService);
+
     this.$location = $location;
     this.localStorageService = localStorageService;
   }
 
-  load() {
-    this.index = this.localStorageService.get('selectedSettingIndex');
-    this.settings = this.localStorageService.get('settings');
-    if (this.settings && this.index) {
-      this.setting = this.settings[this.index];
+  _createClass(SettingsService, [{
+    key: 'load',
+    value: function load() {
+      this.index = this.localStorageService.get('selectedSettingIndex');
+      this.settings = this.localStorageService.get('settings');
+      if (this.settings && this.index) {
+        this.setting = this.settings[this.index];
+      }
+
+      // If there are no saved settings, redirect to /settings for first setting input
+      if (!this.setting) {
+        this.$location.path('/settings').replace();
+      }
     }
-
-    // If there are no saved settings, redirect to /settings for first setting input
-    if (!this.setting) {
-      this.$location.path('/settings').replace();
+  }, {
+    key: 'save',
+    value: function save(newSettings, newIndex) {
+      this.settings = newSettings;
+      this.index = newIndex;
+      this.localStorageService.set('selectedSettingIndex', newIndex);
+      this.localStorageService.set('settings', newSettings);
     }
-  }
+  }, {
+    key: 'get',
+    value: function get() {
+      if (!this.setting) {
+        this.load();
+      }
 
-  save(newSettings, newIndex) {
-    this.settings = newSettings;
-    this.index = newIndex;
-    this.localStorageService.set('selectedSettingIndex', newIndex);
-    this.localStorageService.set('settings', newSettings);
-  }
-
-  get() {
-    if (!this.setting) {
-      this.load();
+      return this.setting;
     }
+  }, {
+    key: 'getIndex',
+    value: function getIndex() {
+      if (!this.setting) {
+        this.load();
+      }
 
-    return this.setting;
-  }
-
-  getIndex() {
-    if (!this.setting) {
-      this.load();
+      return this.index;
     }
+  }, {
+    key: 'getSettings',
+    value: function getSettings() {
+      if (!this.setting) {
+        this.load();
+      }
 
-    return this.index;
-  }
-
-  getSettings() {
-    if (!this.setting) {
-      this.load();
+      return this.settings;
     }
+  }], [{
+    key: 'getDefaultSetting',
+    value: function getDefaultSetting() {
+      return {
+        name: 'Robot Name',
+        address: '127.0.0.1', // use localhost
+        port: 9090, // default port of rosbridge_server
+        log: '/rosout',
+        imagePreview: { port: 0, quality: 70, width: 640, height: 480 },
+        battery: false,
+        batteryTopic: '',
+        advanced: false
+      };
+    }
+  }]);
 
-    return this.settings;
-  }
-
-  static getDefaultSetting() {
-    return {
-      name: 'Robot Name',
-      address: '127.0.0.1', // use localhost
-      port: 9090, // default port of rosbridge_server
-      log: '/rosout',
-      imagePreview: { port: 0, quality: 70, width: 640, height: 480 },
-      battery: false,
-      batteryTopic: '',
-      advanced: false
-    };
-  }
-}
+  return SettingsService;
+}();
 
 angular.module('roscc').service('Settings', SettingsService);
+'use strict';
+
 function topicDirective() {
   return {
     scope: { topic: '=' },
     template: '<ng-include src="vm.fileName"></ng-include>',
     controllerAs: 'vm',
-    controller($scope, $timeout, $http, Settings, Quaternions) {
-      const roslibTopic = new ROSLIB.Topic({
-        ros,
+    controller: function controller($scope, $timeout, $http, Settings, Quaternions) {
+      var _this = this;
+
+      var roslibTopic = new ROSLIB.Topic({
+        ros: ros,
         name: $scope.topic.name,
         messageType: $scope.topic.type
       });
-      const path = 'app/topics/';
+      var path = 'app/topics/';
 
       this.topic = $scope.topic;
       this.toggleSubscription = toggleSubscription;
@@ -474,28 +611,32 @@ function topicDirective() {
       this.isSubscribing = false;
       this.setting = Settings.get();
       this.Quaternions = Quaternions;
-      this.fileName = `${ path }default.html`;
+      this.fileName = path + 'default.html';
 
       // Check if file exists
-      $scope.$watch('topic.type', () => {
+      $scope.$watch('topic.type', function () {
         if (!$scope.topic.type) {
           return;
         }
-        const fileName = `${ path }${ $scope.topic.type }.html`;
+        var fileName = '' + path + $scope.topic.type + '.html';
 
-        this.topic = $scope.topic;
-        $http.get(fileName).then(result => {
+        _this.topic = $scope.topic;
+        $http.get(fileName).then(function (result) {
           if (result.data) {
-            this.fileName = fileName;
+            _this.fileName = fileName;
           }
+        }, function (result) {
+          console.log(fileName + ' not found, use default topic component.');
         });
       });
 
       function toggleSubscription(data) {
+        var _this2 = this;
+
         if (!data) {
-          roslibTopic.subscribe(message => {
-            $timeout(() => {
-              this.message = message;
+          roslibTopic.subscribe(function (message) {
+            $timeout(function () {
+              _this2.message = message;
             });
           });
         } else {
@@ -505,8 +646,8 @@ function topicDirective() {
       }
 
       function publishMessage(input, isJSON) {
-        const data = isJSON ? angular.fromJSON(input) : input;
-        const message = new ROSLIB.Message(data);
+        var data = isJSON ? angular.fromJSON(input) : input;
+        var message = new ROSLIB.Message(data);
         roslibTopic.publish(message);
       }
     }

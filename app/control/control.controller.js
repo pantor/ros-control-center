@@ -100,9 +100,9 @@ class ControlController {
       name: this.setting.log,
       messageType: 'rosgraph_msgs/Log',
     });
-    consoleTopic.subscribe(message => {
+    consoleTopic.subscribe((message) => {
       const nameArray = message.name.split('/');
-      const d = new Date(message.header.stamp.secs * 1E3 + message.header.stamp.nsecs * 1E-6);
+      const d = new Date((message.header.stamp.secs * 1E3) + (message.header.stamp.nsecs * 1E-6));
 
       message.abbr = (nameArray.length > 1) ? nameArray[1] : message.name;
 
@@ -127,7 +127,7 @@ class ControlController {
       name: this.setting.batteryTopic,
       messageType: 'std_msgs/Float32',
     });
-    batteryTopic.subscribe(message => {
+    batteryTopic.subscribe((message) => {
       this.batteryStatus = message.data;
     });
   }
@@ -136,28 +136,28 @@ class ControlController {
   loadData() {
     this.resetData();
 
-    ros.getTopics(topics => {
-      angular.forEach(topics, name => {
+    ros.getTopics((topics) => {
+      angular.forEach(topics, (name) => {
         this.data.topics.push({ name });
 
-        ros.getTopicType(name, type => {
+        ros.getTopicType(name, (type) => {
           _.findWhere(this.data.topics, { name }).type = type;
         });
       });
     });
 
-    ros.getServices(services => {
-      angular.forEach(services, name => {
+    ros.getServices((services) => {
+      angular.forEach(services, (name) => {
         this.data.services.push({ name });
 
-        ros.getServiceType(name, type => {
+        ros.getServiceType(name, (type) => {
           _.findWhere(this.data.services, { name }).type = type;
         });
       });
     });
 
-    ros.getParams(params => {
-      angular.forEach(params, name => {
+    ros.getParams((params) => {
+      angular.forEach(params, (name) => {
         const param = new ROSLIB.Param({ ros, name });
         this.data.parameters.push({ name });
 
@@ -167,8 +167,8 @@ class ControlController {
       });
     });
 
-    ros.getNodes(nodes => {
-      angular.forEach(nodes, name => {
+    ros.getNodes((nodes) => {
+      angular.forEach(nodes, (name) => {
         this.data.nodes.push({ name });
       });
     });

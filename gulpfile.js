@@ -6,7 +6,7 @@ var gulp = require('gulp'),
 // Concat all js files into roscc.js
 gulp.task('js', function () {
   return gulp.src(['app/app.js', 'app/**/*.js'])
-    .pipe(babel({ presets: ['es2015'] }))
+    .pipe(babel({ presets: ['es2016'] }))
     .pipe(concat('roscc.js'))
     .pipe(gulp.dest('assets/js/'));
 });
@@ -14,15 +14,7 @@ gulp.task('js', function () {
 // Lint javascript based on airbnb ES5 linter and angular code style guide
 gulp.task('js-lint', function() {
   return gulp.src(['app/**/*.js'])
-    .pipe(eslint({
-      global: ['_', 'ros', 'ROSLIB'],
-      extends: ['airbnb/base', 'angular'],
-      rules: {
-        'no-param-reassign': 1,
-        'angular/no-service-method': 0,
-        'angular/controller-as-vm': 0,
-      },
-    }))
+    .pipe(eslint()) // use .eslintrc.json file for rules
     .pipe(eslint.format())
     .pipe(eslint.failAfterError());
 });

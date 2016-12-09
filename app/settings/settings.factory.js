@@ -48,14 +48,14 @@ class SettingsService {
     return this.settings;
   }
 
-  getDefaultSetting() {
+  static getDefaultSetting() {
     return {
-      name: 'New Setting',
-      address: location.hostname,
-      port: 9090,
+      name: 'Robot Name',
+      address: '127.0.0.1', // use localhost
+      port: 9090, // default port of rosbridge_server
       log: '/rosout',
       imagePreview: { port: 0, quality: 70, width: 640, height: 480 },
-      battery: true,
+      battery: false,
       batteryTopic: '',
       advanced: false,
     };

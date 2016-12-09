@@ -1,7 +1,7 @@
 function topicDirective() {
   return {
     scope: { topic: '=' },
-    template: '<ng-include src=\"vm.fileName\"></ng-include>',
+    template: '<ng-include src="vm.fileName"></ng-include>',
     controllerAs: 'vm',
     controller($scope, $timeout, $http, Settings, Quaternions) {
       const roslibTopic = new ROSLIB.Topic({
@@ -24,10 +24,10 @@ function topicDirective() {
         if (!$scope.topic.type) {
           return;
         }
-        const fileName = '${path}${$scope.topic.type}.html';
+        const fileName = `${path}${$scope.topic.type}.html`;
 
         this.topic = $scope.topic;
-        $http.get(fileName).then(result => {
+        $http.get(fileName).then((result) => {
           if (result.data) {
             this.fileName = fileName;
           }
@@ -36,7 +36,7 @@ function topicDirective() {
 
       function toggleSubscription(data) {
         if (!data) {
-          roslibTopic.subscribe(message => {
+          roslibTopic.subscribe((message) => {
             $timeout(() => {
               this.message = message;
             });

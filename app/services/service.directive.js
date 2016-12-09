@@ -1,7 +1,7 @@
 function serviceDirective() {
   return {
     scope: { service: '=' },
-    template: '<ng-include src=\"vm.fileName\"></ng-include>',
+    template: '<ng-include src="vm.fileName"></ng-include>',
     controllerAs: 'vm',
     controller($scope, $timeout, $http) {
       const path = 'app/services/';
@@ -18,7 +18,7 @@ function serviceDirective() {
         const fileName = `${path}${$scope.service.type}.html`;
 
         this.service = $scope.service;
-        $http.get(fileName).then(result => {
+        $http.get(fileName).then((result) => {
           if (result.data) {
             this.fileName = fileName;
           }
@@ -34,7 +34,7 @@ function serviceDirective() {
         });
         const request = new ROSLIB.ServiceRequest(data);
 
-        service.callService(request, result => {
+        service.callService(request, (result) => {
           $timeout(() => {
             this.result = result;
           });

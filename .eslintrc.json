@@ -1,0 +1,18 @@
+{
+  "parserOptions": {
+    "ecmaVersion": 6
+  },
+  "globals": {
+    "_": true,
+    "ros": true,
+    "ROSLIB": true
+  },
+  "extends": [
+    "airbnb/base",
+    "angular"
+  ],
+  "rules": {
+    "angular/no-service-method": 0,
+    "no-param-reassign": 1
+  }
+}

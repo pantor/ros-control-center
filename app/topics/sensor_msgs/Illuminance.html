@@ -1,19 +1,19 @@
-<div class="panel panel-default" ng-class="{'panel-success': vm.toggle}">
+<div class="panel panel-default" ng-class="{'panel-success': ctrl.toggle}">
   <div class="panel-heading clearfix">
-    <button class="btn btn-default btn-sm pull-right" ng-click="vm.toggleSubscription(!vm.toggle)" ng-model="vm.toggle" uib-btn-checkbox>{{ vm.toggle ? 'Unsubscribe' : 'Subscribe' }}</button>
+    <button class="btn btn-default btn-sm pull-right" ng-click="ctrl.toggleSubscription(!ctrl.toggle)" ng-model="ctrl.toggle" uib-btn-checkbox>{{ ctrl.toggle ? 'Unsubscribe' : 'Subscribe' }}</button>
 
     <h3 class="panel-title">
-      {{ vm.topic.abbr }}
-      <small style="font-size: 12px;">({{ vm.topic.type }})</small>
+      {{ ctrl.topic.abbr }}
+      <small style="font-size: 12px;">({{ ctrl.topic.type }})</small>
     </h3>
   </div>
 
   <div class="panel-body">
     <div class="row">
       <div class="col-xs-12">
-        <button class="btn btn-default pull-right" type="button" ng-disabled="vm.isSubscribing" style="margin-left: 10px;" ng-click="vm.publishMessage(vm.message)">Publish</button>
+        <button class="btn btn-default pull-right" type="button" ng-disabled="ctrl.isSubscribing" style="margin-left: 10px;" ng-click="ctrl.publishMessage(ctrl.message)">Publish</button>
         <div class="input-group">
-          <input type="number" class="form-control" ng-model="vm.message.illuminance" ng-readonly="vm.isSubscribing">
+          <input type="number" class="form-control" ng-model="ctrl.message.illuminance" ng-readonly="ctrl.isSubscribing">
           <span class="input-group-addon">a.u.</span>
         </div>
       </div>

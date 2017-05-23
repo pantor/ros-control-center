@@ -3,12 +3,12 @@ function ROSCCConfig($routeProvider, localStorageServiceProvider) {
     .when('/', {
       templateUrl: 'app/control/control.html',
       controller: 'ControlController',
-      controllerAs: 'vm',
+      controllerAs: 'ctrl',
     })
     .when('/settings', {
       templateUrl: 'app/settings/settings.html',
       controller: 'SettingsController',
-      controllerAs: 'vm',
+      controllerAs: 'ctrl',
     })
     .otherwise({ redirectTo: '/' });
 

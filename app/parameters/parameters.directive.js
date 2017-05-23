@@ -2,7 +2,7 @@ function ParamaterDirective() {
   return {
     scope: { parameter: '=' },
     templateUrl: 'app/parameters/parameters.html',
-    controllerAs: 'vm',
+    controllerAs: 'ctrl',
     controller($scope) {
       const param = new ROSLIB.Param({ ros, name: $scope.parameter.name });
 

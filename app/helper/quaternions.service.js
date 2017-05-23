@@ -1,5 +1,5 @@
 class QuaternionsService {
-  static getRoll(q) {
+  getRoll(q) {
     if (!q) {
       return '';
     }
@@ -7,7 +7,7 @@ class QuaternionsService {
     return (180 / Math.PI) * rad;
   }
 
-  static getPitch(q) {
+  getPitch(q) {
     if (!q) {
       return '';
     }
@@ -15,7 +15,7 @@ class QuaternionsService {
     return (180 / Math.PI) * rad;
   }
 
-  static getYaw(q) {
+  getYaw(q) {
     if (!q) {
       return '';
     }
@@ -23,7 +23,7 @@ class QuaternionsService {
     return (180 / Math.PI) * rad;
   }
 
-  static getInit() {
+  getInit() {
     return { w: 1, x: 0, y: 0, z: 0 };
   }
 }

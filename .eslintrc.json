@@ -14,7 +14,6 @@
   "rules": {
     "angular/no-service-method": 0,
     "no-param-reassign": 1,
-    "class-methods-use-this": 0,
-    "arrow-body-style": 1
+    "class-methods-use-this": 0
   }
 }

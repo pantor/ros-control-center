@@ -1,7 +1,7 @@
 function NavbarDirective($location) {
   return {
     templateUrl: 'app/navbar/navbar.html',
-    controllerAs: 'vm',
+    controllerAs: 'ctrl',
     controller() {
       this.isPath = isPath;
 

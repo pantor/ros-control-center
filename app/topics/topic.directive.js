@@ -1,8 +1,8 @@
 function topicDirective() {
   return {
     scope: { topic: '=' },
-    template: '<ng-include src="vm.fileName"></ng-include>',
-    controllerAs: 'vm',
+    template: '<ng-include src="ctrl.fileName"></ng-include>',
+    controllerAs: 'ctrl',
     controller($scope, $timeout, $http, Settings, Quaternions) {
       const roslibTopic = new ROSLIB.Topic({
         ros,

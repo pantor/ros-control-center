@@ -48,7 +48,7 @@ class SettingsService {
     return this.settings;
   }
 
-  static getDefaultSetting() {
+  getDefaultSetting() {
     return {
       name: 'Robot Name',
       address: '127.0.0.1', // use localhost

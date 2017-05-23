@@ -1,10 +1,10 @@
-<div class="panel panel-default" ng-class="{'panel-success': vm.toggle}">
+<div class="panel panel-default" ng-class="{'panel-success': ctrl.toggle}">
   <div class="panel-heading clearfix">
-    <button class="btn btn-default btn-sm pull-right" ng-click="vm.toggleSubscription(!vm.toggle)" ng-model="vm.toggle" uib-btn-checkbox>{{ vm.toggle ? 'Unsubscribe' : 'Subscribe' }}</button>
+    <button class="btn btn-default btn-sm pull-right" ng-click="ctrl.toggleSubscription(!ctrl.toggle)" ng-model="ctrl.toggle" uib-btn-checkbox>{{ ctrl.toggle ? 'Unsubscribe' : 'Subscribe' }}</button>
 
     <h3 class="panel-title">
-      {{ vm.topic.abbr }}
-      <small style="font-size: 12px;">({{ vm.topic.type }})</small>
+      {{ ctrl.topic.abbr }}
+      <small style="font-size: 12px;">({{ ctrl.topic.type }})</small>
     </h3>
   </div>
 
@@ -15,7 +15,7 @@
           <div class="form-group">
             <label>X</label>
             <div class="input-group">
-              <input type="number" class="form-control" ng-model="vm.message.magnetic_field.x" ng-readonly="vm.isSubscribing">
+              <input type="number" class="form-control" ng-model="ctrl.message.magnetic_field.x" ng-readonly="ctrl.isSubscribing">
               <span class="input-group-addon">m/s<sup>2</sup></span>
             </div>
           </div>
@@ -23,7 +23,7 @@
           <div class="form-group">
             <label>Y</label>
             <div class="input-group">
-              <input type="number" class="form-control" ng-model="vm.message.magnetic_field.y" ng-readonly="vm.isSubscribing">
+              <input type="number" class="form-control" ng-model="ctrl.message.magnetic_field.y" ng-readonly="ctrl.isSubscribing">
               <span class="input-group-addon">m/s<sup>2</sup></span>
             </div>
           </div>
@@ -31,7 +31,7 @@
           <div class="form-group">
             <label>Z</label>
             <div class="input-group">
-              <input type="number" class="form-control" ng-model="vm.message.magnetic_field.z" ng-readonly="vm.isSubscribing">
+              <input type="number" class="form-control" ng-model="ctrl.message.magnetic_field.z" ng-readonly="ctrl.isSubscribing">
               <span class="input-group-addon">m/s<sup>2</sup></span>
             </div>
           </div>

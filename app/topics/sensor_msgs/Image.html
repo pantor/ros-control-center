@@ -1,18 +1,18 @@
-<div class="panel panel-default" ng-class="{'panel-success': vm.toggle}">
+<div class="panel panel-default" ng-class="{'panel-success': ctrl.toggle}">
   <div class="panel-heading clearfix">
-    <button class="btn btn-default btn-sm pull-right" ng-click="vm.toggleSubscription(!vm.toggle)" ng-model="vm.toggle" uib-btn-checkbox>{{ vm.toggle ? 'Unsubscribe' : 'Subscribe' }}</button>
+    <button class="btn btn-default btn-sm pull-right" ng-click="ctrl.toggleSubscription(!ctrl.toggle)" ng-model="ctrl.toggle" uib-btn-checkbox>{{ ctrl.toggle ? 'Unsubscribe' : 'Subscribe' }}</button>
 
     <h3 class="panel-title">
-      {{ vm.topic.abbr }}
-      <small style="font-size: 12px;">({{ vm.topic.type }})</small>
+      {{ ctrl.topic.abbr }}
+      <small style="font-size: 12px;">({{ ctrl.topic.type }})</small>
     </h3>
   </div>
 
-  <div class="panel-body" ng-if="vm.toggle">
+  <div class="panel-body" ng-if="ctrl.toggle">
     <div class="row">
       <div class="col-sm-12">
         <center>
-          <img class="img-responsive img-thumbnail" ng-src="http://{{ vm.setting.address }}:{{ vm.setting.imagePreview.port }}/stream?topic={{ topic.name }}&quality={{ vm.setting.imagePreview.quality }}&width={{ vm.setting.imagePreview.width }}&height={{ vm.setting.imagePreview.height }}">
+          <img class="img-responsive img-thumbnail" ng-src="http://{{ ctrl.setting.address }}:{{ ctrl.setting.imagePreview.port }}/stream?topic={{ topic.name }}&quality={{ ctrl.setting.imagePreview.quality }}&width={{ ctrl.setting.imagePreview.width }}&height={{ ctrl.setting.imagePreview.height }}">
         </center>
       </div>
     </div>

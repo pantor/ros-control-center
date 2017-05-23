@@ -1,46 +1,46 @@
 <div class="container-fluid">
   <!-- No connection alert -->
-  <div class="alert alert-danger col-sm-6 col-sm-offset-3" role="alert" ng-if="!vm.isConnected">
+  <div class="alert alert-danger col-sm-6 col-sm-offset-3" role="alert" ng-if="!ctrl.isConnected">
     <p class="lead"><i class="glyphicon glyphicon-warning-sign"></i> Whoops...</p>
-    The ROS Control Center is <b>not connected</b> to a robot running rosbridge_suite at {{ vm.setting.address }}:{{ vm.setting.port }}. You can change the URL in the <i>Settings</i> tab, further information can be found in the <a href="https://github.com/pantor/ros-control-center">GitHub Repository</a>.
+    The ROS Control Center is <b>not connected</b> to a robot running rosbridge_suite at {{ ctrl.setting.address }}:{{ ctrl.setting.port }}. You can change the URL in the <i>Settings</i> tab, further information can be found in the <a href="https://github.com/pantor/ros-control-center">GitHub Repository</a>.
   </div>
 
-  <div class="alert alert-info col-sm-6 col-sm-offset-3" ng-if="vm.isConnected && !vm.hasFilteredDomains(vm.setting.advanced)">
+  <div class="alert alert-info col-sm-6 col-sm-offset-3" ng-if="ctrl.isConnected && !ctrl.hasFilteredDomains(ctrl.setting.advanced)">
     <p class="lead"><i class="glyphicon glyphicon glyphicon-th-list"></i> There is nothing to show here...</p>
     In default mode, ROS Control Center only shows nodes / parameters with a <b>C</b>apital first letter. You can show every item by using the advanced view setting, either in the seperate settings tab or here:
     <center style="margin-top: 10px;">
-      <button class="btn btn-info btn-sm" ng-click="vm.setting.advanced = true">Enable Advanced View</button>
+      <button class="btn btn-info btn-sm" ng-click="ctrl.setting.advanced = true">Enable Advanced View</button>
     </center>
   </div>
 
-  <div class="row" ng-if="vm.isConnected && vm.hasFilteredDomains(vm.setting.advanced)">
+  <div class="row" ng-if="ctrl.isConnected && ctrl.hasFilteredDomains(ctrl.setting.advanced)">
     <div class="cols-xs-12 col-sm-8">
       <div class="row">
         <!-- Sidebar menu -->
         <div class="col-sm-3">
           <!-- Domains -->
-          <div class="panel panel-default panel-domain" ng-class="{ 'panel-active': vm.activeDomain == domain }" ng-repeat="domain in vm.getDomains()" ng-if="vm.Domains.filterAdvanced(domain, vm.setting.advanced)" ng-click="vm.setActiveDomain(domain)">
+          <div class="panel panel-default panel-domain" ng-class="{ 'panel-active': ctrl.activeDomain == domain }" ng-repeat="domain in ctrl.getDomains()" ng-if="ctrl.Domains.filterAdvanced(domain, ctrl.setting.advanced)" ng-click="ctrl.setActiveDomain(domain)">
             <div class="panel-heading">
               <h3 class="panel-title">{{ domain }}</h3>
             </div>
           </div>
 
           <!-- Global parameters -->
-          <cc-parameter ng-repeat="parameter in vm.getGlobalParameters()" ng-show="vm.Domains.filterAdvanced(parameter.name, vm.setting.advanced)" parameter="parameter"></cc-parameter>
+          <cc-parameter ng-repeat="parameter in ctrl.getGlobalParameters()" ng-show="ctrl.Domains.filterAdvanced(parameter.name, ctrl.setting.advanced)" parameter="parameter"></cc-parameter>
         </div>
 
         <div class="col-sm-9">
-          <div ng-repeat="domain in vm.getDomains()" ng-show="vm.activeDomain == domain">
+          <div ng-repeat="domain in ctrl.getDomains()" ng-show="ctrl.activeDomain == domain">
             <p class="lead" style="font-size: 28px;">{{ domain }}</p>
 
             <!-- Topics -->
-            <cc-topic topic="topic" ng-repeat="topic in vm.Domains.getDataForDomain(vm.data.topics, domain, vm.setting.advanced)"></cc-topic>
+            <cc-topic topic="topic" ng-repeat="topic in ctrl.Domains.getDataForDomain(ctrl.data.topics, domain, ctrl.setting.advanced)"></cc-topic>
 
             <!-- Services -->
-            <cc-service service="service" ng-repeat="service in vm.Domains.getDataForDomain(vm.data.services, domain, vm.setting.advanced)"></cc-service>
+            <cc-service service="service" ng-repeat="service in ctrl.Domains.getDataForDomain(ctrl.data.services, domain, ctrl.setting.advanced)"></cc-service>
 
             <!-- Parameters -->
-            <cc-parameter parameter="parameter" ng-repeat="parameter in vm.Domains.getDataForDomain(vm.data.parameters, domain, vm.setting.advanced)"></cc-parameter>
+            <cc-parameter parameter="parameter" ng-repeat="parameter in ctrl.Domains.getDataForDomain(ctrl.data.parameters, domain, ctrl.setting.advanced)"></cc-parameter>
           </div>
         </div>
       </div>
@@ -50,7 +50,7 @@
       <!-- Console Log -->
       <div class="console">
         <table class="table">
-          <tr ng-repeat="logEntry in vm.data.rosout" ng-if="vm.Domains.filterAdvanced(logEntry.abbr, vm.setting.advanced)">
+          <tr ng-repeat="logEntry in ctrl.data.rosout" ng-if="ctrl.Domains.filterAdvanced(logEntry.abbr, ctrl.setting.advanced)">
             <td>
               <strong ng-class="{ 'text-danger bg-danger': logEntry.level > 8, 'text-danger': logEntry.level == 8, 'text-warning': logEntry.level == 4, 'text-info': logEntry.level == 2, 'text-muted': logEntry.level < 2 }">
                 {{ logEntry.abbr }}
@@ -64,20 +64,20 @@
       </div>
 
       <!-- Battery Status -->
-      <div class="battery" ng-if="vm.setting.battery">
+      <div class="battery" ng-if="ctrl.setting.battery">
         <strong>Battery</strong><br>
 
-        <div class="row" ng-show="vm.batteryStatus">
+        <div class="row" ng-show="ctrl.batteryStatus">
           <div class="col-xs-4 col-sm-3">
-            <p>{{ 100 * vm.batteryStatus | number: 1 }} %</p>
+            <p>{{ 100 * ctrl.batteryStatus | number: 1 }} %</p>
           </div>
 
           <div class="col-xs-8 col-md-9">
-            <uib-progressbar type="{{ vm.batteryStatus > 0.3 ? 'success' : 'danger' }}" min="0" max="1" value="vm.batteryStatus"></uib-progressbar>
+            <uib-progressbar type="{{ ctrl.batteryStatus > 0.3 ? 'success' : 'danger' }}" min="0" max="1" value="ctrl.batteryStatus"></uib-progressbar>
           </div>
         </div>
 
-        <div class="row" ng-show="!vm.batteryStatus">
+        <div class="row" ng-show="!ctrl.batteryStatus">
           <div class="col-xs-12">
             <p><i>No battery data yet.</i></p>
           </div>

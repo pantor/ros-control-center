@@ -1,15 +1,10 @@
-function NavbarDirective($location) {
-  return {
-    templateUrl: 'app/navbar/navbar.html',
-    controllerAs: 'ctrl',
-    controller() {
-      this.isPath = isPath;
+angular.module('roscc').component('ccNavbar', {
+  templateUrl: 'app/navbar/navbar.html',
+  controller($location) {
+    function isPath(path) {
+      return $location.path() === path;
+    }
 
-      function isPath(path) {
-        return $location.path() === path;
-      }
-    },
-  };
-}
-
-angular.module('roscc').directive('ccNavbar', NavbarDirective);
+    this.isPath = isPath;
+  },
+});

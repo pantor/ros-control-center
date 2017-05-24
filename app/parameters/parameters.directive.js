@@ -1,19 +1,16 @@
-function ParamaterDirective() {
-  return {
-    scope: { parameter: '=' },
-    templateUrl: 'app/parameters/parameters.html',
-    controllerAs: 'ctrl',
-    controller($scope) {
-      const param = new ROSLIB.Param({ ros, name: $scope.parameter.name });
+angular.module('roscc').component('ccParameter', {
+  bindings: { parameter: '=' },
+  templateUrl: 'app/parameters/parameters.html',
+  controller() {
+    function $onInit() {
+      this.param = new ROSLIB.Param({ ros, name: this.parameter.name });
+    }
 
-      this.parameter = $scope.parameter;
-      this.setValue = setValue;
+    function setValue(value) {
+      this.param.set(value);
+    }
 
-      function setValue(value) {
-        param.set(value);
-      }
-    },
-  };
-}
-
-angular.module('roscc').directive('ccParameter', ParamaterDirective);
+    this.$onInit = $onInit;
+    this.setValue = setValue;
+  },
+});

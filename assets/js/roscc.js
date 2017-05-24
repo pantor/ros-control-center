@@ -21,7 +21,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var ros = undefined;
+var ros = void 0;
 var isConnected = false;
 
 var ControlController = function () {
@@ -51,6 +51,7 @@ var ControlController = function () {
 
   // The active domain shows further information in the center view
 
+
   _createClass(ControlController, [{
     key: 'setActiveDomain',
     value: function setActiveDomain(domain) {
@@ -72,9 +73,9 @@ var ControlController = function () {
     value: function hasFilteredDomains(advanced) {
       var _this2 = this;
 
-      return this.getDomains().some(function (domain) {
+      return _.some(_.map(this.getDomains(), function (domain) {
         return _this2.Domains.filterAdvanced(domain, advanced);
-      });
+      }));
     }
   }, {
     key: 'getGlobalParameters',
@@ -311,6 +312,7 @@ var DomainsService = function () {
 
 // Filter advanced topics, services, parameters by checking the beginning capital letter
 
+
 angular.module('roscc').service('Domains', DomainsService);
 'use strict';
 
@@ -362,45 +364,20 @@ var QuaternionsService = function () {
 
 // Quaternions to Euler angles converter
 
+
 angular.module('roscc').service('Quaternions', QuaternionsService);
 'use strict';
 
-function NavbarDirective($location) {
-  return {
-    templateUrl: 'app/navbar/navbar.html',
-    controllerAs: 'ctrl',
-    controller: function controller() {
-      this.isPath = isPath;
-
-      function isPath(path) {
-        return $location.path() === path;
-      }
+angular.module('roscc').component('ccNavbar', {
+  templateUrl: 'app/navbar/navbar.html',
+  controller: function controller($location) {
+    function isPath(path) {
+      return $location.path() === path;
     }
-  };
-}
 
-angular.module('roscc').directive('ccNavbar', NavbarDirective);
-'use strict';
-
-function ParamaterDirective() {
-  return {
-    scope: { parameter: '=' },
-    templateUrl: 'app/parameters/parameters.html',
-    controllerAs: 'ctrl',
-    controller: function controller($scope) {
-      var param = new ROSLIB.Param({ ros: ros, name: $scope.parameter.name });
-
-      this.parameter = $scope.parameter;
-      this.setValue = setValue;
-
-      function setValue(value) {
-        param.set(value);
-      }
-    }
-  };
-}
-
-angular.module('roscc').directive('ccParameter', ParamaterDirective);
+    this.isPath = isPath;
+  }
+});
 'use strict';
 
 function serviceDirective() {
@@ -456,6 +433,24 @@ function serviceDirective() {
 }
 
 angular.module('roscc').directive('ccService', serviceDirective);
+'use strict';
+
+angular.module('roscc').component('ccParameter', {
+  bindings: { parameter: '=' },
+  templateUrl: 'app/parameters/parameters.html',
+  controller: function controller() {
+    function $onInit() {
+      this.param = new ROSLIB.Param({ ros: ros, name: this.parameter.name });
+    }
+
+    function setValue(value) {
+      this.param.set(value);
+    }
+
+    this.$onInit = $onInit;
+    this.setValue = setValue;
+  }
+});
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();

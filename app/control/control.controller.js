@@ -38,9 +38,7 @@ class ControlController {
   }
 
   hasFilteredDomains(advanced) {
-    return this.getDomains().some(function (domain) {
-      return this.Domains.filterAdvanced(domain, advanced);
-    });
+    return _.some(_.map(this.getDomains(), dom => this.Domains.filterAdvanced(dom, advanced)));
   }
 
   getGlobalParameters() {

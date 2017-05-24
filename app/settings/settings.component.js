@@ -31,4 +31,7 @@ class SettingsController {
   }
 }
 
-angular.module('roscc').controller('SettingsController', SettingsController);
+angular.module('roscc').component('ccSettings', {
+  templateUrl: 'app/settings/settings.html',
+  controller: SettingsController,
+});

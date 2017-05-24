@@ -179,4 +179,7 @@ class ControlController {
   }
 }
 
-angular.module('roscc').controller('ControlController', ControlController);
+angular.module('roscc').component('ccControl', {
+  templateUrl: 'app/control/control.html',
+  controller: ControlController,
+});

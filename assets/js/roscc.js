@@ -1,15 +1,7 @@
 'use strict';
 
 function ROSCCConfig($routeProvider, localStorageServiceProvider) {
-  $routeProvider.when('/', {
-    templateUrl: 'app/control/control.html',
-    controller: 'ControlController',
-    controllerAs: 'ctrl'
-  }).when('/settings', {
-    templateUrl: 'app/settings/settings.html',
-    controller: 'SettingsController',
-    controllerAs: 'ctrl'
-  }).otherwise({ redirectTo: '/' });
+  $routeProvider.when('/', { template: '<cc-control></cc-control>' }).when('/settings', { template: '<cc-settings></cc-settings>' }).otherwise({ redirectTo: '/' });
 
   localStorageServiceProvider.setPrefix('roscc');
 }
@@ -241,7 +233,10 @@ var ControlController = function () {
   return ControlController;
 }();
 
-angular.module('roscc').controller('ControlController', ControlController);
+angular.module('roscc').component('ccControl', {
+  templateUrl: 'app/control/control.html',
+  controller: ControlController
+});
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -368,61 +363,91 @@ var QuaternionsService = function () {
 angular.module('roscc').service('Quaternions', QuaternionsService);
 'use strict';
 
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var NavbarController = function () {
+  function NavbarController($location) {
+    _classCallCheck(this, NavbarController);
+
+    this.$location = $location;
+  }
+
+  _createClass(NavbarController, [{
+    key: 'isPath',
+    value: function isPath(path) {
+      return this.$location.path() === path;
+    }
+  }]);
+
+  return NavbarController;
+}();
+
 angular.module('roscc').component('ccNavbar', {
   templateUrl: 'app/navbar/navbar.html',
-  controller: function controller($location) {
-    function isPath(path) {
-      return $location.path() === path;
-    }
-
-    this.isPath = isPath;
-  }
+  controller: NavbarController
 });
 'use strict';
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var ParameterController = function () {
+  function ParameterController() {
+    _classCallCheck(this, ParameterController);
+
+    this.param = new ROSLIB.Param({ ros: ros, name: this.parameter.name });
+  }
+
+  _createClass(ParameterController, [{
+    key: 'setValue',
+    value: function setValue(value) {
+      this.param.set(value);
+    }
+  }]);
+
+  return ParameterController;
+}();
 
 angular.module('roscc').component('ccParameter', {
   bindings: { parameter: '=' },
   templateUrl: 'app/parameters/parameters.html',
-  controller: function controller() {
-    function $onInit() {
-      this.param = new ROSLIB.Param({ ros: ros, name: this.parameter.name });
-    }
-
-    function setValue(value) {
-      this.param.set(value);
-    }
-
-    this.$onInit = $onInit;
-    this.setValue = setValue;
-  }
+  controller: ParameterController
 });
 'use strict';
 
-angular.module('roscc').component('ccService', {
-  bindings: { service: '=' },
-  template: '<ng-include src="$ctrl.fileName"></ng-include>',
-  controller: function controller($scope, $http) {
-    function $onInit() {
-      var _this = this;
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-      var path = 'app/services/';
-      this.fileName = path + 'default.html';
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-      // Check if file exists
-      $scope.$watch('service.type', function () {
-        if (!_this.service.type) {
-          return;
+var ServiceController = function () {
+  function ServiceController($scope, $http) {
+    var _this = this;
+
+    _classCallCheck(this, ServiceController);
+
+    var path = 'app/services/';
+    this.fileName = path + 'default.html';
+
+    // Check if file exists
+    $scope.$watch('service.type', function () {
+      if (!_this.service.type) {
+        return;
+      }
+      var fileName = '' + path + _this.service.type + '.html';
+      $http.get(fileName).then(function (result) {
+        if (result.data) {
+          _this.fileName = fileName;
         }
-        var fileName = '' + path + _this.service.type + '.html';
-        $http.get(fileName).then(function (result) {
-          if (result.data) {
-            _this.fileName = fileName;
-          }
-        });
       });
-    }
+    });
+  }
 
-    function callService(input, isJSON) {
+  _createClass(ServiceController, [{
+    key: 'callService',
+    value: function callService(input, isJSON) {
       var _this2 = this;
 
       var data = isJSON ? angular.fromJson(input) : input;
@@ -437,10 +462,15 @@ angular.module('roscc').component('ccService', {
         _this2.result = result;
       });
     }
+  }]);
 
-    this.$onInit = $onInit;
-    this.callService = callService;
-  }
+  return ServiceController;
+}();
+
+angular.module('roscc').component('ccService', {
+  bindings: { service: '=' },
+  template: '<ng-include src="$ctrl.fileName"></ng-include>',
+  controller: ServiceController
 });
 'use strict';
 
@@ -490,7 +520,10 @@ var SettingsController = function () {
   return SettingsController;
 }();
 
-angular.module('roscc').controller('SettingsController', SettingsController);
+angular.module('roscc').component('ccSettings', {
+  templateUrl: 'app/settings/settings.html',
+  controller: SettingsController
+});
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -576,41 +609,46 @@ var SettingsService = function () {
 angular.module('roscc').service('Settings', SettingsService);
 'use strict';
 
-angular.module('roscc').component('ccTopic', {
-  bindings: { topic: '=' },
-  template: '<ng-include src="$ctrl.fileName"></ng-include>',
-  controller: function controller($scope, $http, Settings, Quaternions) {
-    function $onInit() {
-      var _this = this;
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-      this.roslibTopic = new ROSLIB.Topic({
-        ros: ros,
-        name: this.topic.name,
-        messageType: this.topic.type
-      });
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-      this.isSubscribing = false;
-      this.setting = Settings.get();
-      this.Quaternions = Quaternions;
+var TopicController = function () {
+  function TopicController($scope, $http, Settings, Quaternions) {
+    var _this = this;
 
-      var path = 'app/topics/';
-      this.fileName = path + 'default.html';
+    _classCallCheck(this, TopicController);
 
-      // Check if file exists
-      $scope.$watch('topic.type', function () {
-        if (!_this.topic.type) {
-          return;
+    this.roslibTopic = new ROSLIB.Topic({
+      ros: ros,
+      name: this.topic.name,
+      messageType: this.topic.type
+    });
+
+    this.isSubscribing = false;
+    this.setting = Settings.get();
+    this.Quaternions = Quaternions;
+
+    var path = 'app/topics/';
+    this.fileName = path + 'default.html';
+
+    // Check if file exists
+    $scope.$watch('topic.type', function () {
+      if (!_this.topic.type) {
+        return;
+      }
+      var fileName = '' + path + _this.topic.type + '.html';
+      $http.get(fileName).then(function (result) {
+        if (result.data) {
+          _this.fileName = fileName;
         }
-        var fileName = '' + path + _this.topic.type + '.html';
-        $http.get(fileName).then(function (result) {
-          if (result.data) {
-            _this.fileName = fileName;
-          }
-        });
       });
-    }
+    });
+  }
 
-    function toggleSubscription(data) {
+  _createClass(TopicController, [{
+    key: 'toggleSubscription',
+    value: function toggleSubscription(data) {
       var _this2 = this;
 
       if (!data) {
@@ -622,15 +660,20 @@ angular.module('roscc').component('ccTopic', {
       }
       this.isSubscribing = !data;
     }
-
-    function publishMessage(input, isJSON) {
+  }, {
+    key: 'publishMessage',
+    value: function publishMessage(input, isJSON) {
       var data = isJSON ? angular.fromJson(input) : input;
       var message = new ROSLIB.Message(data);
       this.roslibTopic.publish(message);
     }
+  }]);
 
-    this.$onInit = $onInit;
-    this.toggleSubscription = toggleSubscription;
-    this.publishMessage = publishMessage;
-  }
+  return TopicController;
+}();
+
+angular.module('roscc').component('ccTopic', {
+  bindings: { topic: '=' },
+  template: '<ng-include src="$ctrl.fileName"></ng-include>',
+  controller: TopicController
 });

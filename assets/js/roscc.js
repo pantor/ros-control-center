@@ -21,6 +21,130 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+var DomainsService = function () {
+  function DomainsService() {
+    _classCallCheck(this, DomainsService);
+  }
+
+  _createClass(DomainsService, [{
+    key: 'filterAdvanced',
+    value: function filterAdvanced(entry, advanced) {
+      var entryArray = entry.split('/');
+      if (advanced) {
+        return true;
+      }
+      if (!entry || _.isEmpty(entryArray)) {
+        return false;
+      }
+      return _.last(entryArray)[0] === _.last(entryArray)[0].toUpperCase();
+    }
+  }, {
+    key: 'getDomains',
+    value: function getDomains(array) {
+      var result = [];
+      angular.forEach(array, function (entry) {
+        var nameArray = entry.name.split('/');
+        if (nameArray.length > 1) {
+          result.push(nameArray[1]);
+        }
+      });
+      return _.uniq(result).sort();
+    }
+  }, {
+    key: 'getGlobalParameters',
+    value: function getGlobalParameters(array) {
+      var result = [];
+      angular.forEach(array, function (entry) {
+        var nameArray = entry.name.split('/');
+        if (nameArray.length === 2) {
+          entry.abbr = _.last(nameArray);
+          result.push(entry);
+        }
+      });
+      return result;
+    }
+  }, {
+    key: 'getDataForDomain',
+    value: function getDataForDomain(array, domainName, advanced) {
+      var _this = this;
+
+      var result = [];
+      angular.forEach(array, function (entry) {
+        var nameArray = entry.name.split('/');
+        if (nameArray.length > 1 && nameArray[1] === domainName && _this.filterAdvanced(entry.name, advanced)) {
+          entry.abbr = nameArray.slice(2).join(' ');
+          result.push(entry);
+        }
+      });
+      return result;
+    }
+  }]);
+
+  return DomainsService;
+}();
+
+// Filter advanced topics, services, parameters by checking the beginning capital letter
+
+
+angular.module('roscc').service('Domains', DomainsService);
+'use strict';
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var QuaternionsService = function () {
+  function QuaternionsService() {
+    _classCallCheck(this, QuaternionsService);
+  }
+
+  _createClass(QuaternionsService, [{
+    key: 'getRoll',
+    value: function getRoll(q) {
+      if (!q) {
+        return '';
+      }
+      var rad = Math.atan2(2 * (q.w * q.x + q.y * q.z), 1 - 2 * (q.x * q.x + q.y * q.y));
+      return 180 / Math.PI * rad;
+    }
+  }, {
+    key: 'getPitch',
+    value: function getPitch(q) {
+      if (!q) {
+        return '';
+      }
+      var rad = Math.asin(2 * (q.w * q.y - q.z * q.x));
+      return 180 / Math.PI * rad;
+    }
+  }, {
+    key: 'getYaw',
+    value: function getYaw(q) {
+      if (!q) {
+        return '';
+      }
+      var rad = Math.atan2(2 * (q.w * q.z + q.x * q.y), 1 - 2 * (q.y * q.y + q.z * q.z));
+      return 180 / Math.PI * rad;
+    }
+  }, {
+    key: 'getInit',
+    value: function getInit() {
+      return { w: 1, x: 0, y: 0, z: 0 };
+    }
+  }]);
+
+  return QuaternionsService;
+}();
+
+// Quaternions to Euler angles converter
+
+
+angular.module('roscc').service('Quaternions', QuaternionsService);
+'use strict';
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
 var ros = void 0;
 var isConnected = false;
 
@@ -73,8 +197,8 @@ var ControlController = function () {
     value: function hasFilteredDomains(advanced) {
       var _this2 = this;
 
-      return _.some(_.map(this.getDomains(), function (domain) {
-        return _this2.Domains.filterAdvanced(domain, advanced);
+      return _.some(_.map(this.getDomains(), function (dom) {
+        return _this2.Domains.filterAdvanced(dom, advanced);
       }));
     }
   }, {
@@ -244,128 +368,22 @@ var ControlController = function () {
 angular.module('roscc').controller('ControlController', ControlController);
 'use strict';
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+angular.module('roscc').component('ccParameter', {
+  bindings: { parameter: '=' },
+  templateUrl: 'app/parameters/parameters.html',
+  controller: function controller() {
+    function $onInit() {
+      this.param = new ROSLIB.Param({ ros: ros, name: this.parameter.name });
+    }
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+    function setValue(value) {
+      this.param.set(value);
+    }
 
-var DomainsService = function () {
-  function DomainsService() {
-    _classCallCheck(this, DomainsService);
+    this.$onInit = $onInit;
+    this.setValue = setValue;
   }
-
-  _createClass(DomainsService, [{
-    key: 'filterAdvanced',
-    value: function filterAdvanced(entry, advanced) {
-      var entryArray = entry.split('/');
-      if (advanced) {
-        return true;
-      }
-      if (!entry || _.isEmpty(entryArray)) {
-        return false;
-      }
-      return _.last(entryArray)[0] === _.last(entryArray)[0].toUpperCase();
-    }
-  }, {
-    key: 'getDomains',
-    value: function getDomains(array) {
-      var result = [];
-      angular.forEach(array, function (entry) {
-        var nameArray = entry.name.split('/');
-        if (nameArray.length > 1) {
-          result.push(nameArray[1]);
-        }
-      });
-      return _.uniq(result).sort();
-    }
-  }, {
-    key: 'getGlobalParameters',
-    value: function getGlobalParameters(array) {
-      var result = [];
-      angular.forEach(array, function (entry) {
-        var nameArray = entry.name.split('/');
-        if (nameArray.length === 2) {
-          entry.abbr = _.last(nameArray);
-          result.push(entry);
-        }
-      });
-      return result;
-    }
-  }, {
-    key: 'getDataForDomain',
-    value: function getDataForDomain(array, domainName, advanced) {
-      var _this = this;
-
-      var result = [];
-      angular.forEach(array, function (entry) {
-        var nameArray = entry.name.split('/');
-        if (nameArray.length > 1 && nameArray[1] === domainName && _this.filterAdvanced(entry.name, advanced)) {
-          entry.abbr = nameArray.slice(2).join(' ');
-          result.push(entry);
-        }
-      });
-      return result;
-    }
-  }]);
-
-  return DomainsService;
-}();
-
-// Filter advanced topics, services, parameters by checking the beginning capital letter
-
-
-angular.module('roscc').service('Domains', DomainsService);
-'use strict';
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var QuaternionsService = function () {
-  function QuaternionsService() {
-    _classCallCheck(this, QuaternionsService);
-  }
-
-  _createClass(QuaternionsService, [{
-    key: 'getRoll',
-    value: function getRoll(q) {
-      if (!q) {
-        return '';
-      }
-      var rad = Math.atan2(2 * (q.w * q.x + q.y * q.z), 1 - 2 * (q.x * q.x + q.y * q.y));
-      return 180 / Math.PI * rad;
-    }
-  }, {
-    key: 'getPitch',
-    value: function getPitch(q) {
-      if (!q) {
-        return '';
-      }
-      var rad = Math.asin(2 * (q.w * q.y - q.z * q.x));
-      return 180 / Math.PI * rad;
-    }
-  }, {
-    key: 'getYaw',
-    value: function getYaw(q) {
-      if (!q) {
-        return '';
-      }
-      var rad = Math.atan2(2 * (q.w * q.z + q.x * q.y), 1 - 2 * (q.y * q.y + q.z * q.z));
-      return 180 / Math.PI * rad;
-    }
-  }, {
-    key: 'getInit',
-    value: function getInit() {
-      return { w: 1, x: 0, y: 0, z: 0 };
-    }
-  }]);
-
-  return QuaternionsService;
-}();
-
-// Quaternions to Euler angles converter
-
-
-angular.module('roscc').service('Quaternions', QuaternionsService);
+});
 'use strict';
 
 angular.module('roscc').component('ccNavbar', {
@@ -414,7 +432,7 @@ function serviceDirective() {
       function callService(input, isJSON) {
         var _this2 = this;
 
-        var data = isJSON ? angular.fromJSON(input) : input;
+        var data = isJSON ? angular.fromJson(input) : input;
         var service = new ROSLIB.Service({
           ros: ros,
           name: this.service.name,
@@ -424,6 +442,7 @@ function serviceDirective() {
 
         service.callService(request, function (result) {
           $timeout(function () {
+            console.log(result);
             _this2.result = result;
           });
         });
@@ -433,24 +452,6 @@ function serviceDirective() {
 }
 
 angular.module('roscc').directive('ccService', serviceDirective);
-'use strict';
-
-angular.module('roscc').component('ccParameter', {
-  bindings: { parameter: '=' },
-  templateUrl: 'app/parameters/parameters.html',
-  controller: function controller() {
-    function $onInit() {
-      this.param = new ROSLIB.Param({ ros: ros, name: this.parameter.name });
-    }
-
-    function setValue(value) {
-      this.param.set(value);
-    }
-
-    this.$onInit = $onInit;
-    this.setValue = setValue;
-  }
-});
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -641,7 +642,7 @@ function topicDirective() {
       }
 
       function publishMessage(input, isJSON) {
-        var data = isJSON ? angular.fromJSON(input) : input;
+        var data = isJSON ? angular.fromJson(input) : input;
         var message = new ROSLIB.Message(data);
         roslibTopic.publish(message);
       }

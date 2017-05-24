@@ -50,7 +50,7 @@ function topicDirective() {
       }
 
       function publishMessage(input, isJSON) {
-        const data = isJSON ? angular.fromJSON(input) : input;
+        const data = isJSON ? angular.fromJson(input) : input;
         const message = new ROSLIB.Message(data);
         roslibTopic.publish(message);
       }

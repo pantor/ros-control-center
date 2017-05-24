@@ -28,7 +28,7 @@ function serviceDirective() {
       });
 
       function callService(input, isJSON) {
-        const data = isJSON ? angular.fromJSON(input) : input;
+        const data = isJSON ? angular.fromJson(input) : input;
         const service = new ROSLIB.Service({
           ros,
           name: this.service.name,
@@ -38,6 +38,7 @@ function serviceDirective() {
 
         service.callService(request, (result) => {
           $timeout(() => {
+            console.log(result);
             this.result = result;
           });
         });

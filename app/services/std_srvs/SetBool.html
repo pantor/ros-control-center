@@ -1,15 +1,15 @@
 <div class="panel panel-default">
   <div class="panel-heading clearfix">
     <h3 class="panel-title">
-      {{ ctrl.service.abbr }}
-      <small style="font-size: 12px;">({{ ctrl.service.type }})</small>
+      {{ $ctrl.service.abbr }}
+      <small style="font-size: 12px;">({{ $ctrl.service.type }})</small>
     </h3>
   </div>
 
   <div class="panel-body">
     <div class="row">
       <div class="col-sm-12">
-        <button class="btn btn-default" ng-class="{'btn-danger': enabled}" ng-model="enabled" ng-click="ctrl.callService({data: enabled})" uib-btn-checkbox>
+        <button class="btn btn-default" ng-class="{'btn-danger': enabled}" ng-model="enabled" ng-click="$ctrl.callService({data: enabled})" uib-btn-checkbox>
           <span ng-show="enabled">Enabled</span>
           <span ng-show="!enabled">Disabled</span>
         </button>

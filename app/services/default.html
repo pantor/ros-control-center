@@ -1,8 +1,8 @@
 <div class="panel panel-default">
   <div class="panel-heading clearfix">
     <h3 class="panel-title">
-      {{ ctrl.service.abbr }}
-      <small style="font-size: 12px;">({{ ctrl.service.type }} / Default)</small>
+      {{ $ctrl.service.abbr }}
+      <small style="font-size: 12px;">({{ $ctrl.service.type }} / Default)</small>
     </h3>
   </div>
 
@@ -12,13 +12,13 @@
         <form class="input-group">
           <input type="text" class="form-control" ng-model="input" placeholder="JSON">
           <span class="input-group-btn">
-            <button class="btn btn-default" type="button" ng-click="ctrl.callService(input, true)">Call</button>
+            <button class="btn btn-default" type="button" ng-click="$ctrl.callService(input, true)">Call</button>
           </span>
         </form>
       </div>
 
       <div class="col-sm-6">
-        <p ng-show="ctrl.result">Result: {{ ctrl.result }}</p>
+        <p ng-show="$ctrl.result">Result: {{ $ctrl.result }}</p>
       </div>
     </div>
   </div>

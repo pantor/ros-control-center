@@ -1,8 +1,8 @@
 function serviceDirective() {
   return {
     scope: { service: '=' },
-    template: '<ng-include src="ctrl.fileName"></ng-include>',
-    controllerAs: 'ctrl',
+    template: '<ng-include src="$ctrl.fileName"></ng-include>',
+    controllerAs: '$ctrl',
     controller($scope, $timeout, $http) {
       const path = 'app/services/';
 

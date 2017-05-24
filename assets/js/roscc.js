@@ -398,60 +398,50 @@ angular.module('roscc').component('ccParameter', {
 });
 'use strict';
 
-function serviceDirective() {
-  return {
-    scope: { service: '=' },
-    template: '<ng-include src="$ctrl.fileName"></ng-include>',
-    controllerAs: '$ctrl',
-    controller: function controller($scope, $timeout, $http) {
+angular.module('roscc').component('ccService', {
+  bindings: { service: '=' },
+  template: '<ng-include src="$ctrl.fileName"></ng-include>',
+  controller: function controller($scope, $http) {
+    function $onInit() {
       var _this = this;
 
       var path = 'app/services/';
-
-      this.service = $scope.service;
-      this.callService = callService;
       this.fileName = path + 'default.html';
 
       // Check if file exists
       $scope.$watch('service.type', function () {
-        if (!$scope.service.type) {
+        if (!_this.service.type) {
           return;
         }
-        var fileName = '' + path + $scope.service.type + '.html';
-
-        _this.service = $scope.service;
+        var fileName = '' + path + _this.service.type + '.html';
         $http.get(fileName).then(function (result) {
           if (result.data) {
             _this.fileName = fileName;
           }
-        }, function () {
-          // console.log(fileName + ' not found, use default service component.');
         });
       });
-
-      function callService(input, isJSON) {
-        var _this2 = this;
-
-        var data = isJSON ? angular.fromJson(input) : input;
-        var service = new ROSLIB.Service({
-          ros: ros,
-          name: this.service.name,
-          serviceType: this.service.type
-        });
-        var request = new ROSLIB.ServiceRequest(data);
-
-        service.callService(request, function (result) {
-          $timeout(function () {
-            console.log(result);
-            _this2.result = result;
-          });
-        });
-      }
     }
-  };
-}
 
-angular.module('roscc').directive('ccService', serviceDirective);
+    function callService(input, isJSON) {
+      var _this2 = this;
+
+      var data = isJSON ? angular.fromJson(input) : input;
+      var ROSservice = new ROSLIB.Service({
+        ros: ros,
+        name: this.service.name,
+        serviceType: this.service.type
+      });
+      var request = new ROSLIB.ServiceRequest(data);
+
+      ROSservice.callService(request, function (result) {
+        _this2.result = result;
+      });
+    }
+
+    this.$onInit = $onInit;
+    this.callService = callService;
+  }
+});
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -586,68 +576,61 @@ var SettingsService = function () {
 angular.module('roscc').service('Settings', SettingsService);
 'use strict';
 
-function topicDirective() {
-  return {
-    scope: { topic: '=' },
-    template: '<ng-include src="$ctrl.fileName"></ng-include>',
-    controllerAs: '$ctrl',
-    controller: function controller($scope, $timeout, $http, Settings, Quaternions) {
+angular.module('roscc').component('ccTopic', {
+  bindings: { topic: '=' },
+  template: '<ng-include src="$ctrl.fileName"></ng-include>',
+  controller: function controller($scope, $http, Settings, Quaternions) {
+    function $onInit() {
       var _this = this;
 
-      var roslibTopic = new ROSLIB.Topic({
+      this.roslibTopic = new ROSLIB.Topic({
         ros: ros,
-        name: $scope.topic.name,
-        messageType: $scope.topic.type
+        name: this.topic.name,
+        messageType: this.topic.type
       });
-      var path = 'app/topics/';
 
-      this.topic = $scope.topic;
-      this.toggleSubscription = toggleSubscription;
-      this.publishMessage = publishMessage;
       this.isSubscribing = false;
       this.setting = Settings.get();
       this.Quaternions = Quaternions;
+
+      var path = 'app/topics/';
       this.fileName = path + 'default.html';
 
       // Check if file exists
       $scope.$watch('topic.type', function () {
-        if (!$scope.topic.type) {
+        if (!_this.topic.type) {
           return;
         }
-        var fileName = '' + path + $scope.topic.type + '.html';
-
-        _this.topic = $scope.topic;
+        var fileName = '' + path + _this.topic.type + '.html';
         $http.get(fileName).then(function (result) {
           if (result.data) {
             _this.fileName = fileName;
           }
-        }, function () {
-          // console.log(fileName + ' not found, use default topic component.');
         });
       });
-
-      function toggleSubscription(data) {
-        var _this2 = this;
-
-        if (!data) {
-          roslibTopic.subscribe(function (message) {
-            $timeout(function () {
-              _this2.message = message;
-            });
-          });
-        } else {
-          roslibTopic.unsubscribe();
-        }
-        this.isSubscribing = !data;
-      }
-
-      function publishMessage(input, isJSON) {
-        var data = isJSON ? angular.fromJson(input) : input;
-        var message = new ROSLIB.Message(data);
-        roslibTopic.publish(message);
-      }
     }
-  };
-}
 
-angular.module('roscc').directive('ccTopic', topicDirective);
+    function toggleSubscription(data) {
+      var _this2 = this;
+
+      if (!data) {
+        this.roslibTopic.subscribe(function (message) {
+          _this2.message = message;
+        });
+      } else {
+        this.roslibTopic.unsubscribe();
+      }
+      this.isSubscribing = !data;
+    }
+
+    function publishMessage(input, isJSON) {
+      var data = isJSON ? angular.fromJson(input) : input;
+      var message = new ROSLIB.Message(data);
+      this.roslibTopic.publish(message);
+    }
+
+    this.$onInit = $onInit;
+    this.toggleSubscription = toggleSubscription;
+    this.publishMessage = publishMessage;
+  }
+});

@@ -1,5 +1,5 @@
 class ParameterController {
-  constructor() {
+  $onInit() {
     this.param = new ROSLIB.Param({ ros, name: this.parameter.name });
   }
 

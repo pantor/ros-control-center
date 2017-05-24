@@ -1,25 +1,30 @@
 class TopicController {
   constructor($scope, $http, Settings, Quaternions) {
+    this.$scope = $scope;
+    this.$http = $http;
+    this.setting = Settings.get();
+    this.Quaternions = Quaternions;
+
+    this.isSubscribing = false;
+  }
+
+  $onInit() {
     this.roslibTopic = new ROSLIB.Topic({
       ros,
       name: this.topic.name,
       messageType: this.topic.type,
     });
 
-    this.isSubscribing = false;
-    this.setting = Settings.get();
-    this.Quaternions = Quaternions;
-
     const path = 'app/topics/';
     this.fileName = `${path}default.html`;
 
     // Check if file exists
-    $scope.$watch('topic.type', () => {
+    this.$scope.$watch('topic.type', () => {
       if (!this.topic.type) {
         return;
       }
       const fileName = `${path}${this.topic.type}.html`;
-      $http.get(fileName).then((result) => {
+      this.$http.get(fileName).then((result) => {
         if (result.data) {
           this.fileName = fileName;
         }

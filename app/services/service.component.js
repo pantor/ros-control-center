@@ -1,15 +1,20 @@
 class ServiceController {
   constructor($scope, $http) {
+    this.$scope = $scope;
+    this.$http = $http;
+  }
+
+  $onInit() {
     const path = 'app/services/';
     this.fileName = `${path}default.html`;
 
     // Check if file exists
-    $scope.$watch('service.type', () => {
+    this.$scope.$watch('service.type', () => {
       if (!this.service.type) {
         return;
       }
       const fileName = `${path}${this.service.type}.html`;
-      $http.get(fileName).then((result) => {
+      this.$http.get(fileName).then((result) => {
         if (result.data) {
           this.fileName = fileName;
         }

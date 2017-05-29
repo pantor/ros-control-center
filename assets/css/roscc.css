@@ -5,7 +5,6 @@
   cursor: pointer;
 }
 .panel-active {
-  margin-right: -8px;
   border: none;
 }
 .panel-active .panel-heading {

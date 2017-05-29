@@ -8,6 +8,8 @@ class SettingsController {
     if (!this.index || this.index > this.settings.length) {
       this.index = '0';
     }
+
+    this.save(); // Save current setting again (if it's the first time)
   }
 
   save() {

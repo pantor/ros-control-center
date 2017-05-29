@@ -15,16 +15,16 @@ Further features like custom formatting for your own message and service types, 
 
 ## Installation
 
-On your ROS robot, the `rosbridge_suite` from [Robot Web Tools](http://robotwebtools.org) needs to run. So to use the control center with your exisiting project, call `roslaunch rosbridge_server rosbridge_websocket.launch` to launch the websocket server. The control center runs on any computer (in particular without ROS...) in the same network. Open the ROS Control Center at [https://pantor.github.io/ros-control-center](https://pantor.github.io/ros-control-center). In the settings tab, you need to enter the IP address and port of your robot. Open the `Control` tab and reload.
+On your ROS robot, the `rosbridge_suite` from [Robot Web Tools](http://robotwebtools.org) needs to run. So to use the control center with your existing project, call `roslaunch rosbridge_server rosbridge_websocket.launch` to launch the websocket server. The control center runs on any computer (in particular without ROS...) in the same network. Open the ROS Control Center at [https://pantor.github.io/ros-control-center](https://pantor.github.io/ros-control-center). In the settings tab, you need to enter the IP address and port of your robot. Open the `Control` tab and reload.
 
 
 ## Features
 
-You can have multiple saved settings for quick changes and several robots. Finally, open index.html in a browser.
+You can have multiple saved settings for quick changes and several robots.
 
 ROS Control Center supports images and camera streams via the `web_video_server` package. If camera and camera info messages are published according to the `web_video_server` standards, the stream is shown with the settings.
 
-For your own custom message and service types, you can download this repository and add `html` templates into the `app/topics/` or `app/services/` folder. The path of your file must correspond to the ROS service or message type name. See the included ROS common messages and standard services as an examples. In your html file, you can write `AngularJS` code for additional customizing and formatting.
+For your own custom message and service types, you can download this repository and start a server via `http-server` in the console. Then, navigate to `index.html` in a browser. You can add individual `html` templates into the `app/topics/` or `app/services/` folder. The path of your file must correspond to the ROS service or message type name. See the included ROS common messages and standard services as an examples. In your html file, you can write `AngularJS` code for additional customizing and formatting.
 
 The right sidebar shows a logger output (`rosout` by default). On the left, group names are shown. ROS topics,
 services and parameters can be grouped together for a better overview. This works as follows:

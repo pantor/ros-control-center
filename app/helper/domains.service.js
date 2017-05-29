@@ -1,13 +1,26 @@
 class DomainsService {
   filterAdvanced(entry, advanced) {
-    const entryArray = entry.split('/');
     if (advanced) {
       return true;
     }
+
+    const entryArray = entry.split('/');
     if (!entry || _.isEmpty(entryArray)) {
       return false;
     }
-    return (_.last(entryArray)[0] === _.last(entryArray)[0].toUpperCase());
+
+    // Don't show the default nodes, params, topics and services
+    return (!_.contains([
+      'rosapi',
+      'rosbridge_websocket',
+      'rosout',
+      'rosout_agg',
+      'rosversion',
+      'run_id',
+      'rosdistro',
+      'get_loggers',
+      'set_logger_level',
+    ], _.last(entryArray)));
   }
 
   getDomains(array) {
@@ -39,8 +52,8 @@ class DomainsService {
       const nameArray = entry.name.split('/');
       if (
         nameArray.length > 1 &&
-          nameArray[1] === domainName &&
-          this.filterAdvanced(entry.name, advanced)
+        nameArray[1] === domainName &&
+        this.filterAdvanced(entry.name, advanced)
       ) {
         entry.abbr = nameArray.slice(2).join(' ');
         result.push(entry);

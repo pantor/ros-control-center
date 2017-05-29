@@ -140,8 +140,8 @@ class ControlController {
   loadData() {
     this.resetData();
 
-    ros.getTopics((topics) => {
-      angular.forEach(topics, (name) => {
+    ros.getTopics((topics) => { // Topics now has topics and types arrays
+      angular.forEach(topics.topics, (name) => {
         this.data.topics.push({ name });
 
         ros.getTopicType(name, (type) => {

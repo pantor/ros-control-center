@@ -6,8 +6,8 @@
   </div>
 
   <div class="alert alert-info col-sm-6 col-sm-offset-3" ng-if="$ctrl.isConnected && !$ctrl.hasFilteredDomains($ctrl.setting.advanced)">
-    <p class="lead"><i class="glyphicon glyphicon glyphicon-th-list"></i> There is nothing to show here...</p>
-    In default mode, ROS Control Center only shows nodes / parameters with a <b>C</b>apital first letter. You can show every item by using the advanced view setting, either in the seperate settings tab or here:
+    <p class="lead"><i class="glyphicon glyphicon glyphicon-th-list"></i> Loading or nothing to show...</p>
+    In default mode, ROS Control Center does not show default nodes / parameters / services and topics. You can show every item by using the advanced view setting, either in the seperate settings tab or here:
     <center style="margin-top: 10px;">
       <button class="btn btn-info btn-sm" ng-click="$ctrl.setting.advanced = true">Enable Advanced View</button>
     </center>

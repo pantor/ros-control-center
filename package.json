@@ -1,6 +1,6 @@
 {
   "name": "ros-control-center",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "A universal web-based control center for ROS robots.",
   "repository": {
     "type": "git",
@@ -25,8 +25,8 @@
     "eslint": "^3.19.0",
     "eslint-config-airbnb": "^15.0.1",
     "eslint-config-angular": "^0.5.0",
-    "eslint-plugin-angular": "^2.4.0",
-    "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-angular": "^2.4.1",
+    "eslint-plugin-import": "^2.3.0",
     "eslint-plugin-jsx-a11y": "^5.0.3",
     "eslint-plugin-react": "^7.0.1",
     "gulp": "^3.9.1",

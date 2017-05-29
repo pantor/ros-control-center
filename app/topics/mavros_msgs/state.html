@@ -1,0 +1,54 @@
+<div class="panel panel-default" ng-class="{'panel-success': vm.toggle}">
+  <div class="panel-heading clearfix">
+    <button class="btn btn-default btn-sm pull-right" ng-click="vm.toggleSubscription(!vm.toggle)" ng-model="vm.toggle" uib-btn-checkbox>{{ vm.toggle ? 'Unsubscribe' : 'Subscribe' }}</button>
+
+    <h3 class="panel-title">
+      {{ vm.topic.abbr }}
+      <small style="font-size: 12px;">({{ vm.topic.type }})</small>
+    </h3>
+  </div>
+
+  <div class="panel-body">
+    <div class="row">
+      <div class="col-sm-6">
+        <form class="form-horizontal form-margin">
+          <div class="form-group">
+            <label>Connected</label>
+            <div class="input-group">
+              <input type="text" class="form-control" ng-model="vm.message.connected" ng-readonly="vm.isSubscribing">
+              <span class="input-group-addon">m</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Armed</label>
+            <div class="input-group">
+              <input type="text" class="form-control" ng-model="vm.message.armed" ng-readonly="vm.isSubscribing">
+              <span class="input-group-addon">m</span>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div class="col-sm-6">
+        <form class="form-horizontal form-margin">
+          <div class="form-group">
+            <label>Guided</label>
+            <div class="input-group">
+              <input type="text" class="form-control" ng-model="vm.message.guided" ng-readonly="vm.isSubscribing">
+              <span class="input-group-addon">°</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Mode</label>
+            <div class="input-group">
+              <input type="text" class="form-control" ng-model="vm.message.mode" ng-readonly="vm.isSubscribing">
+              <span class="input-group-addon">°</span>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,88 @@
+<div class="container-fluid">
+  <!-- No connection alert -->
+  <div class="alert alert-danger col-sm-6 col-sm-offset-3" role="alert" *ngIf="!isConnected">
+    <p class="lead"><i class="glyphicon glyphicon-warning-sign"></i> Whoops...</p>
+    The ROS Control Center is <b>not connected</b> to a robot running rosbridge_suite at {{ setting.address }}:{{ setting.port }}. You can change the URL in the <i>Settings</i> tab, further information can be found in the <a href="https://github.com/pantor/ros-control-center">GitHub Repository</a>.
+  </div>
+
+  <div class="alert alert-info col-sm-6 col-sm-offset-3" *ngIf="isConnected && !hasFilteredDomains(setting.advanced)">
+    <p class="lead"><i class="glyphicon glyphicon glyphicon-th-list"></i> Loading or nothing to show...</p>
+    In default mode, ROS Control Center does not show default nodes / parameters / services and topics. You can show every item by using the advanced view setting, either in the seperate settings tab or here:
+    <div style="margin-top: 10px;">
+      <button class="btn btn-info btn-sm" (click)="setting.advanced = true">Enable Advanced View</button>
+    </div>
+  </div>
+
+  <div class="row" *ngIf="isConnected && hasFilteredDomains(setting.advanced)">
+    <div class="cols-xs-12 col-sm-8">
+      <div class="row">
+        <!-- Sidebar menu -->
+        <div class="col-sm-3">
+          <!-- Domains -->
+          <div class="panel panel-default panel-domain" [class.panel-active]="activeDomain == domain" *ngFor="let domain of getDomains()" (click)="setActiveDomain(domain)"> <!--  *ngIf="domainsService.filterAdvanced(domain, setting.advanced)" -->
+            <div class="panel-heading">
+              <h3 class="panel-title">{{ domain }}</h3>
+            </div>
+          </div>
+
+          <!-- Global parameters -->
+          <app-parameter *ngFor="let parameter of getGlobalParameters()" [hidden]="!domainsService.filterAdvanced(parameter.name, setting.advanced)" [parameter]="parameter"></app-parameter>
+        </div>
+
+        <div class="col-sm-9">
+          <div *ngFor="let domain of getDomains()" [hidden]="activeDomain !== domain">
+            <p class="lead" style="font-size: 28px;">{{ domain }}</p>
+
+            <!-- Topics -->
+            <app-topic [topic]="topic" *ngFor="let topic of domainsService.getDataForDomain(data.topics, domain, setting.advanced)"></app-topic>
+
+            <!-- Services -->
+            <app-service [service]="service" *ngFor="let service of domainsService.getDataForDomain(data.services, domain, setting.advanced)"></app-service>
+
+            <!-- Parameters -->
+            <app-parameter [parameter]="parameter" *ngFor="let parameter of domainsService.getDataForDomain(data.parameters, domain, setting.advanced)"></app-parameter>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-sm-4 sidebar hidden-xs">
+      <!-- Console Log -->
+      <div class="console">
+        <table class="table">
+          <tr *ngFor="let logEntry of data.rosout" [hidden]="!domainsService.filterAdvanced(logEntry.abbr, setting.advanced)">
+            <td>
+              <strong [ngClass]="{ 'text-danger bg-danger': logEntry.level > 8, 'text-danger': logEntry.level == 8, 'text-warning': logEntry.level == 4, 'text-info': logEntry.level == 2, 'text-muted': logEntry.level < 2 }">
+                {{ logEntry.abbr }}
+              </strong>
+              <br>
+              <small><i class="glyphicon glyphicon-time"></i> {{ logEntry.dateString }}</small>
+            </td>
+            <td>{{ logEntry.msg }}</td>
+          </tr>
+        </table>
+      </div>
+
+      <!-- Battery Status -->
+      <div class="battery" *ngIf="setting.battery">
+        <strong>Battery</strong><br>
+
+        <div class="row" *ngIf="batteryStatus">
+          <div class="col-xs-4 col-sm-3">
+            <p>{{ 100 * batteryStatus | number: 1 }} %</p>
+          </div>
+
+          <div class="col-xs-8 col-md-9">
+            <!--uib-progressbar type="{{ batteryStatus > 0.3 ? 'success' : 'danger' }}" min="0" max="1" value="batteryStatus"></uib-progressbar-->
+          </div>
+        </div>
+
+        <div class="row" *ngIf="!batteryStatus">
+          <div class="col-xs-12">
+            <p><i>No battery data yet.</i></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

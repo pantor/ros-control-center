@@ -1,0 +1,26 @@
+
+<div class="panel panel-default">
+  <div class="panel-heading clearfix">
+    <h3 class="panel-title">
+      {{ service.abbr }}
+      <small style="font-size: 12px;">({{ service.type }} / Default)</small>
+    </h3>
+  </div>
+
+  <div class="panel-body">
+    <div class="row">
+      <div class="col-sm-6">
+        <form class="input-group">
+          <input type="text" class="form-control" [(ngModel)]="input" placeholder="JSON">
+          <span class="input-group-btn">
+            <button class="btn btn-default" type="button" (click)="callService(input, true)">Call</button>
+          </span>
+        </form>
+      </div>
+
+      <div class="col-sm-6">
+        <p [hidden]="!result">Result: {{ result }}</p>
+      </div>
+    </div>
+  </div>
+</div>

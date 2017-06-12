@@ -1,1 +1,21 @@
-/* You can add global styles to this file, and also import other style files */
+@import url("../node_modules/bootstrap/dist/css/bootstrap.css");
+
+.panel {
+  margin-bottom: 5px;
+}
+.panel-domain {
+  cursor: pointer;
+}
+.panel-active {
+  border: none;
+}
+.panel-active .panel-heading {
+  color: white;
+  background-color: #2E3D5F;
+  border: 1px #2E3D5F solid;
+  border-radius: 3px;
+}
+
+.form-margin {
+  margin: 0 15px;
+}

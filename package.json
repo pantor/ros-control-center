@@ -1,7 +1,16 @@
 {
   "name": "ros-control-center",
-  "version": "0.0.0",
-  "license": "MIT",
+  "version": "0.6.0",
+  "description": "A universal web-based control center for ROS robots.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pantor/ros-control-center.git"
+  },
+  "author": "Lars Berscheid",
+  "license": "BSD-3-Clause",
+  "bugs": {
+    "url": "https://github.com/pantor/ros-control-center/issues"
+  },
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -10,7 +19,6 @@
     "lint": "ng lint",
     "e2e": "ng e2e"
   },
-  "private": true,
   "dependencies": {
     "@angular/animations": "^4.0.0",
     "@angular/common": "^4.0.0",
@@ -21,8 +29,12 @@
     "@angular/platform-browser": "^4.0.0",
     "@angular/platform-browser-dynamic": "^4.0.0",
     "@angular/router": "^4.0.0",
+    "@types/underscore": "^1.8.1",
+    "bootstrap": "^3.3.7",
     "core-js": "^2.4.1",
+    "roslib": "^0.18.0",
     "rxjs": "^5.1.0",
+    "underscore": "^1.8.3",
     "zone.js": "^0.8.4"
   },
   "devDependencies": {

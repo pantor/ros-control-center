@@ -1,3 +1,20 @@
-<app-navbar></app-navbar>
+<nav class="navbar navbar-default navbar-static-top">
+  <div class="container">
+    <div class="navbar-header">
+      <a class="navbar-brand" routerLink="/">
+        <img src="assets/ros-logo.svg" height="22px">
+      </a>
+      <a class="navbar-brand" routerLink="/">
+        <img src="assets/ros.svg" height="22px">
+      </a>
+    </div>
+
+    <ul class="nav navbar-nav navbar-right">
+      <li routerLinkActive="active"><a routerLink="/dashboard">Dashboard</a></li>
+      <li routerLinkActive="active"><a routerLink="/settings">Settings</a></li>
+      <li><a target="_blank" href="https://github.com/gaug-cns/ros-control-center">GitHub</a></li>
+    </ul>
+  </div>
+</nav>
 
 <router-outlet></router-outlet>

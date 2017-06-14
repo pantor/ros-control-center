@@ -14,9 +14,8 @@ import { ros } from '../dashboard/dashboard.component';
 export class TopicComponent implements OnInit {
   @Input() topic: any;
   roslibTopic: any;
-  fileName: string;
   message: any;
-  isSubscribing: boolean;
+  isSubscribing: boolean = false;
 
   constructor() { }
 
@@ -26,26 +25,22 @@ export class TopicComponent implements OnInit {
       name: this.topic.name,
       messageType: this.topic.type,
     });
-
-    const path = 'app/topics/';
-    this.fileName = `${path}default.html`;
   }
 
-
-  toggleSubscription(data): void {
-    if (!data) {
+  toggleSubscription(isSubscribing): void {
+    if (!isSubscribing) {
       this.roslibTopic.subscribe((message) => {
         this.message = message;
       });
     } else {
       this.roslibTopic.unsubscribe();
     }
-    this.isSubscribing = !data;
+    this.isSubscribing = isSubscribing;
   }
 
-  publishMessage(input, isJSON: boolean): void {
-    const data = isJSON ? JSON.stringify(input) : input;
-    const message = new ROSLIB.Message(data);
+  publish(data: any): void {
+    const data2 = data.isJSON ? JSON.stringify(data.message) : data.message;
+    const message = new ROSLIB.Message(data2);
     this.roslibTopic.publish(message);
   }
 }

@@ -5,7 +5,7 @@ export class QuaternionsService {
 
   getRoll(q): number {
     if (!q) {
-      return '';
+      return null;
     }
     const rad = Math.atan2(2 * ((q.w * q.x) + (q.y * q.z)), 1 - (2 * ((q.x * q.x) + (q.y * q.y))));
     return (180 / Math.PI) * rad;
@@ -13,7 +13,7 @@ export class QuaternionsService {
 
   getPitch(q): number {
     if (!q) {
-      return '';
+      return null;
     }
     const rad = Math.asin(2 * ((q.w * q.y) - (q.z * q.x)));
     return (180 / Math.PI) * rad;
@@ -21,7 +21,7 @@ export class QuaternionsService {
 
   getYaw(q): number {
     if (!q) {
-      return '';
+      return null;
     }
     const rad = Math.atan2(2 * ((q.w * q.z) + (q.x * q.y)), 1 - (2 * ((q.y * q.y) + (q.z * q.z))));
     return (180 / Math.PI) * rad;

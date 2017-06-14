@@ -5,6 +5,7 @@
 }
 .panel-domain {
   cursor: pointer;
+  overflow: hidden;
 }
 .panel-active {
   border: none;

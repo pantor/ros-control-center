@@ -1,6 +1,6 @@
-<div class="panel panel-default" [ngClass]="{'panel-success': toggle}">
+<div class="panel panel-default" [class.panel-success]="isSubscribing">
   <div class="panel-heading clearfix">
-    <button class="btn btn-default btn-sm pull-right" (click)="toggleSubscription(!$ctrl.toggle)" [(ngModel)]="toggle">{{ toggle ? 'Unsubscribe' : 'Subscribe' }}</button>
+    <button class="btn btn-default btn-sm pull-right" (click)="toggleSubscription(!isSubscribing)" [class.active]="isSubscribing">{{ isSubscribing ? 'Unsubscribe' : 'Subscribe' }}</button>
 
     <h3 class="panel-title">
       {{ topic.abbr }}
@@ -8,15 +8,5 @@
     </h3>
   </div>
 
-  <div class="panel-body">
-    <div class="row">
-      <div class="col-xs-12">
-        <button class="btn btn-default pull-right" type="button" [disabled]="isSubscribing" style="margin-left: 10px;" (click)="publishMessage(message, true)">Publish</button>
-        <div class="input-group">
-          <input type="text" class="form-control" [(ngModel)]="message" [readonly]="isSubscribing" placeholder="JSON">
-          <span class="input-group-addon"></span>
-        </div>
-      </div>
-    </div>
-  </div>
+  <app-topic-default [onNewMessage]="message" (publish)="publish($event)" [isSubscribing]="isSubscribing"></app-topic-default>
 </div>

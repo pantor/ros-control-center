@@ -4,23 +4,27 @@ import { FormsModule }   from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { NavbarComponent } from './navbar/navbar.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { SettingsComponent } from './settings/settings.component';
 import { ParameterComponent } from './parameter/parameter.component';
 import { TopicComponent } from './topic/topic.component';
 import { ServiceComponent } from './service/service.component';
+import { TopicLoaderComponent, CustomComponent2 } from './topic-loader/topic-loader.component';
+import { DefaultComponent } from './topic/default/default.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    NavbarComponent,
     DashboardComponent,
     SettingsComponent,
     ParameterComponent,
     TopicComponent,
-    ServiceComponent
+    ServiceComponent,
+    TopicLoaderComponent,
+    CustomComponent2,
+    DefaultComponent
   ],
+  entryComponents: [CustomComponent2],
   imports: [
     BrowserModule,
     FormsModule,

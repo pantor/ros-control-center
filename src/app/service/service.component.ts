@@ -15,6 +15,7 @@ export class ServiceComponent implements OnInit {
   @Input() service: any;
   result: any;
   fileName: string;
+  input: any;
 
   constructor() { }
 

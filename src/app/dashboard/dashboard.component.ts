@@ -22,7 +22,7 @@ export class DashboardComponent implements OnInit {
   data: any;
   activeDomain: string;
   isConnected: boolean;
-  setting: any;
+  setting: Setting;
   maxConsoleEntries: number;
   batteryStatus: any;
 

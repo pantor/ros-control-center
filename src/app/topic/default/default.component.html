@@ -1,0 +1,11 @@
+<div class="panel-body">
+  <div class="row">
+    <div class="col-xs-12">
+      <button class="btn btn-default pull-right" type="button" [disabled]="isSubscribing" style="margin-left: 10px;" (click)="publishMessage(message, true)">Publish</button>
+      <div class="input-group">
+        <input type="text" class="form-control" [(ngModel)]="message" [readonly]="isSubscribing" placeholder="JSON">
+        <span class="input-group-addon"></span>
+      </div>
+    </div>
+  </div>
+</div>

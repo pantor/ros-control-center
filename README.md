@@ -10,7 +10,7 @@ In general, ROS Control Center offers an easy way to
  - call services.
  - show and change parameters.
 
-Further features like custom formatting for your own message and service types, a console (rosout by default) output, a battery status view, a camera stream view or an advanced mode for better usability are implemented. [Check it out!](https://pantor.github.io/ros-control-center)
+Further features like custom formatting for your own message and service types, a console (rosout by default) output, a battery status view, a camera stream view or an advanced mode for better usability are implemented. [Check it out!](http://pantor.github.io/ros-control-center)
 
 
 ## Installation

@@ -10,12 +10,12 @@ In general, ROS Control Center offers an easy way to
  - call services.
  - show and change parameters.
 
-Further features like custom formatting for your own message and service types, a console (rosout by default) output, a battery status view, a camera stream view or an advanced mode for better usability are implemented. [Check it out!](https://pantor.github.io/ros-control-center)
+Further features like custom formatting for your own message and service types, a console (rosout by default) output, a battery status view, a camera stream view or an advanced mode for better usability are implemented. [Check it out!](http://pantor.github.io/ros-control-center)
 
 
 ## Installation
 
-On your ROS robot, the `rosbridge_suite` from [Robot Web Tools](http://robotwebtools.org) needs to run. So to use the control center with your existing project, call `roslaunch rosbridge_server rosbridge_websocket.launch` to launch the websocket server. The control center runs on any computer (in particular without ROS...) in the same network. Open the ROS Control Center at [https://pantor.github.io/ros-control-center](https://pantor.github.io/ros-control-center). In the settings tab, you need to enter the IP address and port of your robot. Open the `Control` tab and reload.
+On your ROS robot, the `rosbridge_suite` from [Robot Web Tools](http://robotwebtools.org) needs to run. So to use the control center with your existing project, call `roslaunch rosbridge_server rosbridge_websocket.launch` to launch the websocket server. The control center runs on any computer (in particular without ROS...) in the same network. Open the ROS Control Center at [https://pantor.github.io/ros-control-center](http://pantor.github.io/ros-control-center). In the settings tab, you need to enter the IP address and port of your robot. Open the `Control` tab and reload.
 
 
 ## Features
@@ -36,13 +36,12 @@ In the right bottom corner, a battery status bar can be shown; the battery topic
 
 ## Contributing
 
-For development, [Gulp](http://gulpjs.com) needs to be installed on your local computer. Gulp depends on the [Node.js](https://nodejs.org/en/) package manager [npm](https://www.npmjs.com), which is installed via Node.js itself. Via `npm install` it will automatically download all development dependencies (from `package.json`). Type `gulp` in the terminal for concatenation of JS files and `gulp js-lint` for linting. The control center is written in ES6 JavaScript.
+For development, [Node.js](https://nodejs.org/en/) needs to be installed. Via `npm install` it will automatically download all development dependencies (from `package.json`). Type `npm start` in the terminal for a live development server. With `vagrant ssh` and `roslaunch ros_test_project main.launch`, you can start a test project in a virtual ubuntu machine.
 
 ROS Control Center depends on:
- - [AngularJS](https://www.angularjs.org/) as the general JavaScript and routing framework.
+ - [Angular](https://www.angular.io/) as the general JavaScript and routing framework.
  - [\_underscore.js](http://underscorejs.org) as a general-purpose JavaScript library.
- - [Bootstrap](http://getbootstrap.com/) for design.
- - [UI Bootstrap](http://angular-ui.github.io/bootstrap/) for Bootstrap components written in AngularJS.
+ - [Bootstrap](https://getbootstrap.com/) for design.
  - [roslib.js](https://github.com/RobotWebTools/roslibjs) for ROS connection.
 
 Contributions are always welcome!
@@ -53,6 +52,6 @@ Contributions are always welcome!
 ROS Control Center is released with a BSD license. For full terms and conditions, see the [LICENSE](https://github.com/pantor/ros-control-center/blob/master/LICENSE) file.
 
 
-## Authors
+## Contributors
 
-See [AUTHORS.md](https://github.com/pantor/ros-control-center/blob/master/AUTHORS.md) for a full list of contributors.
+See [here](https://github.com/pantor/ros-control-center/graphs/contributors) for a full list of contributors.

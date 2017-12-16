@@ -1,114 +1,97 @@
-<div class="container">
-  <div class="row">
-    <div class="col-xs-12">
-      <h2>Settings</h2>
+<div class="container mt-3">
+  <div class="d-flex">
+    <select class="form-control col-sm-3 mr-2" [(ngModel)]="index" (ngModelChange)="save()">
+      <option *ngFor="let s of settings; let i = index;" [value]="i">{{ s.name }}</option>
+    </select>
 
-      <div class="row" style="margin-bottom: 30px;">
-        <div class="col-xs-4">
-          <select class="form-control" [(ngModel)]="index" (ngModelChange)="save()">
-            <option *ngFor="let s of settings; let i = index;" [value]="i">{{ s.name }}</option>
-          </select>
-        </div>
+    <button class="btn btn-success mr-2" (click)="add()">Add Robot</button>
+    <button class="btn btn-danger" (click)="remove()">Remove Robot</button>
+  </div>
 
-        <div class="col-xs-8">
-          <button class="btn btn-success" (click)="add()">Add Setting</button>
-          <button class="btn btn-danger" (click)="remove()">Remove Setting</button>
-        </div>
+  <hr>
+
+  <form class="mt-4 mb-4">
+    <div class="form-group row">
+      <label class="col-sm-3 col-form-label">Name</label>
+      <div class="col-sm-4">
+        <input type="text" class="form-control" placeholder="Name" [(ngModel)]="settings[index].name" name="name" (ngModelChange)="save()">
       </div>
-
-      <hr>
-
-      <div class="row">
-        <div class="col-xs-12">
-          <div class="form-horizontal">
-            <div class="form-group">
-              <label class="col-sm-2 control-label">Name</label>
-              <div class="col-sm-4">
-                <input type="text" class="form-control" placeholder="Name" [(ngModel)]="settings[index].name" (ngModelChange)="save()">
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label class="col-sm-2 control-label">URL</label>
-              <div class="col-sm-4">
-                <input type="text" class="form-control" placeholder="Address" [(ngModel)]="settings[index].address" (ngModelChange)="save()">
-                <span class="help-block">Please reload after URL change</span>
-              </div>
-              <div class="col-sm-2">
-                <input type="number" class="form-control" placeholder="Port" [(ngModel)]="settings[index].port" (ngModelChange)="save()">
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label class="col-sm-2 control-label">Log</label>
-              <div class="col-sm-4">
-                <input type="text" class="form-control" placeholder="Console" [(ngModel)]="settings[index].log" (ngModelChange)="save()">
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label class="col-sm-2 control-label">Image Preview Port</label>
-              <div class="col-sm-2">
-                <input type="number" class="form-control" placeholder="Port" [(ngModel)]="settings[index].imagePreview.port" (ngModelChange)="save()">
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label class="col-sm-2 control-label">Image Width &times; Height</label>
-              <div class="col-sm-2">
-                <input type="number" class="form-control" placeholder="Width" [(ngModel)]="settings[index].imagePreview.width" (ngModelChange)="save()">
-              </div>
-              <div class="col-sm-2">
-                <input type="number" class="form-control" placeholder="Height" [(ngModel)]="settings[index].imagePreview.height" (ngModelChange)="save()">
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label class="col-sm-2 control-label">Image Quality</label>
-              <div class="col-sm-2">
-                <input type="number" class="form-control" placeholder="Quality" [(ngModel)]="settings[index].imagePreview.quality" (ngModelChange)="save()">
-              </div>
-            </div>
-
-            <div class="form-group">
-              <div class="col-sm-offset-2 col-sm-10">
-                <div class="checkbox">
-                  <label>
-                    <input type="checkbox" [(ngModel)]="settings[index].battery" (ngModelChange)="save()"> Battery
-                  </label>
-                </div>
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label class="col-sm-2 control-label">Battery Topic</label>
-              <div class="col-sm-4">
-                <input type="text" class="form-control" placeholder="/battery" [(ngModel)]="settings[index].batteryTopic" (ngModelChange)="save()">
-                <span class="help-block">The message type should be <i>std_msgs/Float32</i>.</span>
-              </div>
-            </div>
-          </div>
-        </div>
+    </div>
+    <div class="form-group row">
+      <label class="col-sm-3 col-form-label">URL</label>
+      <div class="col-sm-4">
+        <input type="text" class="form-control" placeholder="Address" [(ngModel)]="settings[index].address" name="address" (ngModelChange)="save()">
+        <small class="form-text text-muted">Please reload after URL change</small>
       </div>
+      <div class="col-sm-3">
+        <input type="number" class="form-control" placeholder="Port" [(ngModel)]="settings[index].port" name="port" (ngModelChange)="save()">
+      </div>
+    </div>
 
-      <hr>
+    <div class="form-group row">
+      <label class="col-sm-3 col-form-label">Log</label>
+      <div class="col-sm-4">
+        <input type="text" class="form-control" placeholder="Console" [(ngModel)]="settings[index].log" name="log" (ngModelChange)="save()">
+      </div>
+    </div>
 
-      <div class="row">
-        <div class="col-xs-12">
-          <div class="form-horizontal">
-            <div class="form-group">
-              <div class="col-sm-offset-2 col-sm-8">
-                <div class="checkbox">
-                  <label>
-                    <input type="checkbox" [(ngModel)]="settings[index].advanced" (ngModelChange)="save()"> Advanced View
-                    <span class="help-block">In the default mode, only nodes / parameters with a capital first letter are shown. This can be used to show only the relevant information. In the advanced view, every item is shown.</span>
-                  </label>
-                </div>
-              </div>
-            </div>
-          </div>
+    <div class="form-group row">
+      <label class="col-sm-3 col-form-label">Image Preview Port</label>
+      <div class="col-sm-2">
+        <input type="number" class="form-control" placeholder="Port" [(ngModel)]="settings[index].imagePreview.port" name="imagePreviewPort" (ngModelChange)="save()">
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <label class="col-sm-3 col-form-label">Image Width &times; Height</label>
+      <div class="col-sm-2">
+        <input type="number" class="form-control" placeholder="Width" [(ngModel)]="settings[index].imagePreview.width" name="imagePreviewWidth" (ngModelChange)="save()">
+      </div>
+      <div class="col-sm-2">
+        <input type="number" class="form-control" placeholder="Height" [(ngModel)]="settings[index].imagePreview.height" name="imagePreviewHeight" (ngModelChange)="save()">
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <label class="col-sm-3 col-form-label">Image Quality</label>
+      <div class="col-sm-2">
+        <input type="number" class="form-control" placeholder="Quality" [(ngModel)]="settings[index].imagePreview.quality" name="imagePreviewQuality" (ngModelChange)="save()">
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <div class="col-sm-3"></div>
+      <div class="col-sm-3">
+        <div class="form-check">
+          <label>
+            <input type="checkbox" [(ngModel)]="settings[index].battery" name="battery" (ngModelChange)="save()"> Battery
+          </label>
         </div>
       </div>
     </div>
-  </div>
+
+    <div class="form-group row">
+      <label class="col-sm-3 col-form-label">Battery Topic</label>
+      <div class="col-sm-4">
+        <input type="text" class="form-control" placeholder="/battery" [(ngModel)]="settings[index].batteryTopic" name="batteryTopic" (ngModelChange)="save()">
+        <small class="form-text text-muted">The message type should be <i>std_msgs/Float32</i>.</small>
+      </div>
+    </div>
+  </form>
+
+  <hr>
+
+  <form class="mt-4">
+    <div class="form-group row">
+      <div class="col-sm-3"></div>
+      <div class="col-sm-8">
+        <div class="form-check">
+          <label>
+            <input type="checkbox" [(ngModel)]="settings[index].advanced" name="advanced" (ngModelChange)="save()"> Advanced View
+            <small class="form-text text-muted">In the default mode, only nodes / parameters with a capital first letter are shown. This can be used to show only the relevant information. In the advanced view, every item is shown.</small>
+          </label>
+        </div>
+      </div>
+    </div>
+  </form>
 </div>

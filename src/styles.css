@@ -1,22 +1,28 @@
 @import url("../node_modules/bootstrap/dist/css/bootstrap.css");
 
-.panel {
+.card {
   margin-bottom: 5px;
 }
-.panel-domain {
+.card-domain {
   cursor: pointer;
   overflow: hidden;
 }
-.panel-active {
-  border: none;
+.card-title {
+  margin: 0.6rem 0.8rem;
 }
-.panel-active .panel-heading {
+.card-active {
   color: white;
   background-color: #2E3D5F;
   border: 1px #2E3D5F solid;
-  border-radius: 3px;
+}
+.card-body-sm {
+  margin: 0 0.6rem 0.6rem 0.6rem;
 }
 
 .form-margin {
   margin: 0 15px;
+}
+.btn-title {
+  padding: 0.1rem 0.5rem;
+  margin: 0.3rem 0.6rem;
 }

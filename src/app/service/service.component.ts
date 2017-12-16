@@ -13,27 +13,25 @@ import { ros } from '../dashboard/dashboard.component';
 })
 export class ServiceComponent implements OnInit {
   @Input() service: Service;
+  roslibService: any;
   result: any;
-  fileName: string;
   input: any;
 
   constructor() { }
 
   ngOnInit() {
-    const path = 'app/services/';
-    this.fileName = `${path}default.html`;
-  }
-
-  callService(input: any, isJSON: boolean): void {
-    const data = isJSON ? JSON.parse(input) : input;
-    const roslibService = new ROSLIB.Service({
+    this.roslibService = new ROSLIB.Service({
       ros,
       name: this.service.name,
       serviceType: this.service.type,
     });
+  }
+
+  callService(input: any, isJSON: boolean): void {
+    const data = isJSON ? JSON.parse(input) : input;
     const request = new ROSLIB.ServiceRequest(data);
 
-    roslibService.callService(request, (result) => {
+    this.roslibService.callService(request, result => {
       this.result = result;
     });
   }

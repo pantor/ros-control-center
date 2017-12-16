@@ -1,11 +1,11 @@
-<div class="panel panel-default" [class.panel-success]="isSubscribing">
-  <div class="panel-heading clearfix">
-    <button class="btn btn-default btn-sm pull-right" (click)="toggleSubscription(!isSubscribing)" [class.active]="isSubscribing">{{ isSubscribing ? 'Unsubscribe' : 'Subscribe' }}</button>
-
-    <h3 class="panel-title">
+<div class="card" [class.bg-dark]="isSubscribing" [class.text-light]="isSubscribing">
+  <div class="d-flex justify-content-between align-items-center">
+    <h6 class="card-title">
       {{ topic.abbr }}
-      <small style="font-size: 12px;">({{ topic.type }})</small>
-    </h3>
+      <small class="text-muted">({{ topic.type }})</small>
+    </h6>
+
+    <button class="btn btn-outline-success btn-sm btn-title" (click)="toggleSubscription(!isSubscribing)" [class.active]="isSubscribing">{{ isSubscribing ? 'Unsubscribe' : 'Subscribe' }}</button>
   </div>
 
   <app-topic-default [onNewMessage]="message" (publish)="publish($event)" [isSubscribing]="isSubscribing"></app-topic-default>

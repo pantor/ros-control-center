@@ -10,7 +10,7 @@ export class DefaultComponent {
   private message: any;
 
   publishMessage(message) {
-    this.publish.emit(message);
+    this.publish.emit(JSON.parse(message));
   }
 
   @Input()

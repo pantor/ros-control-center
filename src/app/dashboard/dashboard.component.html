@@ -1,32 +1,27 @@
 <div class="container-fluid">
-  <!-- No connection alert -->
-  <div class="alert alert-danger col-sm-6 col-sm-offset-3" role="alert" *ngIf="!isConnected">
-    <p class="lead"><i class="glyphicon glyphicon-warning-sign"></i> Whoops...</p>
-    The ROS Control Center is <b>not connected</b> to a robot running rosbridge_suite at {{ setting.address }}:{{ setting.port }}. You can change the URL in the <i>Settings</i> tab, further information can be found in the <a href="https://github.com/pantor/ros-control-center">GitHub Repository</a>.
-  </div>
+  <div class="row justify-content-center">
+    <div class="alert alert-info col-sm-6" *ngIf="isConnected && !ready">
+      Loading...
+    </div>
 
-  <div class="alert alert-info col-sm-6 col-sm-offset-3" *ngIf="isConnected && !ready">
-    <p class="lead"><i class="glyphicon glyphicon glyphicon-th-list"></i> Loading...</p>
-  </div>
+    <div class="alert alert-info col-sm-6" *ngIf="isConnected && ready && !hasDomains()">
+      There is nothing to show... In default mode, ROS Control Center does not show default nodes / parameters / services and topics. You can show every item by using the advanced view setting, either in the seperate settings tab or here:
+      <button class="btn btn-info btn-sm mb-2" (click)="setting.advanced = true">Enable Advanced View</button>
+    </div>
 
-  <div class="alert alert-info col-sm-6 col-sm-offset-3" *ngIf="isConnected && ready && !hasDomains()">
-    <p class="lead"><i class="glyphicon glyphicon glyphicon-th-list"></i> Nothing to show...</p>
-    In default mode, ROS Control Center does not show default nodes / parameters / services and topics. You can show every item by using the advanced view setting, either in the seperate settings tab or here:
-    <div style="margin-top: 10px;">
-      <button class="btn btn-info btn-sm" (click)="setting.advanced = true">Enable Advanced View</button>
+    <div class="alert alert-danger col-sm-6" role="alert" *ngIf="!isConnected">
+      The ROS Control Center is <b>not connected</b> to a robot running rosbridge_suite at {{ setting.address }}:{{ setting.port }}. You can change the URL in the <i>Settings</i> tab, further information can be found in the <a href="https://github.com/pantor/ros-control-center">GitHub Repository</a>.
     </div>
   </div>
 
   <div class="row" *ngIf="isConnected && hasDomains()">
-    <div class="cols-xs-12 col-sm-8">
+    <div class="col-9">
       <div class="row">
         <!-- Sidebar menu -->
         <div class="col-sm-3">
           <!-- Domains -->
-          <div class="panel panel-default panel-domain" [class.panel-active]="activeDomain == domain" *ngFor="let domain of getDomains()" (click)="setActiveDomain(domain)">
-            <div class="panel-heading">
-              <h3 class="panel-title">{{ domain }}</h3>
-            </div>
+          <div class="card card-domain" [class.card-active]="activeDomain == domain" *ngFor="let domain of getDomains()" (click)="setActiveDomain(domain)">
+            <h6 class="card-title">{{ domain }}</h6>
           </div>
 
           <!-- Global parameters -->
@@ -48,7 +43,7 @@
       </div>
     </div>
 
-    <div class="col-sm-4 sidebar hidden-xs">
+    <div class="col-3 sidebar">
       <!-- Console Log -->
       <div class="console">
         <table class="table">
@@ -58,7 +53,7 @@
                 {{ logEntry.abbr }}
               </strong>
               <br>
-              <small><i class="glyphicon glyphicon-time"></i> {{ logEntry.dateString }}</small>
+              <small class="text-muted">{{ logEntry.dateString }}</small>
             </td>
             <td>{{ logEntry.msg }}</td>
           </tr>
@@ -79,11 +74,7 @@
           </div>
         </div>
 
-        <div class="row" *ngIf="!batteryStatus">
-          <div class="col-xs-12">
-            <p><i>No battery data yet.</i></p>
-          </div>
-        </div>
+        <p *ngIf="!batteryStatus" class="text-muted">No battery data yet.</p>
       </div>
     </div>
   </div>

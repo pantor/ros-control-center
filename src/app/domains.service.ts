@@ -3,8 +3,6 @@ import { Injectable } from '@angular/core';
 @Injectable()
 export class DomainsService {
 
-  constructor() { }
-
   filterAdvanced(entry: string, advanced = false) {
     if (advanced) {
       return true;
@@ -30,23 +28,18 @@ export class DomainsService {
   }
 
   getDomains(array: any[]): Domain[] {
-    return array
-      .filter(entry => entry.name.split('/').length > 1)
+    return array.filter(entry => entry.name.split('/').length > 1)
       .map(entry => entry.name.split('/')[1])
       .filter((v, i, a) => a.indexOf(v) === i)
       .sort();
   }
 
   getGlobalParameters(array: Parameter[]): Parameter[] {
-    const result: Parameter[] = [];
-    for (const entry of array) {
-      const nameArray = entry.name.split('/');
-      if (nameArray.length === 2) {
-        entry.abbr = nameArray.pop();
-        result.push(entry);
-      }
-    };
-    return result;
+    return array.filter(entry => entry.name.split('/').length === 2)
+      .map(entry => {
+        entry.abbr = entry.name.split('/').pop();
+        return entry;
+      });
   }
 
   getDataForDomain(array: any[], domain: Domain, advanced: boolean) {

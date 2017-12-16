@@ -19,8 +19,14 @@ let isConnected = false;
   providers: [DomainsService]
 })
 export class DashboardComponent implements OnInit {
-  data: any;
-  activeDomain: string;
+  data: {
+    rosout: any[],
+    topics: Topic[],
+    nodes: any[],
+    parameters: Parameter[],
+    services: Service[],
+  };
+  activeDomain: Domain;
   isConnected: boolean;
   setting: Setting;
   maxConsoleEntries: number;
@@ -46,29 +52,30 @@ export class DashboardComponent implements OnInit {
   ngOnInit() { }
 
   // The active domain shows further information in the center view
-  setActiveDomain(domain) {
+  setActiveDomain(domain: Domain) {
     this.activeDomain = domain;
   }
 
-  getDomains() {
-    const allData = this.data.topics.concat(this.data.services, this.data.nodes);
+  getDomains(advanced: boolean): Domain[] {
+    const allData: any[] = this.data.topics.concat(this.data.services, this.data.nodes);
     const domains = this.domainsService.getDomains(allData);
 
     if (!this.activeDomain) {
       this.setActiveDomain(domains[0]);
     }
-    return domains;
+    return _.filter(domains, dom => this.domainsService.filterAdvanced(dom, advanced));
   }
 
-  hasFilteredDomains(advanced) {
-    return _.some(_.map(this.getDomains(), dom => this.domainsService.filterAdvanced(dom, advanced)));
+  hasFilteredDomains(advanced: boolean): boolean {
+    return !_.isEmpty(this.getDomains(advanced));
   }
 
-  getGlobalParameters() {
-    return this.domainsService.getGlobalParameters(this.data.parameters);
+  getGlobalParameters(advanced: boolean): Parameter[] {
+    const parameters = this.domainsService.getGlobalParameters(this.data.parameters);
+    return _.filter(parameters, param => this.domainsService.filterAdvanced(param.name, advanced));
   }
 
-  resetData() {
+  resetData(): void {
     this.data = {
       rosout: [],
       topics: [],
@@ -148,7 +155,7 @@ export class DashboardComponent implements OnInit {
   }
 
   // Setup battery status
-  setBattery() {
+  setBattery(): void {
     const batteryTopic = new ROSLIB.Topic({
       ros,
       name: this.setting.batteryTopic,
@@ -165,7 +172,7 @@ export class DashboardComponent implements OnInit {
 
     ros.getTopics((topics) => { // Topics now has topics and types arrays
       for (let name of topics.topics) {
-        this.data.topics.push({ name });
+        this.data.topics.push({ 'name': name, 'abbr': '', 'type': '' });
 
         ros.getTopicType(name, (type) => {
           (_.findWhere(this.data.topics, { name }) as any).type = type;
@@ -186,7 +193,7 @@ export class DashboardComponent implements OnInit {
     ros.getParams((params) => {
       for (let name of params) {
         const param = new ROSLIB.Param({ ros, name });
-        this.data.parameters.push({ name });
+        this.data.parameters.push({ 'name': name, 'abbr': '', 'value': '' });
 
         param.get((value) => {
           (_.findWhere(this.data.parameters, { name }) as any).value = value;

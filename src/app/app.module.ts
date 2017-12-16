@@ -9,7 +9,6 @@ import { SettingsComponent } from './settings/settings.component';
 import { ParameterComponent } from './parameter/parameter.component';
 import { TopicComponent } from './topic/topic.component';
 import { ServiceComponent } from './service/service.component';
-import { TopicLoaderComponent, CustomComponent2 } from './topic-loader/topic-loader.component';
 import { DefaultComponent } from './topic/default/default.component';
 
 @NgModule({
@@ -20,11 +19,9 @@ import { DefaultComponent } from './topic/default/default.component';
     ParameterComponent,
     TopicComponent,
     ServiceComponent,
-    TopicLoaderComponent,
-    CustomComponent2,
     DefaultComponent
   ],
-  entryComponents: [CustomComponent2],
+  entryComponents: [],
   imports: [
     BrowserModule,
     FormsModule,

@@ -1,24 +1,20 @@
-import { Component, OnInit, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'app-topic-default',
   templateUrl: './default.component.html'
 })
-export class DefaultComponent implements OnInit {
+export class DefaultComponent {
   @Input() isSubscribing: boolean = false;
-  @Output() publish = new EventEmitter<{ message: any, isJSON: boolean }>();
+  @Output() publish = new EventEmitter<{ message: any, isJSON?: boolean }>();
   private message: any;
 
-  constructor() { }
-
-  ngOnInit() { }
-
-  publishMessage(message, isJSON) {
-    this.publish.emit({ message: message, isJSON: isJSON });
+  publishMessage(message) {
+    this.publish.emit({ message: message, isJSON: true });
   }
 
   @Input()
-  set onNewMessage(onNewMessage: string) {
+  set onNewMessage(onNewMessage: any) {
     this.message = onNewMessage;
   }
 }

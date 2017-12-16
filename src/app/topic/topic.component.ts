@@ -12,7 +12,7 @@ import { ros } from '../dashboard/dashboard.component';
   styleUrls: ['./topic.component.css']
 })
 export class TopicComponent implements OnInit {
-  @Input() topic: any;
+  @Input() topic: Topic;
   roslibTopic: any;
   message: any;
   isSubscribing: boolean = false;
@@ -27,7 +27,7 @@ export class TopicComponent implements OnInit {
     });
   }
 
-  toggleSubscription(isSubscribing): void {
+  toggleSubscription(isSubscribing: boolean): void {
     if (!isSubscribing) {
       this.roslibTopic.subscribe((message) => {
         this.message = message;

@@ -12,16 +12,16 @@ import { ros } from '../dashboard/dashboard.component';
   styleUrls: ['./parameter.component.css']
 })
 export class ParameterComponent implements OnInit {
-  @Input() parameter: any;
-  param: any;
+  @Input() parameter: Parameter;
+  roslibParam: any;
 
   constructor() { }
 
   ngOnInit() {
-    this.param = new ROSLIB.Param({ ros, name: this.parameter.name });
+    this.roslibParam = new ROSLIB.Param({ ros, name: this.parameter.name });
   }
 
-  setValue(value): void {
-    this.param.set(value);
+  setValue(value: Parameter['value']): void {
+    this.roslibParam.set(value);
   }
 }

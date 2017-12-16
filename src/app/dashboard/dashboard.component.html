@@ -19,29 +19,27 @@
         <!-- Sidebar menu -->
         <div class="col-sm-3">
           <!-- Domains -->
-          <div class="panel panel-default panel-domain" [class.panel-active]="activeDomain == domain" *ngFor="let domain of getDomains()" (click)="setActiveDomain(domain)"> <!--  *ngIf="domainsService.filterAdvanced(domain, setting.advanced)" -->
+          <div class="panel panel-default panel-domain" [class.panel-active]="activeDomain == domain" *ngFor="let domain of getDomains(setting.advanced)" (click)="setActiveDomain(domain)">
             <div class="panel-heading">
               <h3 class="panel-title">{{ domain }}</h3>
             </div>
           </div>
 
           <!-- Global parameters -->
-          <app-parameter *ngFor="let parameter of getGlobalParameters()" [hidden]="!domainsService.filterAdvanced(parameter.name, setting.advanced)" [parameter]="parameter"></app-parameter>
+          <app-parameter *ngFor="let parameter of getGlobalParameters(setting.advanced)" [parameter]="parameter"></app-parameter>
         </div>
 
         <div class="col-sm-9">
-          <div *ngFor="let domain of getDomains()" [hidden]="activeDomain !== domain">
-            <p class="lead" style="font-size: 28px;">{{ domain }}</p>
+          <p class="lead" style="font-size: 28px;">{{ activeDomain }}</p>
 
-            <!-- Topics -->
-            <app-topic [topic]="topic" *ngFor="let topic of domainsService.getDataForDomain(data.topics, domain, setting.advanced)"></app-topic>
+          <!-- Topics -->
+          <app-topic [topic]="topic" *ngFor="let topic of domainsService.getDataForDomain(data.topics, activeDomain, setting.advanced)"></app-topic>
 
-            <!-- Services -->
-            <app-service [service]="service" *ngFor="let service of domainsService.getDataForDomain(data.services, domain, setting.advanced)"></app-service>
+          <!-- Services -->
+          <app-service [service]="service" *ngFor="let service of domainsService.getDataForDomain(data.services, activeDomain, setting.advanced)"></app-service>
 
-            <!-- Parameters -->
-            <app-parameter [parameter]="parameter" *ngFor="let parameter of domainsService.getDataForDomain(data.parameters, domain, setting.advanced)"></app-parameter>
-          </div>
+          <!-- Parameters -->
+          <app-parameter [parameter]="parameter" *ngFor="let parameter of domainsService.getDataForDomain(data.parameters, activeDomain, setting.advanced)"></app-parameter>
         </div>
       </div>
     </div>

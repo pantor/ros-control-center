@@ -7,7 +7,7 @@ export class DomainsService {
 
   constructor() { }
 
-  filterAdvanced(entry, advanced: boolean) {
+  filterAdvanced(entry: string, advanced: boolean) {
     if (advanced) {
       return true;
     }
@@ -31,7 +31,7 @@ export class DomainsService {
     ], _.last(entryArray)));
   }
 
-  getDomains(array) {
+  getDomains(array: any[]): Domain[] {
     const result = [];
     for (let entry of array) {
       const nameArray = entry.name.split('/');
@@ -42,7 +42,7 @@ export class DomainsService {
     return _.uniq(result).sort();
   }
 
-  getGlobalParameters(array) {
+  getGlobalParameters(array: any[]): Parameter[] {
     const result = [];
     for (let entry of array) {
       const nameArray = entry.name.split('/');
@@ -54,13 +54,13 @@ export class DomainsService {
     return result;
   }
 
-  getDataForDomain(array, domainName, advanced: boolean) {
+  getDataForDomain(array: any[], domain: Domain, advanced: boolean) {
     const result = [];
     for (let entry of array) {
       const nameArray = entry.name.split('/');
       if (
         nameArray.length > 1 &&
-        nameArray[1] === domainName &&
+        nameArray[1] === domain &&
         this.filterAdvanced(entry.name, advanced)
       ) {
         entry.abbr = nameArray.slice(2).join(' ');

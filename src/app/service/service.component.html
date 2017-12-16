@@ -4,15 +4,5 @@
     <small class="text-muted">({{ service.type }} / Default)</small>
   </h6>
 
-  <div class="card-body-sm">
-    <div class="d-flex justify-content-between">
-      <div class="input-group mr-2">
-        <input type="text" class="form-control" [(ngModel)]="input" placeholder="JSON">
-      </div>
-
-      <button class="btn btn-secondary" type="button" (click)="callService(input, true)">Call</button>
-    </div>
-
-    <p [hidden]="!result">Result: {{ result }}</p>
-  </div>
+  <app-service-default [onResponse]="response" (call)="callService($event)"></app-service-default>
 </div>

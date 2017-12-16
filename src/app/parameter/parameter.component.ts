@@ -21,7 +21,7 @@ export class ParameterComponent implements OnInit {
     this.roslibParam = new ROSLIB.Param({ ros, name: this.parameter.name });
   }
 
-  setValue(value: Parameter['value']): void {
-    this.roslibParam.set(value);
+  setValue(): void {
+    this.roslibParam.set(this.parameter.value);
   }
 }

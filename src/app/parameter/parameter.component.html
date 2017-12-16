@@ -2,11 +2,12 @@
   <h6 class="card-title">{{ parameter.abbr }}</h6>
 
   <div class="card-body-sm">
-    <div class="input-group">
-      <input type="text" class="form-control" [(ngModel)]="parameter.value">
-      <span class="input-group-btn">
-        <button class="btn btn-secondary" type="button" (click)="setValue(parameter.value)">Set</button>
-      </span>
+    <div class="d-flex justify-content-between">
+      <div class="input-group mr-2">
+        <input type="text" class="form-control" [(ngModel)]="parameter.value">
+      </div>
+
+      <button class="btn btn-secondary" type="button" (click)="setValue()">Set</button>
     </div>
   </div>
 </div>

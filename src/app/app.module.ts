@@ -9,7 +9,8 @@ import { SettingsComponent } from './settings/settings.component';
 import { ParameterComponent } from './parameter/parameter.component';
 import { TopicComponent } from './topic/topic.component';
 import { ServiceComponent } from './service/service.component';
-import { DefaultComponent } from './topic/default/default.component';
+import { DefaultTopicComponent } from './topic/default/default.component';
+import { DefaultServiceComponent } from './service/default/default.component';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,8 @@ import { DefaultComponent } from './topic/default/default.component';
     ParameterComponent,
     TopicComponent,
     ServiceComponent,
-    DefaultComponent
+    DefaultTopicComponent,
+    DefaultServiceComponent
   ],
   entryComponents: [],
   imports: [

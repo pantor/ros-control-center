@@ -4,9 +4,9 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
   selector: 'app-topic-default',
   templateUrl: './default.component.html'
 })
-export class DefaultComponent {
+export class DefaultTopicComponent {
   @Input() isSubscribing = false;
-  @Output() publish = new EventEmitter<{ message: any, isJSON?: boolean }>();
+  @Output() publish = new EventEmitter<any>();
   private message: any;
 
   publishMessage(message) {
@@ -14,7 +14,7 @@ export class DefaultComponent {
   }
 
   @Input()
-  set onNewMessage(onNewMessage: any) {
-    this.message = JSON.stringify(onNewMessage);
+  set onNewMessage(message: any) {
+    this.message = JSON.stringify(message);
   }
 }

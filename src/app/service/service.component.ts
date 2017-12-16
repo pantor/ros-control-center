@@ -14,8 +14,7 @@ import { ros } from '../dashboard/dashboard.component';
 export class ServiceComponent implements OnInit {
   @Input() service: Service;
   roslibService: any;
-  result: any;
-  input: any;
+  response: any;
 
   constructor() { }
 
@@ -27,12 +26,10 @@ export class ServiceComponent implements OnInit {
     });
   }
 
-  callService(input: any, isJSON: boolean): void {
-    const data = isJSON ? JSON.parse(input) : input;
+  callService(data: any): void {
     const request = new ROSLIB.ServiceRequest(data);
-
-    this.roslibService.callService(request, result => {
-      this.result = result;
+    this.roslibService.callService(request, response => {
+      this.response = response;
     });
   }
 }

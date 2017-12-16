@@ -3,11 +3,18 @@
 import random
 import rospy
 from sensor_msgs.msg import Imu
+from std_srvs.srv import Trigger, TriggerResponse
+
+
+def calibrate(req):
+  rospy.loginfo('Calibrating...')
+  return TriggerResponse(True, 'Calibrated.')
 
 
 if __name__ == '__main__':
   rospy.init_node('imu')
   pub = rospy.Publisher('imu/imu', Imu, queue_size=10)
+  s = rospy.Service('imu/calibrate', Trigger, calibrate)
 
   r = rospy.Rate(2)  # [Hz]
 

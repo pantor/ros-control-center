@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 
 declare var ROSLIB: any;
-import '../../assets/roslib.js';
+import 'roslib/build/roslib.js';
 
 import { ros } from '../dashboard/dashboard.component';
 

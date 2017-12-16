@@ -40,7 +40,6 @@ For development, [Node.js](https://nodejs.org/en/) needs to be installed. Via `n
 
 ROS Control Center depends on:
  - [Angular](https://www.angular.io/) as the general JavaScript and routing framework.
- - [\_underscore.js](http://underscorejs.org) as a general-purpose JavaScript library.
  - [Bootstrap](https://getbootstrap.com/) for design.
  - [roslib.js](https://github.com/RobotWebTools/roslibjs) for ROS connection.
 

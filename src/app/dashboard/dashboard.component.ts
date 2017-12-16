@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
 
 declare var ROSLIB: any;
-import '../../assets/roslib.js';
-import * as _ from 'underscore';
+import 'roslib/build/roslib.js';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/observable/forkJoin';
 
 import { DomainsService } from '../domains.service';
 import { Setting } from '../setting';
@@ -22,15 +24,20 @@ export class DashboardComponent implements OnInit {
   data: {
     rosout: any[],
     topics: Topic[],
-    nodes: any[],
+    nodes: Node[],
     parameters: Parameter[],
     services: Service[],
   };
+  domains: Domain[];
+  filteredDomains: Domain[];
+  globalParameters: Parameter[];
+  filteredGlobalParameters: Parameter[];
   activeDomain: Domain;
   isConnected: boolean;
   setting: Setting;
   maxConsoleEntries: number;
   batteryStatus: any;
+  ready = false;
 
   constructor(private domainsService: DomainsService) {
     this.isConnected = isConnected;
@@ -43,7 +50,14 @@ export class DashboardComponent implements OnInit {
       this.newRosConnection();
     }, 1000); // [ms]
 
-    this.resetData();
+    this.data = {
+      rosout: [],
+      topics: [],
+      nodes: [],
+      parameters: [],
+      services: [],
+    };
+
     if (isConnected) {
       this.onConnected();
     }
@@ -52,40 +66,23 @@ export class DashboardComponent implements OnInit {
   ngOnInit() { }
 
   // The active domain shows further information in the center view
-  setActiveDomain(domain: Domain) {
+  setActiveDomain(domain: Domain): void {
     this.activeDomain = domain;
   }
 
-  getDomains(advanced: boolean): Domain[] {
-    const allData: any[] = this.data.topics.concat(this.data.services, this.data.nodes);
-    const domains = this.domainsService.getDomains(allData);
-
-    if (!this.activeDomain) {
-      this.setActiveDomain(domains[0]);
-    }
-    return _.filter(domains, dom => this.domainsService.filterAdvanced(dom, advanced));
+  getDomains(): Domain[] {
+    return this.setting.advanced ? this.domains : this.filteredDomains;
   }
 
-  hasFilteredDomains(advanced: boolean): boolean {
-    return !_.isEmpty(this.getDomains(advanced));
+  hasDomains(): boolean {
+    return (this.getDomains() && this.getDomains().length > 0);
   }
 
-  getGlobalParameters(advanced: boolean): Parameter[] {
-    const parameters = this.domainsService.getGlobalParameters(this.data.parameters);
-    return _.filter(parameters, param => this.domainsService.filterAdvanced(param.name, advanced));
+  getGlobalParameters(): Parameter[] {
+    return this.setting.advanced ? this.globalParameters : this.filteredGlobalParameters;
   }
 
-  resetData(): void {
-    this.data = {
-      rosout: [],
-      topics: [],
-      nodes: [],
-      parameters: [],
-      services: [],
-    };
-  }
-
-  newRosConnection() {
+  newRosConnection(): void {
     if (isConnected) {
       return;
     }
@@ -115,7 +112,7 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  onConnected() {
+  onConnected(): void {
     // wait a moment until ROS is loaded and initialized
     setTimeout(() => {
       this.loadData();
@@ -128,7 +125,7 @@ export class DashboardComponent implements OnInit {
   }
 
   // Setup of console (in the right sidebar)
-  setConsole() {
+  setConsole(): void {
     const consoleTopic = new ROSLIB.Topic({
       ros,
       name: this.setting.log,
@@ -168,43 +165,72 @@ export class DashboardComponent implements OnInit {
 
   // Load structure, all data, parameters, topics, services, nodes...
   loadData(): void {
-    this.resetData();
+    const nodeObservable: Observable<Node[]> = Observable.create(observer => {
+      ros.getNodes(data => {
+        observer.next(data);
+        observer.complete();
+      });
+    })
+    .map(data => data.map(name => ({ name })));
 
-    ros.getTopics((topics) => { // Topics now has topics and types arrays
-      for (let name of topics.topics) {
-        this.data.topics.push({ 'name': name, 'abbr': '', 'type': '' });
+    const topicObservable: Observable<Topic[]> = Observable.create(observer => {
+      ros.getTopics(data => {
+        observer.next(data);
+        observer.complete();
+      });
+    })
+    .map(data => data.topics.map((name, i) => ({ name, type: data.types[i], abbr: '' })));
 
-        ros.getTopicType(name, (type) => {
-          (_.findWhere(this.data.topics, { name }) as any).type = type;
+    const serviceObservable: Observable<Service[]> = Observable.create(observer => {
+      ros.getServices(data => {
+        const obs = data.map(name => Observable.create(observer2 => {
+          ros.getServiceType(name, type => {
+            observer2.next({ name, type, 'abbr': '' });
+            observer2.complete();
+          });
+        }));
+        Observable.forkJoin(...obs).subscribe(data2 => {
+          observer.next(data2);
+          observer.complete();
         });
-      };
+      });
     });
 
-    ros.getServices((services) => {
-      for (let name of services) {
-        this.data.services.push({ name });
-
-        ros.getServiceType(name, (type) => {
-          (_.findWhere(this.data.services, { name }) as any).type = type;
+    const paramObservable: Observable<Parameter[]> = Observable.create(observer => {
+      ros.getParams(data => {
+        const obs = data.map(name => Observable.create(observer2 => {
+          const param = new ROSLIB.Param({ ros, name });
+          param.get(value => {
+            observer2.next({ name, value, abbr: '' });
+            observer2.complete();
+          });
+        }));
+        Observable.forkJoin(...obs).subscribe(data2 => {
+          observer.next(data2);
+          observer.complete();
         });
+      });
+    });
+
+    Observable.forkJoin(nodeObservable, topicObservable, serviceObservable, paramObservable)
+    .subscribe(([nodes, topics, services, params]) => {
+      this.data = {
+        rosout: [] as any[],
+        nodes: nodes,
+        topics: topics,
+        services: services,
+        parameters: params,
       }
-    });
 
-    ros.getParams((params) => {
-      for (let name of params) {
-        const param = new ROSLIB.Param({ ros, name });
-        this.data.parameters.push({ 'name': name, 'abbr': '', 'value': '' });
+      const allData: any[] = this.data.topics.concat(this.data.services, this.data.nodes as any[]);
+      this.domains = this.domainsService.getDomains(allData);
+      this.filteredDomains = this.domains.filter(dom => this.domainsService.filterAdvanced(dom));
+      this.globalParameters = this.domainsService.getGlobalParameters(this.data.parameters);
+      this.filteredGlobalParameters = this.globalParameters.filter(param => this.domainsService.filterAdvanced(param.name));
 
-        param.get((value) => {
-          (_.findWhere(this.data.parameters, { name }) as any).value = value;
-        });
-      };
-    });
-
-    ros.getNodes((nodes) => {
-      for (let name of nodes) {
-        this.data.nodes.push({ name });
-      };
+      const domains = this.setting.advanced ? this.domains : this.filteredDomains;
+      this.setActiveDomain(domains[0]);
+      this.ready = true;
     });
   }
 }

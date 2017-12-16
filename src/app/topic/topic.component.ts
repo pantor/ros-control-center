@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 
 declare var ROSLIB: any;
-import '../../assets/roslib.js';
+import 'roslib/build/roslib.js';
 
 import { ros } from '../dashboard/dashboard.component';
 
@@ -15,7 +15,7 @@ export class TopicComponent implements OnInit {
   @Input() topic: Topic;
   roslibTopic: any;
   message: any;
-  isSubscribing: boolean = false;
+  isSubscribing = false;
 
   constructor() { }
 
@@ -28,8 +28,8 @@ export class TopicComponent implements OnInit {
   }
 
   toggleSubscription(isSubscribing: boolean): void {
-    if (!isSubscribing) {
-      this.roslibTopic.subscribe((message) => {
+    if (isSubscribing) {
+      this.roslibTopic.subscribe(message => {
         this.message = message;
       });
     } else {
@@ -39,8 +39,7 @@ export class TopicComponent implements OnInit {
   }
 
   publish(data: any): void {
-    const data2 = data.isJSON ? JSON.stringify(data.message) : data.message;
-    const message = new ROSLIB.Message(data2);
+    const message = new ROSLIB.Message(data);
     this.roslibTopic.publish(message);
   }
 }

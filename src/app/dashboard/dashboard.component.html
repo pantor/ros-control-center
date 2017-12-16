@@ -5,28 +5,32 @@
     The ROS Control Center is <b>not connected</b> to a robot running rosbridge_suite at {{ setting.address }}:{{ setting.port }}. You can change the URL in the <i>Settings</i> tab, further information can be found in the <a href="https://github.com/pantor/ros-control-center">GitHub Repository</a>.
   </div>
 
-  <div class="alert alert-info col-sm-6 col-sm-offset-3" *ngIf="isConnected && !hasFilteredDomains(setting.advanced)">
-    <p class="lead"><i class="glyphicon glyphicon glyphicon-th-list"></i> Loading or nothing to show...</p>
+  <div class="alert alert-info col-sm-6 col-sm-offset-3" *ngIf="isConnected && !ready">
+    <p class="lead"><i class="glyphicon glyphicon glyphicon-th-list"></i> Loading...</p>
+  </div>
+
+  <div class="alert alert-info col-sm-6 col-sm-offset-3" *ngIf="isConnected && ready && !hasDomains()">
+    <p class="lead"><i class="glyphicon glyphicon glyphicon-th-list"></i> Nothing to show...</p>
     In default mode, ROS Control Center does not show default nodes / parameters / services and topics. You can show every item by using the advanced view setting, either in the seperate settings tab or here:
     <div style="margin-top: 10px;">
       <button class="btn btn-info btn-sm" (click)="setting.advanced = true">Enable Advanced View</button>
     </div>
   </div>
 
-  <div class="row" *ngIf="isConnected && hasFilteredDomains(setting.advanced)">
+  <div class="row" *ngIf="isConnected && hasDomains()">
     <div class="cols-xs-12 col-sm-8">
       <div class="row">
         <!-- Sidebar menu -->
         <div class="col-sm-3">
           <!-- Domains -->
-          <div class="panel panel-default panel-domain" [class.panel-active]="activeDomain == domain" *ngFor="let domain of getDomains(setting.advanced)" (click)="setActiveDomain(domain)">
+          <div class="panel panel-default panel-domain" [class.panel-active]="activeDomain == domain" *ngFor="let domain of getDomains()" (click)="setActiveDomain(domain)">
             <div class="panel-heading">
               <h3 class="panel-title">{{ domain }}</h3>
             </div>
           </div>
 
           <!-- Global parameters -->
-          <app-parameter *ngFor="let parameter of getGlobalParameters(setting.advanced)" [parameter]="parameter"></app-parameter>
+          <app-parameter *ngFor="let parameter of getGlobalParameters()" [parameter]="parameter"></app-parameter>
         </div>
 
         <div class="col-sm-9">

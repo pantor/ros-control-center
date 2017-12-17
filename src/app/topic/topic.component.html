@@ -1,12 +1,18 @@
 <div class="card" [class.bg-dark]="isSubscribing" [class.text-light]="isSubscribing">
   <div class="d-flex justify-content-between align-items-center">
-    <h6 class="card-title">
+    <h5 class="card-title">
       {{ topic.abbr }}
       <small class="text-muted">({{ topic.type }})</small>
-    </h6>
+    </h5>
 
     <button class="btn btn-outline-success btn-sm btn-title" (click)="toggleSubscription(!isSubscribing)" [class.active]="isSubscribing">{{ isSubscribing ? 'Unsubscribe' : 'Subscribe' }}</button>
   </div>
 
-  <app-topic-default [onNewMessage]="message" (publish)="publish($event)" [isSubscribing]="isSubscribing"></app-topic-default>
+  <div [ngSwitch]="topic.type">
+    <app-topic-std-msgs-number *ngSwitchCase="'std_msgs/Float32'" [onNewMessage]="message" (publish)="publish($event)" [isSubscribing]="isSubscribing"></app-topic-std-msgs-number>
+
+    <app-topic-sensor-msgs-imu *ngSwitchCase="'sensor_msgs/Imu'" [onNewMessage]="message" (publish)="publish($event)" [isSubscribing]="isSubscribing"></app-topic-sensor-msgs-imu>
+
+    <app-topic-default *ngSwitchDefault [onNewMessage]="message" (publish)="publish($event)" [isSubscribing]="isSubscribing"></app-topic-default>
+  </div>
 </div>

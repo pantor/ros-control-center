@@ -1,8 +1,14 @@
 <div class="card">
-  <h6 class="card-title">
+  <h5 class="card-title">
     {{ service.abbr }}
     <small class="text-muted">({{ service.type }} / Default)</small>
-  </h6>
+  </h5>
 
-  <app-service-default [onResponse]="response" (call)="callService($event)"></app-service-default>
+  <div [ngSwitch]="service.type">
+    <app-service-std-srvs-empty *ngSwitchCase="'std_srvs/Empty'" [onResponse]="response" (call)="callService($event)"></app-service-std-srvs-empty>
+    <!--app-service-std-srvs-set-bool *ngSwitchCase="'std_srvs/SetBool'" [onResponse]="response" (call)="callService($event)"></app-service-std-srvs-set-bool-->
+    <app-service-std-srvs-trigger *ngSwitchCase="'std_srvs/Trigger'" [onResponse]="response" (call)="callService($event)"></app-service-std-srvs-trigger>
+
+    <app-service-default *ngSwitchDefault [onResponse]="response" (call)="callService($event)"></app-service-default>
+  </div>
 </div>

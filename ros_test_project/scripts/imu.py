@@ -8,7 +8,7 @@ from std_srvs.srv import Trigger, TriggerResponse
 
 def calibrate(req):
   rospy.loginfo('Calibrating...')
-  return TriggerResponse(True, 'Calibrated.')
+  return TriggerResponse(random.choice([True, False]), 'Calibrated.')
 
 
 if __name__ == '__main__':

@@ -4,7 +4,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
   selector: 'app-service-default',
   templateUrl: './default.component.html'
 })
-export class DefaultServiceComponent {
+export class ServiceDefaultComponent {
   @Output() call = new EventEmitter<any>();
   private response: any;
   private input: string;
@@ -13,9 +13,8 @@ export class DefaultServiceComponent {
     if (this.input) {
       this.call.emit(JSON.parse(this.input));
     } else {
-      this.call.emit(JSON.parse('""'));
+      this.call.emit({});
     }
-
   }
 
   @Input()

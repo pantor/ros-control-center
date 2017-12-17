@@ -1,0 +1,9 @@
+<div class="card-body-sm">
+  <div class="d-flex">
+    <button class="btn btn-secondary ml-auto" type="button" (click)="callService()">Call</button>
+  </div>
+
+  <div class="alert mt-2" *ngIf="response" [class.alert-success]="response.success" [class.alert-danger]="!response.success" role="alert">
+    {{ response.message }}
+  </div>
+</div>

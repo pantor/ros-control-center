@@ -1,0 +1,23 @@
+<div class="d-flex" [class.flex-row]="horizontal" [class.flex-column]="!horizontal">
+  <div class="d-flex-g mt-2 mr-2" [class.mr-2]="level == 0 || !last" *ngFor="let m of info.members; let last = last">
+    <div *ngIf="m.members">
+      <strong>{{ m.name | humanize }}</strong>
+      <app-type [info]="m" [data]="data" [readonly]="readonly" [level]="level + 1"></app-type>
+    </div>
+
+    <div *ngIf="!m.members">
+      <small class="text-muted" *ngIf="info.members.length > 1">{{ m.name | humanize }}</small>
+      <div class="input-group" [ngSwitch]="getLooseType(m.type)">
+        <input type="checkbox" *ngSwitchCase="'bool'" class="form-control" [name]="m.name">
+
+        <input type="text" *ngSwitchCase="'string'" class="form-control" [readonly]="readonly" [name]="m.name" [placeholder]="m.type">
+
+        <input type="number" *ngSwitchCase="'number'" class="form-control" [readonly]="readonly" [name]="m.name" [placeholder]="m.type">
+
+        <div *ngSwitchCase="'time'">
+          Time
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

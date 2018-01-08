@@ -1,9 +1,0 @@
-<div class="card-body-sm">
-  <div class="d-flex justify-content-between">
-    <div class="input-group mr-2">
-      <input type="text" class="form-control" [(ngModel)]="message" [readonly]="isSubscribing" placeholder="JSON">
-    </div>
-
-    <button class="btn btn-secondary" type="button" [disabled]="isSubscribing" (click)="publishMessage(message)">Publish</button>
-  </div>
-</div>

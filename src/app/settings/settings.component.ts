@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
-import { Setting } from '../setting';
+import { Setting } from './setting';
 
 
 @Component({
@@ -11,17 +11,17 @@ import { Setting } from '../setting';
 export class SettingsComponent implements OnInit {
   settings: Setting[];
   index: number;
-
-  constructor() { }
+  private storageSettingsName = 'roscc2-settings';
+  private storageIndexName = 'roscc2-index';
 
   ngOnInit() {
-    this.settings = JSON.parse(localStorage.getItem('roscc2-settings')) || [ Setting.getDefault() ];
-    this.index = JSON.parse(localStorage.getItem('roscc2-index')) || 0;
+    this.settings = JSON.parse(localStorage.getItem(this.storageSettingsName)) || [ Setting.getDefault() ];
+    this.index = JSON.parse(localStorage.getItem(this.storageIndexName)) || 0;
   }
 
   save(): void {
-    localStorage.setItem('roscc2-settings', JSON.stringify(this.settings));
-    localStorage.setItem('roscc2-index', JSON.stringify(this.index));
+    localStorage.setItem(this.storageSettingsName, JSON.stringify(this.settings));
+    localStorage.setItem(this.storageIndexName, JSON.stringify(this.index));
   }
 
   add(): void {

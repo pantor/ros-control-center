@@ -1,9 +1,10 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, ViewChild, OnInit, Input } from '@angular/core';
 
 declare var ROSLIB: any;
 import 'roslib/build/roslib.js';
 
 import { ros } from '../dashboard/dashboard.component';
+import { TypeComponent } from '../type/type.component';
 
 
 @Component({
@@ -12,11 +13,12 @@ import { ros } from '../dashboard/dashboard.component';
   styleUrls: ['./service.component.css']
 })
 export class ServiceComponent implements OnInit {
-  @Input() service: Service;
-  roslibService: any;
-  response: any;
+  @ViewChild(TypeComponent) child: TypeComponent;
 
-  constructor() { }
+  @Input() service: Service;
+  private roslibService: any;
+  private input = {};
+  private response: any;
 
   ngOnInit() {
     this.roslibService = new ROSLIB.Service({
@@ -26,8 +28,8 @@ export class ServiceComponent implements OnInit {
     });
   }
 
-  callService(data: any): void {
-    const request = new ROSLIB.ServiceRequest(data);
+  callService(): void {
+    const request = new ROSLIB.ServiceRequest(this.child.data);
     this.roslibService.callService(request, response => {
       this.response = response;
     });

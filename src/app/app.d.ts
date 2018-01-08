@@ -1,15 +1,23 @@
 interface Topic {
   name: string;
-  abbr: string;
   type: string;
+  info?: any;
 }
 
 type Service = any;
 
 interface Parameter {
   name: string;
-  abbr: string;
   value: any;
+  node?: string;
 }
 
-type Domain = string;
+interface Node {
+  name: string;
+  topics: Topic[];
+  services: Service[];
+  params: Parameter[];
+
+  publishing?: string[];
+  subscribing?: string[];
+}

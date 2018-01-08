@@ -1,0 +1,16 @@
+<launch>
+  <include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch" >
+     <arg name="port" value="9090"/>
+  </include>
+
+  <param name="global_param_int" value="4" />
+  <param name="global_param_string" value="hello" />
+
+  <node pkg="ros_test_project" name="std_srvs" type="node_std_srvs.py">
+    <param name="local_param" value="5.0" />
+  </node>
+
+  <node pkg="ros_test_project" name="std_msgs" type="node_std_msgs.py" />
+  <node pkg="ros_test_project" name="geometry_msgs" type="node_geometry_msgs.py" />
+  <node pkg="ros_test_project" name="sensor_msgs" type="node_sensor_msgs.py" />
+</launch>

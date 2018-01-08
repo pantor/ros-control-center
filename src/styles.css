@@ -3,17 +3,17 @@
 .card {
   margin-bottom: 5px;
 }
-.card-domain {
+.card.active {
+  color: white;
+  background-color: #2E3D5F;
+  border: 1px #2E3D5F solid;
+}
+.card-node {
   cursor: pointer;
   overflow: hidden;
 }
 .card-title {
   margin: 0.6rem 0.8rem;
-}
-.card-active {
-  color: white;
-  background-color: #2E3D5F;
-  border: 1px #2E3D5F solid;
 }
 .card-body-sm {
   margin: 0 0.6rem 0.6rem 0.6rem;
@@ -25,4 +25,12 @@
 .btn-title {
   padding: 0.1rem 0.5rem;
   margin: 0.3rem 0.6rem;
+}
+
+.d-flex-g {
+  flex-grow: 1;
+}
+
+app-type {
+  flex: 1;
 }

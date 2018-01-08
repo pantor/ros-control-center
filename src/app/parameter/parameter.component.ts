@@ -13,9 +13,7 @@ import { ros } from '../dashboard/dashboard.component';
 })
 export class ParameterComponent implements OnInit {
   @Input() parameter: Parameter;
-  roslibParam: any;
-
-  constructor() { }
+  private roslibParam: any;
 
   ngOnInit() {
     this.roslibParam = new ROSLIB.Param({ ros, name: this.parameter.name });

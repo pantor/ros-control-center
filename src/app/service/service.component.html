@@ -1,14 +1,19 @@
 <div class="card">
   <h5 class="card-title">
-    {{ service.abbr }}
+    {{ service.name | humanize }}
     <small class="text-muted">({{ service.type }} / Default)</small>
   </h5>
 
-  <div [ngSwitch]="service.type">
-    <app-service-std-srvs-empty *ngSwitchCase="'std_srvs/Empty'" [onResponse]="response" (call)="callService($event)"></app-service-std-srvs-empty>
-    <!--app-service-std-srvs-set-bool *ngSwitchCase="'std_srvs/SetBool'" [onResponse]="response" (call)="callService($event)"></app-service-std-srvs-set-bool-->
-    <app-service-std-srvs-trigger *ngSwitchCase="'std_srvs/Trigger'" [onResponse]="response" (call)="callService($event)"></app-service-std-srvs-trigger>
+  <div class="card-body-sm">
+    <form class="d-flex justify-content-between">
+      <app-type [info]="service.request_info" [data]="input" [readonly]="false"></app-type>
 
-    <app-service-default *ngSwitchDefault [onResponse]="response" (call)="callService($event)"></app-service-default>
+      <button class="btn btn-secondary align-self-end" type="button" (click)="callService()">Call</button>
+    </form>
+
+    <div class="mt-4" *ngIf="response">
+      <hr>
+      <app-type [info]="service.response_info" [data]="response" [readonly]="true"></app-type>
+    </div>
   </div>
 </div>

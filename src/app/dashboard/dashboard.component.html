@@ -4,7 +4,7 @@
       Loading...
     </div>
 
-    <div class="alert alert-info col-sm-6" *ngIf="isConnected && ready && !hasDomains()">
+    <div class="alert alert-info col-sm-6" *ngIf="isConnected && ready && !hasNodes">
       There is nothing to show... In default mode, ROS Control Center does not show default nodes / parameters / services and topics. You can show every item by using the advanced view setting, either in the seperate settings tab or here:
       <button class="btn btn-info btn-sm mb-2" (click)="setting.advanced = true">Enable Advanced View</button>
     </div>
@@ -14,53 +14,42 @@
     </div>
   </div>
 
-  <div class="row" *ngIf="isConnected && hasDomains()">
+  <div class="row" *ngIf="isConnected && ready && hasNodes">
     <div class="col-9">
       <div class="row">
-        <!-- Sidebar menu -->
         <div class="col-sm-3">
-          <!-- Domains -->
-          <div class="card card-domain" [class.card-active]="activeDomain == domain" *ngFor="let domain of getDomains()" (click)="setActiveDomain(domain)">
-            <h6 class="card-title">{{ domain }}</h6>
+          <div class="card card-node" [class.active]="activeNode == n" *ngFor="let n of data.nodes" (click)="setActiveNode(n)">
+            <h6 class="card-title">{{ n.name | humanize }}</h6>
           </div>
 
-          <!-- Global parameters -->
-          <app-parameter *ngFor="let parameter of getGlobalParameters()" [parameter]="parameter"></app-parameter>
+          <app-parameter *ngFor="let parameter of data.globalParameters" [parameter]="parameter"></app-parameter>
         </div>
 
-        <div class="col-sm-9">
-          <p class="lead" style="font-size: 28px;">{{ activeDomain }}</p>
+        <div class="col-sm-9" *ngIf="activeNode">
+          <p class="lead" style="font-size: 28px;">{{ activeNode.name | humanize }}</p>
 
-          <!-- Topics -->
-          <app-topic [topic]="topic" *ngFor="let topic of domainsService.getDataForDomain(data.topics, activeDomain, setting.advanced)"></app-topic>
-
-          <!-- Services -->
-          <app-service [service]="service" *ngFor="let service of domainsService.getDataForDomain(data.services, activeDomain, setting.advanced)"></app-service>
-
-          <!-- Parameters -->
-          <app-parameter [parameter]="parameter" *ngFor="let parameter of domainsService.getDataForDomain(data.parameters, activeDomain, setting.advanced)"></app-parameter>
+          <app-topic [topic]="t" *ngFor="let t of activeNode.topics"></app-topic>
+          <app-service [service]="s" *ngFor="let s of activeNode.services"></app-service>
+          <app-parameter [parameter]="p" *ngFor="let p of activeNode.params"></app-parameter>
         </div>
       </div>
     </div>
 
-    <div class="col-3 sidebar">
-      <!-- Console Log -->
-      <div class="console">
-        <table class="table">
-          <tr *ngFor="let logEntry of data.rosout" [hidden]="!domainsService.filterAdvanced(logEntry.abbr, setting.advanced)">
-            <td>
-              <strong [ngClass]="{ 'text-danger bg-danger': logEntry.level > 8, 'text-danger': logEntry.level == 8, 'text-warning': logEntry.level == 4, 'text-info': logEntry.level == 2, 'text-muted': logEntry.level < 2 }">
-                {{ logEntry.abbr }}
-              </strong>
-              <br>
-              <small class="text-muted">{{ logEntry.dateString }}</small>
-            </td>
-            <td>{{ logEntry.msg }}</td>
-          </tr>
-        </table>
+    <div class="col-3">
+      <div class="col sidebar">
+        <div class="row console-row" *ngFor="let logEntry of data.rosout">
+          <div class="col-12 col-xl-4">
+            <strong [ngClass]="{ 'text-danger bg-danger': logEntry.level > 8, 'text-danger': logEntry.level == 8, 'text-warning': logEntry.level == 4, 'text-info': logEntry.level == 2, 'text-muted': logEntry.level < 2 }">
+              {{ logEntry.name | humanize }}
+            </strong>
+          </div>
+
+          <div class="col-12 col-xl-8">
+            {{ logEntry.msg }}
+          </div>
+        </div>
       </div>
 
-      <!-- Battery Status -->
       <div class="battery" *ngIf="setting.battery">
         <strong>Battery</strong><br>
 

@@ -1,26 +1,11 @@
 .sidebar {
-  position: absolute;
-  top: 50px;
-  bottom: 0;
-  right: 0;
+  border-left: 1px solid #f4f5f7;
 
-  padding: 0;
-  border-left: 1px solid #f8f9fa;
-  border-bottom: 1px solid #f8f9fa;
-}
-.console {
-  position: absolute;
-  top: 0;
-  bottom: 70px;
-  display: block;
-  width: 100%;
-
-  overflow-x: hidden;
+  overflow-x: scroll;
   overflow-y: auto;
 }
-.console > table > tr > td {
-  border-top: none;
-  border-bottom: 1px solid #f8f9fa;
+.console-row {
+  border-bottom: 1px solid #f4f5f7;
 }
 .battery {
   position: absolute;
@@ -29,5 +14,5 @@
   width: 100%;
 
   background-color: white;
-  border-top: 1px solid #f8f9fa;
+  border-top: 1px solid #f4f5f7;
 }

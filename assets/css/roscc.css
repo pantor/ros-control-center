@@ -1,0 +1,53 @@
+.panel {
+  margin-bottom: 5px;
+}
+.panel-domain {
+  cursor: pointer;
+}
+.panel-active {
+  border: none;
+}
+.panel-active .panel-heading {
+  color: white;
+  background-color: #2E3D5F;
+  border: 1px #2E3D5F solid;
+  border-radius: 3px;
+}
+
+.sidebar {
+  position: absolute;
+  top: 50px;
+  bottom: 0;
+  right: 0;
+
+  padding: 0;
+  border-left: 1px solid #e7e7e7;
+  border-bottom: 1px solid #e7e7e7;
+}
+.console {
+  position: absolute;
+  top: 0;
+  bottom: 70px;
+  display: block;
+  width: 100%;
+
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+.console > table > tr > td {
+  border-top: none;
+  border-bottom: 1px solid #ddd;
+}
+.battery {
+  position: absolute;
+  bottom: 0;
+  padding: 15px 15px 0 15px;
+  width: 100%;
+
+  background-color: white;
+  border-top: 1px solid #e7e7e7;
+}
+
+.form-margin {
+  margin: 0 15px;
+}

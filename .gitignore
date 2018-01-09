@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 
 # compiled output
@@ -42,3 +43,22 @@ Thumbs.db
 
 # Vagrant
 .vagrant
+=======
+# NPM
+node_modules
+
+# Exclude folders...
+app/topics/**/
+app/services/**/
+
+# ...except of standard ROS packages
+!app/topics/default.html
+!app/topics/topic.component.js
+!app/topics/geometry_msgs
+!app/topics/nav_msgs
+!app/topics/sensor_msgs
+!app/topics/std_msgs
+!app/services/default.html
+!app/services/service.component.js
+!app/services/std_srvs
+>>>>>>> c7b7ef762f12f94ca1cf92446b59aff4aa654c8f

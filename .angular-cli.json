@@ -5,7 +5,6 @@
   },
   "apps": [
     {
-      "baseHref": "ros-control-center/",
       "root": "src",
       "outDir": "dist",
       "assets": [

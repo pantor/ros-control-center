@@ -11,7 +11,7 @@ export class TypeComponent implements OnInit {
   @Input() data: any;
   @Input() readonly: boolean;
   @Input() level = 0;
-  private horizontal = false;
+  public horizontal = false;
 
   ngOnInit() {
     this.horizontal = this.info && this.info.members && !this.info.members.some(e => typeof e.members !== 'undefined');

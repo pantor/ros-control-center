@@ -14,8 +14,8 @@ import { ros } from '../dashboard/dashboard.component';
 export class TopicComponent implements OnInit {
   @Input() topic: Topic;
   private roslibTopic: any;
-  private input = {};
-  private isSubscribing = false;
+  public input = {};
+  public isSubscribing = false;
 
   ngOnInit() {
     this.roslibTopic = new ROSLIB.Topic({

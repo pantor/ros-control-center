@@ -17,8 +17,8 @@ export class ServiceComponent implements OnInit {
 
   @Input() service: Service;
   private roslibService: any;
-  private input = {};
-  private response: any;
+  public input = {};
+  public response: any;
 
   ngOnInit() {
     this.roslibService = new ROSLIB.Service({

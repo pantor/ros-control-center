@@ -1,18 +1,22 @@
 <div class="d-flex" [class.flex-row]="horizontal" [class.flex-column]="!horizontal">
   <div class="d-flex-g mt-2 mr-2" [class.mr-2]="level == 0 || !last" *ngFor="let m of info.members; let last = last">
     <div *ngIf="m.members">
-      <strong>{{ m.name | humanize }}</strong>
-      <app-type [info]="m" [data]="data" [readonly]="readonly" [level]="level + 1"></app-type>
+      <strong>
+        {{ m.name | humanize }} <span *ngIf="m.length > 0">{{ m.length }}</span>
+      </strong>
+      <app-type [info]="m" [data]="data && data[m.name]" [readonly]="readonly" [level]="level + 1" (childEvent)="update($event)"></app-type>
     </div>
 
     <div *ngIf="!m.members">
-      <small class="text-muted" *ngIf="info.members.length > 1">{{ m.name | humanize }}</small>
+      <small class="text-muted" *ngIf="info.members.length > 1">
+        {{ m.name | humanize }} <span *ngIf="m.length > 0">{{ m.length }}</span>
+      </small>
       <div class="input-group" [ngSwitch]="getLooseType(m.type)">
-        <input type="checkbox" *ngSwitchCase="'bool'" class="form-control" [name]="m.name">
+        <input type="checkbox" *ngSwitchCase="'bool'" [ngModel]="data && data[m.name]" (ngModelChange)="update({names: [m.name], value: $event})" class="form-control" [name]="m.name">
 
-        <input type="text" *ngSwitchCase="'string'" class="form-control" [readonly]="readonly" [name]="m.name" [placeholder]="m.type">
+        <input type="text" *ngSwitchCase="'string'" [ngModel]="data && data[m.name]" (ngModelChange)="update({names: [m.name], value: $event})" class="form-control" [readonly]="readonly" [name]="m.name" [placeholder]="m.type">
 
-        <input type="number" *ngSwitchCase="'number'" class="form-control" [readonly]="readonly" [name]="m.name" [placeholder]="m.type">
+        <input type="number" *ngSwitchCase="'number'" [ngModel]="data && data[m.name]" (ngModelChange)="update({names: [m.name], value: $event})" class="form-control" [readonly]="readonly" [name]="m.name" [placeholder]="m.type">
 
         <div *ngSwitchCase="'time'">
           Time

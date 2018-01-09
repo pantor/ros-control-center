@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-type',
@@ -6,14 +6,15 @@ import { Component, OnInit, Input } from '@angular/core';
   styleUrls: ['./type.component.css']
 })
 export class TypeComponent implements OnInit {
-  @Input() info: { name: string, members: any[] };
+  @Output() childEvent = new EventEmitter();
+  @Input() info: Type;
   @Input() data: any;
   @Input() readonly: boolean;
   @Input() level = 0;
-  horizontal = false;
+  private horizontal = false;
 
   ngOnInit() {
-    this.horizontal = this.info && this.info.members && !this.info.members.some(e => e.members);
+    this.horizontal = this.info && this.info.members && !this.info.members.some(e => typeof e.members !== 'undefined');
   }
 
   getLooseType(primitiveType: string): string {
@@ -29,7 +30,28 @@ export class TypeComponent implements OnInit {
       'float32',
       'float64',
     ];
-    if (numbers.includes(primitiveType)) return 'number';
+    if (numbers.includes(primitiveType)) {
+      return 'number';
+    }
     return primitiveType;
+  }
+
+  update(object: { names: string[], value: any }) {
+    if (this.level > 0) {
+      object.names.unshift(this.info.name);
+      this.childEvent.emit(object);
+    } else {
+      if (this.data === undefined) {
+        this.data = {};
+      }
+      let dataElement = this.data;
+      for (const n of object.names.slice(0, -1)) {
+        if (dataElement[n] === undefined) {
+          dataElement[n] = {};
+        }
+        dataElement = dataElement[n];
+      }
+      dataElement[object.names[object.names.length - 1]] = object.value;
+    }
   }
 }

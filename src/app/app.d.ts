@@ -21,3 +21,12 @@ interface Node {
   publishing?: string[];
   subscribing?: string[];
 }
+
+interface Type {
+  type: string;
+  name: string;
+
+  members?: Type[];
+  example?: any;
+  length?: number;
+}

@@ -14,7 +14,7 @@ import { ros } from '../dashboard/dashboard.component';
 export class TopicComponent implements OnInit {
   @Input() topic: Topic;
   private roslibTopic: any;
-  private message: any;
+  private input = {};
   private isSubscribing = false;
 
   ngOnInit() {
@@ -23,16 +23,12 @@ export class TopicComponent implements OnInit {
       name: this.topic.name,
       messageType: this.topic.type,
     });
-
-
   }
 
   toggleSubscription(isSubscribing: boolean): void {
-    console.log(this.topic);
-
     if (isSubscribing) {
       this.roslibTopic.subscribe(message => {
-        this.message = message;
+        this.input = message;
       });
     } else {
       this.roslibTopic.unsubscribe();
@@ -40,8 +36,8 @@ export class TopicComponent implements OnInit {
     this.isSubscribing = isSubscribing;
   }
 
-  publish(data: any): void {
-    const message = new ROSLIB.Message(data);
+  publish(): void {
+    const message = new ROSLIB.Message(this.input);
     this.roslibTopic.publish(message);
   }
 }

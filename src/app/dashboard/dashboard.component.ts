@@ -29,7 +29,7 @@ export class DashboardComponent implements OnInit {
   activeNode: Node;
   isConnected: boolean;
   setting: Setting;
-  maxConsoleEntries: number;
+  maxConsoleEntries = 200;
   batteryStatus: any;
   ready = false;
   hasNodes = true;
@@ -37,7 +37,6 @@ export class DashboardComponent implements OnInit {
   ngOnInit() {
     this.isConnected = isConnected;
     this.setting = Setting.getCurrent();
-    this.maxConsoleEntries = 200;
 
     // Load ROS connection and keep trying if it fails
     this.newRosConnection();
@@ -114,7 +113,9 @@ export class DashboardComponent implements OnInit {
       messageType: 'rosgraph_msgs/Log',
     });
     consoleTopic.subscribe(message => {
-      if (!this.setting.advanced && !this.filterString(message.name)) return;
+      if (!this.setting.advanced && !this.filterString(message.name)) {
+        return;
+      }
 
       const nameArray = message.name.split('/');
       const d = new Date((message.header.stamp.secs * 1E3) + (message.header.stamp.nsecs * 1E-6));
@@ -148,7 +149,7 @@ export class DashboardComponent implements OnInit {
   }
 
 
-  parseTypedef(typedef: any): any {
+  parseTypedef(typedef: any): Type {
     const info = typedef.map(inf => ({
       type: inf.type,
       members: inf.examples.map((e, i) => ({
@@ -159,14 +160,18 @@ export class DashboardComponent implements OnInit {
       })),
     }));
 
-    for (let i = 0; i < 3; i++) {
-      for (let e of info[0].members) {
-        if (info.find(i => e.type == i.type)) {
-          e.members = info.find(i => e.type == i.type).members;
+    function findMembers(obj) {
+      for (const e of obj.members) {
+        if (info.find(i => e.type === i.type)) {
+          e.members = info.find(i => e.type === i.type).members;
+        }
+        if (e.members) {
+          findMembers(e);
         }
       }
     }
 
+    findMembers(info[0]);
     return info[0];
   }
 
@@ -180,9 +185,9 @@ export class DashboardComponent implements OnInit {
     }).flatMap(data => {
       return Observable.forkJoin(data.map(name => Observable.create(obs => {
         const detailClient = new ROSLIB.Service({
-          ros : ros,
-          name : '/rosapi/node_details',
-          serviceType : 'rosapi/NodeDetails'
+          ros: ros,
+          name: '/rosapi/node_details',
+          serviceType: 'rosapi/NodeDetails'
         });
         const request = new ROSLIB.ServiceRequest({ node: name });
         detailClient.callService(request, data2 => {
@@ -205,7 +210,6 @@ export class DashboardComponent implements OnInit {
           obs.next({ name, type: data.types[i], info: this.parseTypedef(typedef) });
           obs.complete();
         }, error => {
-          console.log(name, error);
           obs.next({ name, type: data.types[i] });
           obs.complete();
         });
@@ -227,28 +231,28 @@ export class DashboardComponent implements OnInit {
         });
       })));
     }).flatMap(data => {
-      return Observable.forkJoin(data.map(data => Observable.create(obs => {
+      return Observable.forkJoin(data.map(data2 => Observable.create(obs => {
         const detailClient = new ROSLIB.Service({
-          ros : ros,
-          name : '/rosapi/service_request_details',
-          serviceType : 'rosapi/ServiceRequestDetails'
+          ros: ros,
+          name: '/rosapi/service_request_details',
+          serviceType: 'rosapi/ServiceRequestDetails'
         });
-        const request = new ROSLIB.ServiceRequest({ type: data.type });
-        detailClient.callService(request, data2 => {
-          obs.next({ ...data, request_info: this.parseTypedef(data2.typedefs) });
+        const request = new ROSLIB.ServiceRequest({ type: data2.type });
+        detailClient.callService(request, data3 => {
+          obs.next({ ...data2, request_info: this.parseTypedef(data3.typedefs) });
           obs.complete();
         });
       })));
     }).flatMap(data => {
-      return Observable.forkJoin(data.map(data => Observable.create(obs => {
+      return Observable.forkJoin(data.map(data2 => Observable.create(obs => {
         const detailClient = new ROSLIB.Service({
-          ros : ros,
-          name : '/rosapi/service_response_details',
-          serviceType : 'rosapi/ServiceResponseDetails'
+          ros: ros,
+          name: '/rosapi/service_response_details',
+          serviceType: 'rosapi/ServiceResponseDetails'
         });
-        const request = new ROSLIB.ServiceRequest({ type: data.type });
-        detailClient.callService(request, data2 => {
-          obs.next({ ...data, response_info: this.parseTypedef(data2.typedefs) });
+        const request = new ROSLIB.ServiceRequest({ type: data2.type });
+        detailClient.callService(request, data3 => {
+          obs.next({ ...data2, response_info: this.parseTypedef(data3.typedefs) });
           obs.complete();
         });
       })));
@@ -264,10 +268,10 @@ export class DashboardComponent implements OnInit {
     }).flatMap(data => {
       return Observable.forkJoin(data.map(name => Observable.create(obs => {
         const param = new ROSLIB.Param({ ros, name });
-        const name_array = name.split('/');
+        const nameArray = name.split('/');
         param.get(value => {
-          if (name_array.length > 2) {
-            obs.next({ node: '/' + name_array[1], name, value });
+          if (nameArray.length > 2) {
+            obs.next({ node: '/' + nameArray[1], name, value });
           } else {
             obs.next({ name, value });
           }
@@ -289,32 +293,31 @@ export class DashboardComponent implements OnInit {
       '/rosversion',
       '/run_id',
       '/rosdistro',
-    ].includes(s)) return false;
+    ].includes(s)) {
+      return false;
+    }
 
-    const arr = s.split('/');
+    const nameArray = s.split('/');
     if ([
       'set_logger_level',
       'get_loggers',
-    ].includes(arr[arr.length - 1])) return false;
+    ].includes(nameArray[nameArray.length - 1])) {
+      return false;
+    }
 
     return true;
   }
 
   // Load structure, all data, parameters, topics, services, nodes...
   loadData(): void {
-    const nodeObservable = this.getNodes();
-    const topicObservable = this.getTopics();
-    const serviceObservable = this.getServices();
-    const paramObservable = this.getParams();
-
-    Observable.forkJoin(nodeObservable, topicObservable, serviceObservable, paramObservable)
+    Observable.forkJoin(this.getNodes(), this.getTopics(), this.getServices(), this.getParams())
     .subscribe(([nodes, topics, services, params]) => {
 
       if (!this.setting.advanced) {
         nodes = nodes.filter(this.filterString);
         params = params.filter(this.filterString);
 
-        for (let n of nodes) {
+        for (const n of nodes) {
           n.services = n.services.filter(this.filterString);
           n.publishing = n.publishing.filter(this.filterString);
           n.subscribing = n.subscribing.filter(this.filterString);
@@ -324,10 +327,10 @@ export class DashboardComponent implements OnInit {
       this.data.nodes = nodes;
       this.data.globalParameters = params.filter(param => !param.node);
 
-      for (let n of this.data.nodes) {
-        n.services = n.services.map(name => services.find(e => e.name == name));
-        n.topics = n.publishing.concat(n.subscribing).map(name => topics.find(e => e.name == name));
-        n.params = params.filter(param => param.node == n.name);
+      for (const n of this.data.nodes) {
+        n.services = n.services.map(name => services.find(e => e.name === name));
+        n.topics = n.publishing.concat(n.subscribing).map(name => topics.find(e => e.name === name));
+        n.params = params.filter(param => param.node === n.name);
       }
 
       this.setActiveNode(this.data.nodes[0]);

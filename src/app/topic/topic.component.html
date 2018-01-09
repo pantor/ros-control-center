@@ -10,9 +10,9 @@
 
   <div class="card-body-sm" *ngIf="topic.info">
     <form class="d-flex">
-      <app-type [info]="topic.info" [data]="message" [readonly]="isSubscribing"></app-type>
+      <app-type [info]="topic.info" [data]="input" [readonly]="isSubscribing"></app-type>
 
-      <button class="btn btn-secondary align-self-end" type="button" [disabled]="isSubscribing" (click)="publish(message)">Publish</button>
+      <button class="btn btn-secondary align-self-end" type="button" [disabled]="isSubscribing" (click)="publish()">Publish</button>
     </form>
   </div>
 </div>

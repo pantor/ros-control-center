@@ -37,7 +37,7 @@
 
     <div class="col-3">
       <div class="col sidebar">
-        <div class="row console-row" *ngFor="let logEntry of data.rosout">
+        <div class="row console-row pt-2 pb-2" *ngFor="let logEntry of data.rosout">
           <div class="col-12 col-xl-4">
             <strong [ngClass]="{ 'text-danger bg-danger': logEntry.level > 8, 'text-danger': logEntry.level == 8, 'text-warning': logEntry.level == 4, 'text-info': logEntry.level == 2, 'text-muted': logEntry.level < 2 }">
               {{ logEntry.name | humanize }}

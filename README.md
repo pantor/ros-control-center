@@ -2,7 +2,7 @@
 
 This control center is a universal tool for controlling robots running ROS. It runs in the browser using a websocket connection and `roslibjs` from [RobotWebTools](http://robotwebtools.org).
 
-[![screenshot](https://raw.githubusercontent.com/pantor/ros-control-center/master/assets/images/screenshot.png)](http://pantor.github.io/ros-control-center)
+[![screenshot](https://raw.githubusercontent.com/pantor/ros-control-center/master/src/assets/screenshot.png)](http://pantor.github.io/ros-control-center)
 
 In general, ROS Control Center offers an easy way to
  - show nodes, topics and service names.

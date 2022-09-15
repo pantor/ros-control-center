@@ -30,7 +30,7 @@
     "@angular/platform-browser": "^5.2.2",
     "@angular/platform-browser-dynamic": "^5.2.2",
     "@angular/router": "^5.2.2",
-    "bootstrap": "^4.0.0",
+    "bootstrap": "^4.3.1",
     "core-js": "^2.5.3",
     "roslib": "^0.20.0",
     "rxjs": "^5.5.6",
